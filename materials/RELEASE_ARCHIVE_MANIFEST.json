@@ -8,7 +8,7 @@
   },
   "summary": {
     "file_count": 178,
-    "size_bytes": 50127479,
+    "size_bytes": 50128696,
     "by_category": {
       "checkpoints": {
         "file_count": 18,
@@ -24,11 +24,11 @@
       },
       "docs": {
         "file_count": 79,
-        "size_bytes": 18385865
+        "size_bytes": 18386841
       },
       "governance": {
         "file_count": 28,
-        "size_bytes": 49213
+        "size_bytes": 49454
       },
       "source_data": {
         "file_count": 19,
@@ -160,8 +160,8 @@
     {
       "path": "RELEASE_CHECKLIST.md",
       "category": "governance",
-      "size_bytes": 750,
-      "sha256": "d7e61758ad7a423d09532a318cd932ca05ef822816662dcb3709855aaf50246e"
+      "size_bytes": 991,
+      "sha256": "1ecac91838a30447de064d87b8587df5b8821fe5a1e6f58aec60748e49db2425"
     },
     {
       "path": "RELEASE_NOTES.md",
@@ -496,8 +496,8 @@
     {
       "path": "docs/OPEN_SCIENCE_STATUS.md",
       "category": "docs",
-      "size_bytes": 1072,
-      "sha256": "2deb3f7d50995ca47e31da563d7bf802da903c44bd18b3f48f7a5b63cea45da9"
+      "size_bytes": 1352,
+      "sha256": "c37de852f571e603bfa953143525f4f77a3a28f0d8bb86e05c1b0aaab560abd3"
     },
     {
       "path": "docs/README.md",
@@ -784,8 +784,8 @@
     {
       "path": "docs/release_status.json",
       "category": "docs",
-      "size_bytes": 1079,
-      "sha256": "41d59bd0ba886f2c1b5d2a98a094c47085918a89cbe935d261303ddc605ab3a6"
+      "size_bytes": 1775,
+      "sha256": "10080c653132be753aacf494b98503a970b17b26541717b7e4eafbbf83611597"
     },
     {
       "path": "docs/revision_manifest.json",

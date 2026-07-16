@@ -13,12 +13,16 @@ Checked: 2026-07-16
 
 ## Private until manuscript submission
 
-- The target repository is the private `chocho2222/DNQ-DLC` project.
+- The private repository is `https://github.com/chocho2222/DNQ-DLC`.
+- The `main` branch has been pushed and its CI workflow passed.
+- Repository management settings, issue templates and release workflows are active.
+- A private `v0.1.0-rc.1` draft prerelease contains the release ZIP and checksum.
 - No public Pages URL will be created before manuscript submission.
-- No versioned GitHub Release, final commit hash, release tag, or archival DOI exists.
+- The Pages workflow is ready and is intentionally skipped while the repository is private.
+- No public versioned release or archival DOI exists.
 - Code, generated data and self-trained model terms are confirmed; custom-track
   and rendered-media provenance remains a public-release gate.
 
-Push to the private author-owned repository now. After manuscript submission,
-complete the track/media review, deploy this folder through GitHub Pages, and
-archive the frozen release through a DOI-issuing repository.
+After manuscript submission, complete the track/media review, make the
+repository public, deploy this folder through GitHub Pages, publish the frozen
+release, and archive it through a DOI-issuing repository.

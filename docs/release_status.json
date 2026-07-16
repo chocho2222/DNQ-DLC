@@ -1,9 +1,18 @@
 {
-  "status": "local_static_release_candidate_ready",
+  "status": "private_github_release_candidate",
   "checked_date": "2026-07-16",
   "public_video_url": null,
   "public_code_repository": null,
-  "github_release_tag": null,
+  "private_code_repository": "https://github.com/chocho2222/DNQ-DLC",
+  "repository_visibility": "private",
+  "default_branch": "main",
+  "initial_remote_content_commit": "52b50320ebc263fc2dd2143ec29f863a9f4f7639",
+  "continuous_integration": "passed",
+  "pages_status": "workflow_ready_skipped_while_private",
+  "release_candidate_version": "v0.1.0-rc.1",
+  "github_release_tag": "v0.1.0-rc.1",
+  "github_release_status": "private_draft_prerelease",
+  "github_release_url": "https://github.com/chocho2222/DNQ-DLC/releases/tag/untagged-fcb4509fcfcc44d43ea2",
   "commit_hash": null,
   "archival_doi": null,
   "local_video_count": 22,
@@ -19,10 +28,12 @@
     "exact_mcnemar_p": 0.0006173782640671298
   },
   "notes": [
-    "The static site and reproducibility additions are ready to deploy.",
-    "No public deployment has been performed.",
-    "Use a new author-owned repository rather than the simulator upstream remote.",
-    "Confirm third-party asset licences before publishing models, tracks, and media."
+    "The private author-owned GitHub repository exists and main is pushed.",
+    "The CI workflow passed on the initial remote commit.",
+    "A private v0.1.0-rc.1 draft prerelease exists with ZIP and SHA-256 assets.",
+    "The Pages workflow is ready and intentionally skipped while the repository is private.",
+    "Complete custom-track and rendered-media provenance review before public release.",
+    "No public deployment or archival DOI has been created."
   ],
   "dlc_checkpoint_sensitivity": {
     "evaluation_cases": 8,
