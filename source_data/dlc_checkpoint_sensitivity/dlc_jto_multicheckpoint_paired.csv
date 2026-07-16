@@ -1,0 +1,6 @@
+comparator,n_paired,dnq_success_rate,comparator_success_rate,paired_difference,paired_bootstrap_ci95_low,paired_bootstrap_ci95_high,dnq_only_success,comparator_only_success,mcnemar_exact_p
+rule_expert_gate,8,0.875,0.75,0.125,0.0,0.375,1,0,1.0
+dlc_jto_train_seed0,8,0.875,0.0,0.875,0.625,1.0,7,0,0.015625
+dlc_jto_train_seed1,8,0.875,0.0,0.875,0.625,1.0,7,0,0.015625
+dlc_jto_train_seed2,8,0.875,0.0,0.875,0.625,1.0,7,0,0.015625
+dlc_jto_train_seed3,8,0.875,0.0,0.875,0.625,1.0,7,0,0.015625

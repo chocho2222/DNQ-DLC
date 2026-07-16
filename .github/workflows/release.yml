@@ -1,0 +1,32 @@
+name: Publish tagged release
+
+"on":
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build source archive
+        run: |
+          git archive --format=zip \
+            --prefix="DNQ-DLC-${GITHUB_REF_NAME}/" \
+            --output="DNQ-DLC-${GITHUB_REF_NAME}.zip" HEAD
+          sha256sum "DNQ-DLC-${GITHUB_REF_NAME}.zip" \
+            > "DNQ-DLC-${GITHUB_REF_NAME}.zip.sha256"
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            "DNQ-DLC-${GITHUB_REF_NAME}.zip" \
+            "DNQ-DLC-${GITHUB_REF_NAME}.zip.sha256" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title "DNQ-DLC ${GITHUB_REF_NAME}" \
+            --notes-file RELEASE_NOTES.md

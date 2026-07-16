@@ -1,0 +1,105 @@
+{
+  "status": "pass",
+  "generated_at_utc": "2026-07-14T13:33:18.154739+00:00",
+  "selected_seed": 1,
+  "selection_rule": "Use --select-seed if specified; otherwise choose the complete candidate with the highest per-seed round-robin mean-score average for the requested stage. If no round-robin exists, choose a complete model set deterministically.",
+  "training_seed_count": 4,
+  "training_summaries": [
+    {
+      "seed": 0,
+      "episodes": 120,
+      "max_steps": 800,
+      "transitions_recorded": 96000,
+      "actor_updates_by_model": "80",
+      "behavior_policy": "track_follow",
+      "train_summary_path": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training/seed_0/models/train_summary.json",
+      "train_summary_sha256": "f07977ef47c4a8ccf7cf114d1b349e57d0b504af90eaded54f268f7c2f8cc9f3"
+    },
+    {
+      "seed": 1,
+      "episodes": 120,
+      "max_steps": 800,
+      "transitions_recorded": 96000,
+      "actor_updates_by_model": "80",
+      "behavior_policy": "track_follow",
+      "train_summary_path": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training/seed_1/models/train_summary.json",
+      "train_summary_sha256": "a8e5c64cc07c5932456ff513a34ebdda66c1d52985326420dae0032893d3d865"
+    },
+    {
+      "seed": 2,
+      "episodes": 120,
+      "max_steps": 800,
+      "transitions_recorded": 96000,
+      "actor_updates_by_model": "80",
+      "behavior_policy": "track_follow",
+      "train_summary_path": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training/seed_2/models/train_summary.json",
+      "train_summary_sha256": "d43b17c50c97b89af86aea05a8d52d55b9257a93a76ea64e4276f7e06a686bbe"
+    },
+    {
+      "seed": 3,
+      "episodes": 120,
+      "max_steps": 800,
+      "transitions_recorded": 96000,
+      "actor_updates_by_model": "80",
+      "behavior_policy": "track_follow",
+      "train_summary_path": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training/seed_3/models/train_summary.json",
+      "train_summary_sha256": "f4d6c4484e2b0f506b7d5c0e0c75d67de6d44ffe61e6376cbf18473711fbd49f"
+    }
+  ],
+  "selection_scores": [
+    {
+      "seed": 0,
+      "selection_score": -23.80580471404602,
+      "round_robin_path": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training/seed_0/round_robin_final.json",
+      "round_robin_sha256": "1b639eb9cfa4e04645788a6139f27cc6f11b3265357fddd9b64b26a314b8ca70"
+    },
+    {
+      "seed": 1,
+      "selection_score": -23.655729481907382,
+      "round_robin_path": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training/seed_1/round_robin_final.json",
+      "round_robin_sha256": "e04607a6c803a38bbd53d163c94d959f5d70dcbe61f6b219afbd9c5800c46c9b"
+    },
+    {
+      "seed": 2,
+      "selection_score": -23.75127779097366,
+      "round_robin_path": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training/seed_2/round_robin_final.json",
+      "round_robin_sha256": "f3714cc83fa2f872626ad112e675d74144c0ade680ac132b42c26142e160a282"
+    },
+    {
+      "seed": 3,
+      "selection_score": -35.432649550173494,
+      "round_robin_path": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training/seed_3/round_robin_final.json",
+      "round_robin_sha256": "c2912e2f6787b09a1fd1e61a926f57899c37ffeebd1561314b4197854db8fc03"
+    }
+  ],
+  "artifact_count": 59,
+  "benchmark_linkage": [
+    {
+      "path": "outputs/tits_dynamic_graph_expanded/e1_200_summary/online_benchmark_summary_manifest.json",
+      "size_bytes": 2103,
+      "sha256": "4a08e7675c736dfdef32efad51cdf51a3f85fcab7836d7e747bf00982241f9c2"
+    },
+    {
+      "path": "outputs/tits_dynamic_graph_expanded/e1_200_summary/tables/online_benchmark_nature_direct_statistics.csv",
+      "size_bytes": 7084,
+      "sha256": "6ab53dd74724c23c5cac4eae7267766680ad1122eac2a495dd8a218b1803e758"
+    },
+    {
+      "path": "outputs/tits_dynamic_graph_expanded/e1_200_summary/tables/retrained_dlc_table_source.csv",
+      "size_bytes": 2258,
+      "sha256": "6ca37c1ac19f498ee4cc7b055e30ef7faffc776dea67b1ffaef4f677925c624d"
+    },
+    {
+      "path": "outputs/tits_dynamic_graph_expanded/e1_200_summary/tables/retrained_dlc_table_data_dictionary.md",
+      "size_bytes": 1193,
+      "sha256": "674afa3c00fb28f5b950c4a53fcf3adc81464324123eedf7c3ec4d9c29ffa24f"
+    }
+  ],
+  "paths": {
+    "training_summary_csv": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/tables/paper_dlc_training_summary.csv",
+    "selection_scores_csv": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/tables/paper_dlc_selection_scores.csv",
+    "artifact_checksums_csv": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/tables/paper_dlc_artifact_checksums.csv"
+  },
+  "temporal_claim_boundary": "This regenerated release manifest proves current artifact identity and the documented selection rule. It does not independently prove the wall-clock order of the original freeze relative to the E1 online run.",
+  "license_boundary": "License status is author_confirmation_required for model/checkpoint artifacts until training-data, track, and third-party rights are confirmed."
+}

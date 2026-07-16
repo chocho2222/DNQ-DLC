@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: Author metadata will be inserted when the manuscript is frozen.
+title: DNQ-DLC Dynamic-Neighborhood Quality-Guided Deep Latent Competition
+type: software
+version: 0.1.0-release-candidate
+date-released: 2026-07-16
+authors:
+  - family-names: AUTHOR-TO-BE-INSERTED
+license: MIT

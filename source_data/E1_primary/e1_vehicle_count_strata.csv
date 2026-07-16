@@ -1,0 +1,7 @@
+vehicle_count_stratum,algorithm,algorithm_label,n,successes,success_rate,wilson_ci95_low,wilson_ci95_high,paired_difference_vs_rule_expert,paired_bootstrap_ci95_low_vs_rule_expert,paired_bootstrap_ci95_high_vs_rule_expert,mcnemar_exact_p_vs_rule_expert
+N=4-6 training range,v6_runtime_dynamic_neighborhood_safe,DNQ-DLC,120,104,0.8666666666666667,0.7943520342531573,0.9162339103731271,0.05,-0.03333333333333333,0.13333333333333333,0.32693958282470703
+N=4-6 training range,rule_expert_gate,Rule Expert,120,98,0.8166666666666667,0.7379908648282967,0.8756969964398578,,,,
+N=4-6 training range,dlc_joint_transition_observer,DLC-JTO,120,14,0.11666666666666667,0.0707811780783005,0.18633351617603885,,,,
+N=7-8 extrapolation,v6_runtime_dynamic_neighborhood_safe,DNQ-DLC,80,67,0.8375,0.7415709565930229,0.9025018059704963,0.275,0.1375,0.4125,0.0004719867429230362
+N=7-8 extrapolation,rule_expert_gate,Rule Expert,80,45,0.5625,0.4534113429694972,0.6658613908385618,,,,
+N=7-8 extrapolation,dlc_joint_transition_observer,DLC-JTO,80,4,0.05,0.019613554535544274,0.1216227620464301,,,,

@@ -1,0 +1,56 @@
+name: CI
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-and-statistics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+      - name: Install analysis dependencies
+        run: python -m pip install "numpy>=1.26,<2" "pandas>=2,<3"
+      - name: Compile Python sources
+        run: python -m compileall -q code
+      - name: Audit static-site links
+        run: |
+          python code/audit_static_site_links.py \
+            --site-root docs \
+            --output /tmp/public_site_link_audit.json
+      - name: Recompute primary endpoint
+        run: |
+          python code/export_e1_primary_endpoint_analysis.py \
+            --source source_data/E1_primary/online_benchmark_nature_direct_source_data.csv \
+            --output-dir /tmp/e1-primary
+      - name: Verify frozen primary result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/e1-primary/e1_primary_endpoint_report.json").read_text()
+          )
+          primary = report["comparisons"][0]
+          expected = {
+              "comparator": "rule_expert_gate",
+              "n_paired": 200,
+              "dnq_successes": 171,
+              "comparator_successes": 143,
+              "paired_difference": 0.14,
+          }
+          for key, value in expected.items():
+              assert primary[key] == value, (key, primary[key], value)
+          assert abs(primary["mcnemar_exact_p"] - 0.0006173782640671298) < 1e-15
+          PY

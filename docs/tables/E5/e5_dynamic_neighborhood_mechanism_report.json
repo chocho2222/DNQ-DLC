@@ -1,0 +1,13 @@
+{
+  "trace": "outputs/tits_dynamic_graph_expanded/video_evidence_raw/e3_scale_N10_seed20000_mp4/traces/v6_runtime_dynamic_neighborhood_safe_n10_seed20000.trace.json",
+  "summary": "outputs/tits_dynamic_graph_expanded/video_evidence_raw/e3_scale_N10_seed20000_mp4/summaries/v6_runtime_dynamic_neighborhood_safe_n10_seed20000.summary.json",
+  "target_agent": 9,
+  "steps": 600,
+  "unique_neighbor_sets": 70,
+  "neighbor_switch_count": 116,
+  "clean_overtake_count": 3,
+  "target_grass_rate": 0.0,
+  "elegant_overtake_count": 3,
+  "source_csv": "outputs/tits_dynamic_graph_expanded/video_evidence_raw/e5_mechanism_from_clean_e3_n10/tables/e5_dynamic_neighborhood_mechanism_source_data.csv",
+  "figure_pdf": "outputs/tits_dynamic_graph_expanded/video_evidence_raw/e5_mechanism_from_clean_e3_n10/figures/figure_e5_dynamic_neighborhood_mechanism.pdf"
+}

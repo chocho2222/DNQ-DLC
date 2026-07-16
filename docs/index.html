@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DNQ-DLC Video Evidence Pack</title>
+  <style>
+    body { margin:0; font-family: Arial, Helvetica, sans-serif; background:#eef3f7; color:#172033; }
+    header { padding:34px 46px 24px; background:#10233f; color:white; }
+    header h1 { margin:0 0 8px; font-size:30px; }
+    header p { max-width:1120px; line-height:1.55; color:#d7e3f2; }
+    main { padding:26px 34px 48px; }
+    .band { display:grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap:22px; margin-bottom:36px; }
+    .band > h2 { grid-column:1/-1; font-size:23px; margin:4px 0 -4px; }
+    .card { background:white; border:1px solid #dbe3ee; border-radius:8px; padding:18px; box-shadow:0 8px 24px rgba(16,35,63,.08); }
+    .card.supplementary { border-color:#ead6a7; }
+    .card.rejected-screening { border-color:#e8b4b4; }
+    .tag { display:inline-block; padding:4px 9px; border-radius:999px; background:#e7eef8; color:#235a9f; font-weight:700; font-size:12px; }
+    h3 { font-size:19px; margin:12px 0 8px; }
+    p { line-height:1.52; }
+    .meta { color:#46566f; font-size:13px; margin:5px 0; }
+    .metrics { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background:#f3f6fa; padding:8px 10px; border-radius:6px; }
+    video { width:100%; max-height:540px; background:#05080d; border:1px solid #d5dde8; border-radius:6px; }
+    .video-block { margin:12px 0; }
+    .video-label { font-weight:700; font-size:13px; margin-bottom:5px; color:#25344a; }
+    .link, .button { display:inline-block; margin:8px 8px 0 0; padding:7px 10px; text-decoration:none; border-radius:6px; background:#eef3fa; color:#17365f; font-weight:700; font-size:13px; }
+    .button { background:#235a9f; color:white; }
+    .reject { color:#8b2d2d; }
+    footer { padding:0 46px 36px; color:#526070; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DNQ-DLC Video Evidence Pack v1</h1>
+    <p><strong>Evidence boundary:</strong> every video on this page is a selected, illustrative fixed-case diagnostic. Videos do not estimate success rates, prove generalization, or validate a component. Confirmatory conclusions come from all prespecified randomized cases, including failures.</p>
+    <p><a class="button" href="tables/primary_endpoint/e1_primary_paired_success.csv">Open matched success analysis</a><a class="button" href="tables/dlc_checkpoint_sensitivity/dlc_jto_multicheckpoint_summary.csv">Open DLC checkpoint sensitivity</a><a class="button" href="assets/analysis_figures/revision/figure_e1_core_evidence.pdf">Open primary result figure</a><a class="button" href="tables/randomized_attribution_report.json">Open 288-run randomized report</a><a class="button" href="tables/video_evidence_audit.csv">Open video audit CSV</a><a class="button" href="release_status.json">Open release status</a><a class="button" href="revision_manifest.json">Open revised figure bundle</a><a class="button" href="tables/rejected_e6_video_screening.csv">Open rejected screening CSV</a></p>
+  </header>
+  <main><section class="band" data-section="Illustrative selected videos"><h2>Illustrative selected videos</h2>
+        <article class="card main">
+          <div class="tag">E2 · main</div>
+          <h3>Environmental generalization: Monza-like topology</h3>
+          <p class="meta"><b>Placement:</b> Illustrative fixed-case diagnostic</p>
+          <p class="meta"><b>Observation:</b> DNQ-DLC completes multiple clean overtakes in this selected Monza-like case; this single case does not establish track generalization.</p>
+          <p class="metrics">success=True; elegant=5; off-track=0.041; rank gain=5</p>
+          <div class="video-block"><div class="video-label">DNQ-DLC first-person MP4</div><video controls muted loop preload="metadata" src="assets/videos/E2/E2_v6_runtime_dynamic_neighborhood_safe.first_person.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Top-down MP4</div><video controls muted loop preload="metadata" src="assets/videos/E2/E2_v6_runtime_dynamic_neighborhood_safe.topdown.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Comparison video 1</div><video controls muted loop preload="metadata" src="assets/videos/E2/E2_rule_expert_gate.first_person.mp4"></video></div><div class="video-block"><div class="video-label">Comparison video 2</div><video controls muted loop preload="metadata" src="assets/videos/E2/E2_dlc_joint_transition_observer.first_person.mp4"></video></div>
+          <div class="links"><a class="link" href="tables/E2/online_metrics_n6_seed12006.csv">metrics CSV</a><a class="link" href="tables/E2/v6_runtime_dynamic_neighborhood_safe_n6_seed12006.summary.json">summary JSON</a><a class="link" href="assets/analysis_figures/E2/figure_tits_dynamic_graph_online_overtake_summary.pdf">analysis figure</a></div>
+          
+        </article>
+        
+
+        <article class="card main">
+          <div class="tag">E3 · main</div>
+          <h3>Zero-shot scale extrapolation: ten vehicles</h3>
+          <p class="meta"><b>Placement:</b> Illustrative fixed-case diagnostic</p>
+          <p class="meta"><b>Observation:</b> DNQ-DLC completes clean overtakes in this selected 10-vehicle case; this video does not establish arbitrary scale robustness.</p>
+          <p class="metrics">success=True; elegant=3; off-track=0.000; rank gain=9</p>
+          <div class="video-block"><div class="video-label">DNQ-DLC first-person MP4</div><video controls muted loop preload="metadata" src="assets/videos/E3/E3_v6_runtime_dynamic_neighborhood_safe.first_person.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Top-down MP4</div><video controls muted loop preload="metadata" src="assets/videos/E3/E3_v6_runtime_dynamic_neighborhood_safe.topdown.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Comparison video 1</div><video controls muted loop preload="metadata" src="assets/videos/E3/E3_rule_expert_gate.first_person.mp4"></video></div><div class="video-block"><div class="video-label">Comparison video 2</div><video controls muted loop preload="metadata" src="assets/videos/E3/E3_dlc_joint_transition.first_person.mp4"></video></div>
+          <div class="links"><a class="link" href="tables/E3/online_metrics_n10_seed20000.csv">metrics CSV</a><a class="link" href="tables/E3/v6_runtime_dynamic_neighborhood_safe_n10_seed20000.summary.json">summary JSON</a><a class="link" href="assets/analysis_figures/E3/figure_tits_dynamic_graph_online_overtake_summary.pdf">analysis figure</a></div>
+          
+        </article>
+        
+
+        <article class="card main">
+          <div class="tag">E4 · main</div>
+          <h3>Four-controller same-track race without background vehicles</h3>
+          <p class="meta"><b>Placement:</b> Illustrative shared-scene diagnostic</p>
+          <p class="meta"><b>Observation:</b> DNQ-DLC reaches first place in this selected trace; unequal training budgets and case selection preclude population-level comparison.</p>
+          <p class="metrics">success=True; elegant=2; off-track=0.060; rank gain=3</p>
+          <div class="video-block"><div class="video-label">DNQ-DLC first-person MP4</div><video controls muted loop preload="metadata" src="assets/videos/E4/E4_DNQ_DLC.first_person.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Top-down MP4</div><video controls muted loop preload="metadata" src="assets/videos/E4/E4_four_controller.topdown.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Comparison video 1</div><video controls muted loop preload="metadata" src="assets/videos/E4/E4_agent0_rule_expert_gate.first_person.mp4"></video></div><div class="video-block"><div class="video-label">Comparison video 2</div><video controls muted loop preload="metadata" src="assets/videos/E4/E4_agent1_td3_continuous.first_person.mp4"></video></div><div class="video-block"><div class="video-label">Comparison video 3</div><video controls muted loop preload="metadata" src="assets/videos/E4/E4_agent2_dlc_joint_transition_observer.first_person.mp4"></video></div><div class="video-block"><div class="video-label">Comparison video 4</div><video controls muted loop preload="metadata" src="assets/videos/E4/E4_agent3_v6_runtime_dynamic_neighborhood_safe.first_person.mp4"></video></div>
+          <div class="links"><a class="link" href="tables/E4/mixed_metrics_n4_seed181.csv">metrics CSV</a><a class="link" href="tables/E4/mixed_n4_seed181_target3.summary.json">summary JSON</a><a class="link" href="assets/analysis_figures/E4/figure_tits_dynamic_graph_online_overtake_summary.pdf">analysis figure</a></div>
+          
+        </article>
+        
+
+        <article class="card main">
+          <div class="tag">E5 · main</div>
+          <h3>Mechanism evidence: dynamic-neighborhood repacking in a clean 10-vehicle overtake</h3>
+          <p class="meta"><b>Placement:</b> Illustrative mechanism trace</p>
+          <p class="meta"><b>Observation:</b> The trace shows that online repacking is active (116 switches, 70 interaction sets); it does not prove a downstream performance gain.</p>
+          <p class="metrics">success=True; elegant=3; off-track=0.000; rank gain=9</p>
+          <div class="video-block"><div class="video-label">DNQ-DLC first-person MP4</div><video controls muted loop preload="metadata" src="assets/videos/E5/E5_dynamic_neighborhood_clean_N10.first_person.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Top-down MP4</div><video controls muted loop preload="metadata" src="assets/videos/E5/E5_dynamic_neighborhood_clean_N10.topdown.mp4"></video></div>
+          
+          <div class="links"><a class="link" href="tables/E5/e5_dynamic_neighborhood_mechanism_source_data.csv">metrics CSV</a><a class="link" href="tables/E5/v6_runtime_dynamic_neighborhood_safe_n10_seed20000.summary.json">summary JSON</a><a class="link" href="assets/analysis_figures/E5/figure_e5_dynamic_neighborhood_mechanism.pdf">analysis figure</a><a class="link" href="tables/E5/e5_dynamic_neighborhood_mechanism_report.json">e5_dynamic_neighborhood_mechanism_report.json</a></div>
+          
+        </article>
+        
+
+        <article class="card main">
+          <div class="tag">E6 · main</div>
+          <h3>High-pressure ablation video: full DNQ-DLC versus module removals</h3>
+          <p class="meta"><b>Placement:</b> Legacy illustrative stress case</p>
+          <p class="meta"><b>Observation:</b> This selected case is retained for auditability only. Component conclusions are taken from the linked 288-run randomized report, which includes null and adverse ablation findings.</p>
+          <p class="metrics">success=True; elegant=5; off-track=0.035; rank gain=5</p>
+          <div class="video-block"><div class="video-label">DNQ-DLC first-person MP4</div><video controls muted loop preload="metadata" src="assets/videos/E6/E6_ours_full_v6_safe.first_person.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Top-down MP4</div><video controls muted loop preload="metadata" src="assets/videos/E6/E6_ours_full_v6_safe.topdown.mp4"></video></div>
+          <div class="video-block"><div class="video-label">Comparison video 1</div><video controls muted loop preload="metadata" src="assets/videos/E6/E6_low_budget_planner.first_person.mp4"></video></div><div class="video-block"><div class="video-label">Comparison video 2</div><video controls muted loop preload="metadata" src="assets/videos/E6/E6_w_o_dynamic_neighborhood.first_person.mp4"></video></div><div class="video-block"><div class="video-label">Comparison video 3</div><video controls muted loop preload="metadata" src="assets/videos/E6/E6_w_o_quality_proposal.first_person.mp4"></video></div><div class="video-block"><div class="video-label">Comparison video 4</div><video controls muted loop preload="metadata" src="assets/videos/E6/E6_w_o_safety_quality_terms.first_person.mp4"></video></div>
+          <div class="links"><a class="link" href="tables/E6/online_metrics_n6_seed35000.csv">metrics CSV</a><a class="link" href="tables/E6/ours_full_v6_safe_n6_seed35000.summary.json">summary JSON</a><a class="link" href="assets/analysis_figures/E6/figure_tits_dynamic_graph_online_overtake_summary.pdf">analysis figure</a></div>
+          
+        </article>
+        </section></main>
+  <footer>Generated from local experiment artifacts. All videos are illustrative; none is used as confirmatory statistical evidence.</footer>
+</body>
+</html>

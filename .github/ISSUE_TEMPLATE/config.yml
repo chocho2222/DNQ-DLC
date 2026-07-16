@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/chocho2222/DNQ-DLC/security/advisories/new
+    about: Read SECURITY.md and report sensitive vulnerabilities privately.

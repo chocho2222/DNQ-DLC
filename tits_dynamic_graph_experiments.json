@@ -1,0 +1,421 @@
+{
+  "study": "dynamic_graph_dlc_world_tits",
+  "python": "/home/itrc/.conda/envs/vlm_planner/bin/python",
+  "track": {
+    "default": "procedural",
+    "monza_npz": "tracks/monza_scaled.npz"
+  },
+  "hardware": {
+    "preferred_device": "cuda:0",
+    "available_gpu_count_expected": 4
+  },
+  "dynamic_graph": {
+    "observation_type": "telemetry_dynamic",
+    "max_neighbors": null,
+    "neighbor_selection_mode": "legacy",
+    "slot_feature_dim": 7,
+    "use_slot_mask": true,
+    "train_agent_range": [
+      4,
+      6
+    ],
+    "test_agent_counts": [
+      4,
+      5,
+      6,
+      8
+    ],
+    "neighbor_modes": [
+      "dynamic",
+      "fixed"
+    ],
+    "neighbor_keep_prob": 0.85,
+    "neighbor_selection_note": "None means all available surrounding vehicles are included in runtime dynamic graph construction."
+  },
+  "algorithms": [
+    {
+      "name": "v6_runtime_dynamic_neighborhood",
+      "kind": "runtime_dynamic_neighborhood_graph_dlc_world",
+      "label_cn": "v6动态邻域DLC",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.25,
+      "quality_overtake_weight": 0.2,
+      "quality_lane_weight": 0.25,
+      "quality_grass_weight": 0.65,
+      "quality_close_gap_weight": 0.2,
+      "description": "No-retraining runtime dynamic-neighborhood variant. It keeps the trained DLC world model fixed but rebuilds the local graph at every decision step using interaction-priority neighbor selection. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "v6_runtime_dynamic_neighborhood_fast",
+      "kind": "runtime_dynamic_neighborhood_graph_dlc_world_fast",
+      "label_cn": "v6动态邻域DLC-fast",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": null,
+      "planner_horizon": 3,
+      "planner_candidates": 10,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.2,
+      "quality_overtake_weight": 0.18,
+      "quality_lane_weight": 0.22,
+      "quality_grass_weight": 0.6,
+      "quality_close_gap_weight": 0.18,
+      "description": "Latency-oriented v6 variant using the same world model and runtime dynamic-neighborhood construction but a smaller MPC budget. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "v6_runtime_dynamic_neighborhood_safe",
+      "kind": "runtime_dynamic_neighborhood_graph_dlc_world_safe",
+      "label_cn": "v6动态邻域DLC-safe",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": null,
+      "planner_horizon": 4,
+      "planner_candidates": 12,
+      "planner_risk_weight": 1.65,
+      "planner_uncertainty_weight": 0.4,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.25,
+      "quality_overtake_weight": 0.18,
+      "quality_lane_weight": 0.35,
+      "quality_grass_weight": 0.9,
+      "quality_close_gap_weight": 0.25,
+      "description": "Safety-oriented v6 variant with a moderate planning budget and stronger risk, lane and grass penalties. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality. It additionally enables a track-geometry generalization shield that adapts target speed, candidate actions and soft barriers from the local track curvature at runtime without retraining the world model.",
+      "geometry_generalization": true,
+      "geometry_curvature_lookahead": 10,
+      "geometry_curvature_speed_weight": 20.0,
+      "geometry_lateral_speed_weight": 5.0,
+      "geometry_heading_speed_weight": 5.5,
+      "geometry_min_speed": 9.5,
+      "geometry_anchor_blend": 0.38,
+      "geometry_barrier_weight": 0.75
+    },
+    {
+      "name": "v7_elegance_barrier_dlc_world",
+      "kind": "diagnostic_driven_elegance_barrier_graph_dlc_world",
+      "label_cn": "v7desirable behavior约束DLC",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": null,
+      "planner_horizon": 4,
+      "planner_candidates": 14,
+      "planner_risk_weight": 1.75,
+      "planner_uncertainty_weight": 0.42,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.24,
+      "quality_overtake_weight": 0.16,
+      "quality_lane_weight": 0.38,
+      "quality_grass_weight": 1.05,
+      "quality_close_gap_weight": 0.32,
+      "elegance_barrier": true,
+      "elegance_barrier_weight": 1.15,
+      "elegance_lateral_limit": 0.3,
+      "elegance_heading_cos_min": 0.82,
+      "elegance_grass_penalty": 2.25,
+      "elegance_backward_penalty": 1.25,
+      "elegance_close_gap_limit": 8.0,
+      "description": "Diagnostic-driven v7 candidate that keeps the DLC world model fixed but adds an explicit soft barrier against grass exposure, large lateral deviation, poor heading and close-gap overtaking during imagined candidate scoring. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "ours_dynamic_graph_dlc_world",
+      "kind": "graph_risk_world_model",
+      "label_cn": "本文方法",
+      "train_script": "scripts/train_graph_risk_world_model.py",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "description": "Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "ours_no_overtake_aware_planner",
+      "kind": "ablation_without_overtake_aware_planner",
+      "label_cn": "本文-无超车规划",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": false,
+      "description": "Ablates the overtake-aware candidate generator and scoring terms while retaining the same dynamic graph world model. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_proposal_dlc_world_v1",
+      "kind": "quality_proposal_graph_dlc_world",
+      "label_cn": "质量Proposal-DLC",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "description": "Dynamic graph DLC world model augmented with a quality-filtered graph BC proposal actor as an additional candidate source. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_proposal_dlc_world_v2",
+      "kind": "quality_proposal_graph_dlc_world",
+      "label_cn": "质量Proposal-DLC-v2",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v2/graph_bc.graph.pt",
+      "description": "Dynamic graph DLC world model augmented with a v2 quality proposal actor trained from desirable overtaking behavior, stable cruising and grass-recovery windows. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_guided_dlc_world_v3",
+      "kind": "quality_guided_graph_dlc_world",
+      "label_cn": "质量引导DLC-v3",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v2/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.65,
+      "quality_overtake_weight": 0.35,
+      "quality_lane_weight": 0.35,
+      "quality_grass_weight": 1.15,
+      "quality_close_gap_weight": 0.25,
+      "description": "Quality-guided dynamic graph DLC world model that rolls out a blend of the learned world-model proposal and the v2 quality actor, while adding explicit lane/grass/overtake quality terms to the planner score. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_aux_dlc_world_v4",
+      "kind": "quality_auxiliary_graph_dlc_world",
+      "label_cn": "质量辅助DLC-v4",
+      "train_script": "scripts/train_graph_risk_world_model.py",
+      "model_path": "outputs/tits_dynamic_graph/models/quality_aux_dlc_world_v4/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v2/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.45,
+      "quality_overtake_weight": 0.25,
+      "quality_lane_weight": 0.25,
+      "quality_grass_weight": 0.8,
+      "quality_close_gap_weight": 0.2,
+      "learned_quality_weight": 1.0,
+      "description": "Dynamic graph DLC world model trained with auxiliary quality heads for on-track probability, grass probability, lane quality and forward clearance; the planner uses these predictions in addition to model reward/risk. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_aux_dlc_world_v5_soft025",
+      "kind": "quality_auxiliary_graph_dlc_world_sweep",
+      "label_cn": "质量辅助DLC-v5-soft025",
+      "model_path": "outputs/tits_dynamic_graph/models/quality_aux_dlc_world_v4/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.25,
+      "quality_overtake_weight": 0.15,
+      "quality_lane_weight": 0.2,
+      "quality_grass_weight": 0.45,
+      "quality_close_gap_weight": 0.15,
+      "learned_quality_weight": 0.25,
+      "description": "v5 Pareto sweep candidate: v4 auxiliary world model with stable v1 proposal and low learned-quality weight. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_aux_dlc_world_v5_soft050",
+      "kind": "quality_auxiliary_graph_dlc_world_sweep",
+      "label_cn": "质量辅助DLC-v5-soft050",
+      "model_path": "outputs/tits_dynamic_graph/models/quality_aux_dlc_world_v4/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.3,
+      "quality_overtake_weight": 0.2,
+      "quality_lane_weight": 0.25,
+      "quality_grass_weight": 0.6,
+      "quality_close_gap_weight": 0.2,
+      "learned_quality_weight": 0.5,
+      "description": "v5 Pareto sweep candidate: v4 auxiliary world model with moderate learned-quality weight. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_aux_dlc_world_v5_gate025",
+      "kind": "quality_auxiliary_graph_dlc_world_sweep",
+      "label_cn": "质量辅助DLC-v5-gate025",
+      "model_path": "outputs/tits_dynamic_graph/models/quality_aux_dlc_world_v4/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.25,
+      "quality_overtake_weight": 0.15,
+      "quality_lane_weight": 0.2,
+      "quality_grass_weight": 0.45,
+      "quality_close_gap_weight": 0.15,
+      "learned_quality_weight": 0.25,
+      "learned_quality_gate": true,
+      "learned_quality_min_on_track": 0.45,
+      "learned_quality_max_grass": 0.55,
+      "learned_quality_max_lane_error": 0.72,
+      "learned_quality_gate_penalty": 1.5,
+      "description": "v5 Pareto sweep candidate: low learned-quality weight plus soft gate penalty for predicted off-track or grass-prone candidates. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "graph_bc_dynamic",
+      "kind": "graph_actor_bc",
+      "label_cn": "图BC",
+      "train_script": "scripts/train_graph_bc.py",
+      "model_path": "outputs/tits_dynamic_graph/models/graph_bc_dynamic/graph_bc.graph.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "description": "Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_graph_bc_v1",
+      "kind": "quality_filtered_graph_actor_bc",
+      "label_cn": "质量图BC-v1",
+      "train_script": "scripts/train_graph_bc.py",
+      "model_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "description": "Graph behavior cloning policy trained from filtered on-track/desirable overtaking windows. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "quality_graph_bc_v2",
+      "kind": "quality_filtered_graph_actor_bc",
+      "label_cn": "质量图BC-v2",
+      "train_script": "scripts/train_graph_bc.py",
+      "model_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v2/graph_bc.graph.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "description": "Graph behavior cloning policy trained from v2 quality data that mixes desirable overtaking behavior, stable cruising and recovery windows. Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "dlc_world_original",
+      "kind": "dlc_world_model_baseline",
+      "label_cn": "DLC世界模型",
+      "model_path": "outputs/paper_multicar_overtake_20260618/models/graph_risk_world_model/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": false,
+      "description": "Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "dlc_world_balanced",
+      "kind": "dlc_world_model_variant",
+      "label_cn": "DLC-balanced",
+      "model_path": "outputs/paper_multicar_overtake_20260618/models/graph_risk_world_model_variants/graph_risk_dlc_world_balanced.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": false,
+      "description": "Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "dlc_world_safety",
+      "kind": "dlc_world_model_variant",
+      "label_cn": "DLC-safety",
+      "model_path": "outputs/paper_multicar_overtake_20260618/models/graph_risk_world_model_variants/graph_risk_dlc_world_safety.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": false,
+      "description": "Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "dlc_world_fast",
+      "kind": "dlc_world_model_variant",
+      "label_cn": "DLC-fast",
+      "model_path": "outputs/paper_multicar_overtake_20260618/models/graph_risk_world_model_variants/graph_risk_dlc_world_fast.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "max_neighbors": null,
+      "overtake_aware_planner": false,
+      "description": "Runtime dynamic graph construction is unbounded: all currently available surrounding vehicles are included, with slot masks for variable cardinality."
+    },
+    {
+      "name": "rule_adaptive_gate",
+      "kind": "rule_baseline",
+      "label_cn": "规则自适应",
+      "policy": "telemetry_adaptive"
+    },
+    {
+      "name": "rule_expert_gate",
+      "kind": "rule_baseline",
+      "label_cn": "规则专家",
+      "policy": "telemetry_expert_gate"
+    }
+  ],
+  "metrics": [
+    "lap_completion_rate",
+    "overtake_success_rate",
+    "overtake_start_to_complete_time",
+    "rank_gain",
+    "grass_rate",
+    "collision_or_contact_proxy",
+    "lateral_error_mean",
+    "heading_error_mean",
+    "time_to_first_overtake",
+    "finish_step",
+    "compute_latency_ms"
+  ],
+  "benchmark_matrix": [
+    {
+      "name": "in_distribution_procedural",
+      "track": "procedural",
+      "agent_counts": [
+        4,
+        5,
+        6
+      ],
+      "seeds": [
+        3,
+        7,
+        11,
+        17,
+        23
+      ]
+    },
+    {
+      "name": "vehicle_count_extrapolation",
+      "track": "procedural",
+      "agent_counts": [
+        8
+      ],
+      "seeds": [
+        31,
+        37,
+        41,
+        43,
+        47
+      ]
+    },
+    {
+      "name": "monza_external_track",
+      "track": "tracks/monza_scaled.npz",
+      "agent_counts": [
+        4,
+        6
+      ],
+      "seeds": [
+        53,
+        59,
+        61,
+        67,
+        71
+      ]
+    }
+  ],
+  "reporting": {
+    "output_dir": "outputs/tits_dynamic_graph",
+    "figures_dir": "outputs/tits_dynamic_graph/figures",
+    "tables_dir": "outputs/tits_dynamic_graph/tables",
+    "gifs_dir": "outputs/tits_dynamic_graph/gifs",
+    "logs_dir": "outputs/tits_dynamic_graph/logs"
+  }
+}

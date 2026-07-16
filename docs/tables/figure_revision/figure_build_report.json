@@ -1,0 +1,36 @@
+{
+  "status": "pass",
+  "backend": "Python/matplotlib/Pillow only",
+  "outputs": {
+    "method": {
+      "svg": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_method_dnq_dlc_runtime_graph.svg",
+      "pdf": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_method_dnq_dlc_runtime_graph.pdf",
+      "png": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_method_dnq_dlc_runtime_graph.png",
+      "tiff": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_method_dnq_dlc_runtime_graph.tiff"
+    },
+    "core_results": {
+      "svg": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_e1_core_evidence.svg",
+      "pdf": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_e1_core_evidence.pdf",
+      "png": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_e1_core_evidence.png",
+      "tiff": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_e1_core_evidence.tiff"
+    },
+    "mechanism_attribution": {
+      "svg": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_e5_mechanism_attribution.svg",
+      "pdf": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_e5_mechanism_attribution.pdf",
+      "png": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_e5_mechanism_attribution.png",
+      "tiff": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_e5_mechanism_attribution.tiff"
+    },
+    "supplementary_sequence": {
+      "svg": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_s1_same_track_simulation_sequence.svg",
+      "pdf": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_s1_same_track_simulation_sequence.pdf",
+      "png": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_s1_same_track_simulation_sequence.png",
+      "tiff": "outputs/tits_dynamic_graph_expanded/tits_submission_figure_revision_20260716/figures/figure_s1_same_track_simulation_sequence.tiff"
+    }
+  },
+  "figure_contract": {
+    "method": "Runtime graph rebuilding plus bounded tensorization and quality-guided latent planning.",
+    "core_results": "Matched 200-case comparisons support a complete-framework success advantage while exposing the survivor-conditioned grass trade-off.",
+    "mechanism_attribution": "Runtime repacking is active, quality terms have supported effects, and selector superiority remains unproven.",
+    "supplementary_sequence": "Selected simulator frames illustrate the same-track race without serving as population evidence."
+  }
+}

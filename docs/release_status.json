@@ -1,0 +1,40 @@
+{
+  "status": "local_static_release_candidate_ready",
+  "checked_date": "2026-07-16",
+  "public_video_url": null,
+  "public_code_repository": null,
+  "github_release_tag": null,
+  "commit_hash": null,
+  "archival_doi": null,
+  "local_video_count": 22,
+  "primary_endpoint": {
+    "matched_cases": 200,
+    "dnq_success_rate": 0.855,
+    "rule_expert_success_rate": 0.715,
+    "paired_difference": 0.14,
+    "paired_ci95": [
+      0.065,
+      0.215
+    ],
+    "exact_mcnemar_p": 0.0006173782640671298
+  },
+  "notes": [
+    "The static site and reproducibility additions are ready to deploy.",
+    "No public deployment has been performed.",
+    "Use a new author-owned repository rather than the simulator upstream remote.",
+    "Confirm third-party asset licences before publishing models, tracks, and media."
+  ],
+  "dlc_checkpoint_sensitivity": {
+    "evaluation_cases": 8,
+    "training_checkpoints": 4,
+    "successes_per_checkpoint": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "dnq_successes": 7,
+    "rule_expert_successes": 6,
+    "holm_p_across_four": 0.0625
+  }
+}

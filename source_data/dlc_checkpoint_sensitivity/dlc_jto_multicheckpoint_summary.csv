@@ -1,0 +1,7 @@
+algorithm,training_seed,n_cases,successes,success_rate,wilson_ci95_low,wilson_ci95_high,mean_desirable_rate,mean_target_grass_rate,mean_rank_gain,mean_completion_time_successes,successful_completion_count
+v6_runtime_dynamic_neighborhood_safe,,8,7,0.875,0.5291118177871464,0.9775825085499433,0.175,0.5359518397599459,0.75,279.2857142857143,7
+rule_expert_gate,,8,6,0.75,0.40927543031016883,0.9285207872478909,0.4375,0.56645642593503,1.5,35.333333333333336,6
+dlc_jto_train_seed0,0.0,8,0,0.0,0.0,0.32440756488388023,0.0,0.5290137678384781,0.0,,0
+dlc_jto_train_seed1,1.0,8,0,0.0,0.0,0.32440756488388023,0.0,0.528325691819191,0.0,,0
+dlc_jto_train_seed2,2.0,8,0,0.0,0.0,0.32440756488388023,0.0,0.7910550460219383,0.0,,0
+dlc_jto_train_seed3,3.0,8,0,0.0,0.0,0.32440756488388023,0.0,0.3946674317121506,0.0,,0

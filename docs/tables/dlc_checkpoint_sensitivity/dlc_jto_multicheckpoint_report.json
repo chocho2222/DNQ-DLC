@@ -1,0 +1,174 @@
+{
+  "status": "pass",
+  "evaluation_case_count": 8,
+  "evaluation_seeds": [
+    9801,
+    9802,
+    9803,
+    9804,
+    9805,
+    9806,
+    9807,
+    9808
+  ],
+  "jto_training_seeds": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "jto_success_rate_mean_across_checkpoints": 0.0,
+  "jto_success_rate_range_across_checkpoints": [
+    0.0,
+    0.0
+  ],
+  "summary": [
+    {
+      "algorithm": "v6_runtime_dynamic_neighborhood_safe",
+      "training_seed": null,
+      "n_cases": 8,
+      "successes": 7,
+      "success_rate": 0.875,
+      "wilson_ci95_low": 0.5291118177871464,
+      "wilson_ci95_high": 0.9775825085499433,
+      "mean_desirable_rate": 0.175,
+      "mean_target_grass_rate": 0.5359518397599459,
+      "mean_rank_gain": 0.75,
+      "mean_completion_time_successes": 279.2857142857143,
+      "successful_completion_count": 7
+    },
+    {
+      "algorithm": "rule_expert_gate",
+      "training_seed": null,
+      "n_cases": 8,
+      "successes": 6,
+      "success_rate": 0.75,
+      "wilson_ci95_low": 0.40927543031016883,
+      "wilson_ci95_high": 0.9285207872478909,
+      "mean_desirable_rate": 0.4375,
+      "mean_target_grass_rate": 0.56645642593503,
+      "mean_rank_gain": 1.5,
+      "mean_completion_time_successes": 35.333333333333336,
+      "successful_completion_count": 6
+    },
+    {
+      "algorithm": "dlc_jto_train_seed0",
+      "training_seed": 0.0,
+      "n_cases": 8,
+      "successes": 0,
+      "success_rate": 0.0,
+      "wilson_ci95_low": 0.0,
+      "wilson_ci95_high": 0.32440756488388023,
+      "mean_desirable_rate": 0.0,
+      "mean_target_grass_rate": 0.5290137678384781,
+      "mean_rank_gain": 0.0,
+      "mean_completion_time_successes": null,
+      "successful_completion_count": 0
+    },
+    {
+      "algorithm": "dlc_jto_train_seed1",
+      "training_seed": 1.0,
+      "n_cases": 8,
+      "successes": 0,
+      "success_rate": 0.0,
+      "wilson_ci95_low": 0.0,
+      "wilson_ci95_high": 0.32440756488388023,
+      "mean_desirable_rate": 0.0,
+      "mean_target_grass_rate": 0.528325691819191,
+      "mean_rank_gain": 0.0,
+      "mean_completion_time_successes": null,
+      "successful_completion_count": 0
+    },
+    {
+      "algorithm": "dlc_jto_train_seed2",
+      "training_seed": 2.0,
+      "n_cases": 8,
+      "successes": 0,
+      "success_rate": 0.0,
+      "wilson_ci95_low": 0.0,
+      "wilson_ci95_high": 0.32440756488388023,
+      "mean_desirable_rate": 0.0,
+      "mean_target_grass_rate": 0.7910550460219383,
+      "mean_rank_gain": 0.0,
+      "mean_completion_time_successes": null,
+      "successful_completion_count": 0
+    },
+    {
+      "algorithm": "dlc_jto_train_seed3",
+      "training_seed": 3.0,
+      "n_cases": 8,
+      "successes": 0,
+      "success_rate": 0.0,
+      "wilson_ci95_low": 0.0,
+      "wilson_ci95_high": 0.32440756488388023,
+      "mean_desirable_rate": 0.0,
+      "mean_target_grass_rate": 0.3946674317121506,
+      "mean_rank_gain": 0.0,
+      "mean_completion_time_successes": null,
+      "successful_completion_count": 0
+    }
+  ],
+  "paired_comparisons": [
+    {
+      "comparator": "rule_expert_gate",
+      "n_paired": 8,
+      "dnq_success_rate": 0.875,
+      "comparator_success_rate": 0.75,
+      "paired_difference": 0.125,
+      "paired_bootstrap_ci95_low": 0.0,
+      "paired_bootstrap_ci95_high": 0.375,
+      "dnq_only_success": 1,
+      "comparator_only_success": 0,
+      "mcnemar_exact_p": 1.0
+    },
+    {
+      "comparator": "dlc_jto_train_seed0",
+      "n_paired": 8,
+      "dnq_success_rate": 0.875,
+      "comparator_success_rate": 0.0,
+      "paired_difference": 0.875,
+      "paired_bootstrap_ci95_low": 0.625,
+      "paired_bootstrap_ci95_high": 1.0,
+      "dnq_only_success": 7,
+      "comparator_only_success": 0,
+      "mcnemar_exact_p": 0.015625
+    },
+    {
+      "comparator": "dlc_jto_train_seed1",
+      "n_paired": 8,
+      "dnq_success_rate": 0.875,
+      "comparator_success_rate": 0.0,
+      "paired_difference": 0.875,
+      "paired_bootstrap_ci95_low": 0.625,
+      "paired_bootstrap_ci95_high": 1.0,
+      "dnq_only_success": 7,
+      "comparator_only_success": 0,
+      "mcnemar_exact_p": 0.015625
+    },
+    {
+      "comparator": "dlc_jto_train_seed2",
+      "n_paired": 8,
+      "dnq_success_rate": 0.875,
+      "comparator_success_rate": 0.0,
+      "paired_difference": 0.875,
+      "paired_bootstrap_ci95_low": 0.625,
+      "paired_bootstrap_ci95_high": 1.0,
+      "dnq_only_success": 7,
+      "comparator_only_success": 0,
+      "mcnemar_exact_p": 0.015625
+    },
+    {
+      "comparator": "dlc_jto_train_seed3",
+      "n_paired": 8,
+      "dnq_success_rate": 0.875,
+      "comparator_success_rate": 0.0,
+      "paired_difference": 0.875,
+      "paired_bootstrap_ci95_low": 0.625,
+      "paired_bootstrap_ci95_high": 1.0,
+      "dnq_only_success": 7,
+      "comparator_only_success": 0,
+      "mcnemar_exact_p": 0.015625
+    }
+  ],
+  "boundary": "This small matched study measures sensitivity to four independently trained DLC-JTO checkpoints. It is supplementary and does not replace the 200-case primary analysis or establish DNQ-DLC training-seed robustness."
+}

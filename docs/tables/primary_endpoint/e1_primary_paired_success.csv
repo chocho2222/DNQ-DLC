@@ -1,0 +1,7 @@
+comparator,comparator_label,n_paired,dnq_successes,dnq_success_rate,comparator_successes,comparator_success_rate,paired_difference,paired_bootstrap_ci95_low,paired_bootstrap_ci95_high,both_success,dnq_only_success,comparator_only_success,neither_success,discordant_pairs,mcnemar_exact_p,mcnemar_holm_p
+rule_expert_gate,Rule Expert,200,171,0.855,143,0.715,0.14,0.065,0.215,125,46,18,11,64,0.0006173782640671298,0.0006173782640671298
+rule_safety_gate,Safety Rule,200,171,0.855,140,0.7,0.155,0.085,0.225,128,43,12,17,55,3.3053764732060564e-05,6.610752946412113e-05
+dlc_joint_transition_observer,DLC-JTO,200,171,0.855,18,0.09,0.765,0.7,0.83,14,157,4,25,161,1.8925714000919334e-41,9.462857000459667e-41
+ppo_continuous,PPO legacy,200,171,0.855,55,0.275,0.58,0.505,0.65,52,119,3,26,122,1.1387963575850963e-31,4.555185430340385e-31
+sac_continuous,SAC legacy,200,171,0.855,1,0.005,0.85,0.8,0.895,1,170,0,29,170,1.3363823550460978e-51,8.018294130276587e-51
+td3_continuous,TD3 legacy,200,171,0.855,78,0.39,0.465,0.39,0.54,73,98,5,24,103,1.8172343385355978e-23,5.451703015606793e-23

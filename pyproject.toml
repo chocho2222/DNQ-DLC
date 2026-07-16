@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dnq-dlc"
+version = "0.1.0rc1"
+description = "Dynamic-neighborhood simulator framework for online multi-car overtaking"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+license = {file = "LICENSE"}
+keywords = ["autonomous-driving", "dynamic-graph", "multi-agent", "overtaking"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "box2d-py==2.3.8",
+  "gym==0.17.2",
+  "matplotlib>=3.7,<4",
+  "numpy>=1.26,<2",
+  "pandas>=2.0,<3",
+  "Pillow>=10,<12",
+  "pyglet>=1.5,<1.6",
+  "shapely>=1.8,<2",
+  "torch>=2.0",
+]
+
+[project.optional-dependencies]
+rl = [
+  "gymnasium>=0.29,<1.3",
+  "stable-baselines3>=2.3,<3",
+]
+dev = [
+  "build>=1.2,<2",
+  "pytest>=8,<9",
+]
+
+[project.urls]
+Documentation = "https://github.com/chocho2222/DNQ-DLC/tree/main/docs"
+Repository = "https://github.com/chocho2222/DNQ-DLC"
+Issues = "https://github.com/chocho2222/DNQ-DLC/issues"
+
+[tool.setuptools]
+package-dir = {"" = "code"}
+
+[tool.setuptools.packages.find]
+where = ["code"]
+include = ["dlc*", "gym_multi_car_racing*"]
