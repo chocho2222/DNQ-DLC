@@ -11,6 +11,8 @@ with GitHub Pages, Netlify Drop, or a standard static web server.
   source-data package;
 - the 200-case matched overtaking-success analysis and pairing audit;
 - an eight-case sensitivity evaluation of four DLC-JTO training checkpoints;
+- explicit provenance links for DLC-IT/JT/JTO, PPO, SAC, TD3, and the
+  author-implemented rule controls;
 - the revised publication figures in PDF, SVG, and PNG;
 - randomized component-attribution data;
 - source CSV/JSON files linked from the webpage;

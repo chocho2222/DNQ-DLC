@@ -413,7 +413,7 @@ def plot_mechanism_attribution():
 
     ax_d = fig.add_subplot(gs[1, 0:5])
     rng = np.random.default_rng(2026)
-    positions = [0, 1]
+    positions = [0.0, 0.78]
     groups = [
         repack.loc[repack.num_agents == n, "unique_top3_configurations"].to_numpy()
         for n in (6, 8)
@@ -421,51 +421,61 @@ def plot_mechanism_attribution():
     violins = ax_d.violinplot(
         groups,
         positions=positions,
-        widths=0.62,
+        widths=0.48,
         showmeans=False,
         showmedians=False,
         showextrema=False,
-        bw_method=0.45,
+        bw_method=0.70,
+        points=200,
     )
-    for body, color in zip(violins["bodies"], [BLUE_LIGHT, BLUE]):
+    for body, color in zip(violins["bodies"], ["#A8D85D", "#56B87A"]):
         body.set_facecolor(color)
-        body.set_edgecolor(NAVY)
-        body.set_linewidth(0.75)
-        body.set_alpha(0.28)
+        body.set_edgecolor("#202020")
+        body.set_linewidth(0.90)
+        body.set_alpha(0.24)
 
-    boxes = ax_d.boxplot(
+    ax_d.boxplot(
         groups,
         positions=positions,
-        widths=0.20,
+        widths=0.18,
         patch_artist=True,
         showfliers=False,
         whis=(5, 95),
-        boxprops=dict(facecolor="white", edgecolor=NAVY, linewidth=0.85, alpha=0.92),
-        whiskerprops=dict(color=NAVY, linewidth=0.8),
-        capprops=dict(color=NAVY, linewidth=0.8),
-        medianprops=dict(color=NAVY, linewidth=1.25),
+        boxprops=dict(facecolor="white", edgecolor="#202020", linewidth=0.95, alpha=0.95),
+        whiskerprops=dict(color="#202020", linewidth=0.90),
+        capprops=dict(color="#202020", linewidth=0.90),
+        medianprops=dict(color="#202020", linewidth=1.35),
     )
-    for x0, vals, color in zip(positions, groups, [BLUE_LIGHT, BLUE]):
-        jitter = rng.uniform(-0.115, 0.115, len(vals))
+    for x0, vals, color in zip(positions, groups, ["#91D33F", "#37B56A"]):
+        jitter = rng.uniform(-0.085, 0.085, len(vals))
         ax_d.scatter(
             np.full(len(vals), x0) + jitter,
             vals,
-            s=15,
+            s=18,
             color=color,
-            edgecolor=NAVY,
-            lw=0.35,
-            alpha=0.78,
+            edgecolor="#202020",
+            lw=0.45,
+            alpha=0.84,
             zorder=3,
         )
         median = float(np.median(vals))
-        ax_d.scatter(x0, median, s=18, color=RED, edgecolor="white", lw=0.45, zorder=5)
+        ax_d.scatter(
+            x0, median, s=22, color="#E31A1C",
+            edgecolor="white", lw=0.50, zorder=5,
+        )
     ax_d.set_xticks(positions, ["N=6", "N=8"])
+    ax_d.set_xlim(-0.28, 1.06)
     ax_d.set_ylabel("Unique ranked top-3 sets")
     ax_d.set_ylim(0, max(repack.unique_top3_configurations) + 5)
-    ax_d.text(0.03, 0.95,
-              f"32/32 cases repacked\nmedian {repack.switch_count.median():.0f} switches/case",
-              transform=ax_d.transAxes, ha="left", va="top", fontsize=5.85,
-              bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=NEUTRAL_LIGHT))
+    ax_d.text(
+        0.03, 0.95,
+        f"32/32 cases repacked\nmedian {repack.switch_count.median():.0f} switches/case",
+        transform=ax_d.transAxes, ha="left", va="top", fontsize=5.85,
+        bbox=dict(
+            boxstyle="round,pad=0.24", facecolor="white",
+            edgecolor="#555555", linewidth=0.55, alpha=0.94,
+        ),
+    )
     panel_label(ax_d, "d")
     ax_d.set_title("Runtime graph repacking", loc="left", fontsize=7.6, fontweight="bold")
 
@@ -502,6 +512,8 @@ def plot_mechanism_attribution():
     for ax in (ax_d, ax_e):
         ax.tick_params(labelsize=6.15)
         ax.grid(False)
+    ax_d.grid(axis="y", color="#D9D9D9", lw=0.45, alpha=0.75)
+    ax_d.set_axisbelow(True)
     fig.subplots_adjust(left=0.075, right=0.99, top=0.94, bottom=0.105)
     TAB.mkdir(parents=True, exist_ok=True)
     repack.to_csv(TAB / "figure_e5_runtime_repacking_source.csv", index=False)

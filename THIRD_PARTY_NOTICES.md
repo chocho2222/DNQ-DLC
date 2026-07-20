@@ -28,9 +28,28 @@ W. Schwarting, A. Pierson, J. Alonso-Mora, S. Karaman and D. Rus, "Deep
 Latent Competition: Learning to Race Using Visual Control Policies in Latent
 Space," arXiv:2102.09812, 2021.
 
-This citation acknowledges methodological provenance. The checkpoints in this
-repository were trained by the DNQ-DLC authors and are not represented as
-official checkpoints from that paper.
+The manuscript labels DLC-IT, DLC-JT, and DLC-JTO refer to the
+individual-transition, joint-transition, and joint-transition-plus-observer
+variants introduced in that study. The implementations and checkpoints in
+this repository were independently produced and trained by the DNQ-DLC
+authors; they are not official code or checkpoints from the cited paper.
+
+## Reinforcement-learning baselines
+
+The PPO, SAC, and TD3 comparisons follow the original algorithm publications:
+
+- PPO: https://arxiv.org/abs/1707.06347
+- SAC: https://proceedings.mlr.press/v80/haarnoja18b.html
+- TD3: https://proceedings.mlr.press/v80/fujimoto18a.html
+
+Training and checkpoint loading use Stable-Baselines3:
+https://www.jmlr.org/papers/v22/20-1364.html. The distributed RL checkpoints
+were trained by the DNQ-DLC authors.
+
+Rule Expert and Safety Rule are author-implemented telemetry controls and do
+not claim provenance from an external algorithm paper. Their definitions are
+recorded in code/dlc/policies.py and summarized in
+[BASELINE_PROVENANCE.md](BASELINE_PROVENANCE.md).
 
 ## Assetto Corsa and custom tracks
 

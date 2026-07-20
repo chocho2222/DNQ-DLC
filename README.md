@@ -28,6 +28,17 @@ the sole cause of the improvement and do not establish universal safety or
 overall performance optimality. See [MODEL_CARD.md](MODEL_CARD.md) and
 [DATA_CARD.md](DATA_CARD.md) for limitations.
 
+## Baseline provenance
+
+DLC-IT, DLC-JT, and DLC-JTO are independently retrained implementations of
+the individual-transition, joint-transition, and joint-transition-plus-observer
+variants introduced in [Deep Latent Competition](https://arxiv.org/abs/2102.09812).
+PPO, SAC, and TD3 follow their original publications and use
+Stable-Baselines3. Rule Expert and Safety Rule are author-implemented
+telemetry controllers rather than methods adopted from external papers.
+See [BASELINE_PROVENANCE.md](BASELINE_PROVENANCE.md) for the complete mapping
+and source links.
+
 ## Repository contents
 
 | Path | Contents |
