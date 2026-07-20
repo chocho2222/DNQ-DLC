@@ -8,7 +8,7 @@
   },
   "summary": {
     "file_count": 198,
-    "size_bytes": 52631193,
+    "size_bytes": 52631754,
     "by_category": {
       "checkpoints": {
         "file_count": 18,
@@ -24,7 +24,7 @@
       },
       "docs": {
         "file_count": 98,
-        "size_bytes": 20885339
+        "size_bytes": 20885900
       },
       "governance": {
         "file_count": 29,
@@ -544,20 +544,20 @@
     {
       "path": "docs/assets/analysis_figures/revision/figure_e1_core_evidence.pdf",
       "category": "docs",
-      "size_bytes": 32286,
-      "sha256": "2b3f5d318c729c7a3f64d8e4cb9b92ece2410e8342533f2fc5c11b15f57d1fae"
+      "size_bytes": 32234,
+      "sha256": "5a267bd317f58f0b3853f1468e0aaba2f672abf29a5bf2e7c6ecc7d4aec76d11"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_e1_core_evidence.png",
       "category": "docs",
-      "size_bytes": 571023,
-      "sha256": "d9e351eb8b9365293725edda41521e21d6ee90b32c944ff1e2d5dde3936a2d80"
+      "size_bytes": 571653,
+      "sha256": "155ef1b848f828d91578cfeee71db95b6a4d2fc2f25da2923afed54800971c8b"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_e1_core_evidence.svg",
       "category": "docs",
-      "size_bytes": 59374,
-      "sha256": "9ac3b824e51c12a831d1f75ccc0771ffc73e8658c0c977e5bf488a1677f04bb4"
+      "size_bytes": 59378,
+      "sha256": "9f215cd5c37623b38dea2a0c541d3f671431c72c9d799c263c3e9434297f8535"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_e5_mechanism_attribution.pdf",
@@ -760,8 +760,8 @@
     {
       "path": "docs/code/figure_generation/build_tits_submission_figures_20260716.py",
       "category": "docs",
-      "size_bytes": 26455,
-      "sha256": "b323041fb13129fef065fdeafc47cf7c68921e12b5374cc55d3f963e99db12f1"
+      "size_bytes": 26434,
+      "sha256": "c3b958f126eddf149be3a5c63627a6992935f514dbd7e65b5d05d58bcc485c9f"
     },
     {
       "path": "docs/code/statistics/export_e1_primary_endpoint_analysis.py",
@@ -911,7 +911,7 @@
       "path": "docs/revision_manifest.json",
       "category": "docs",
       "size_bytes": 20436,
-      "sha256": "60ab3d0ed7591db866abc4a51b9aa216f182d326982b9399d2d6d8522a94734d"
+      "sha256": "f4c66cf4e41f50882bed38419ddd1285cc9d88b9358b2f15fc064e667dfd4e56"
     },
     {
       "path": "docs/tables/E2/online_metrics_n6_seed12006.csv",

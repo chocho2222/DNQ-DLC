@@ -254,20 +254,20 @@ def plot_core_results():
                       marker="o", ms=4.3 if method == "DNQ-DLC" else 3.7, lw=1.35,
                       capsize=2.2, label=method)
     dnq_strata = strata[strata.algorithm_label == "DNQ-DLC"].set_index("vehicle_count_stratum").loc[band_order]
-    for x, row in zip([0, 1], dnq_strata.itertuples()):
+    label_positions = [(0.16, 98.5), (0.94, 98.5)]
+    for (label_x, label_y), row in zip(label_positions, dnq_strata.itertuples()):
         delta = row.paired_difference_vs_rule_expert * 100
-        y_dnq = row.success_rate * 100
-        ax_c.annotate(
+        ax_c.text(
+            label_x,
+            label_y,
             f"{delta:+.1f} pp vs Rule",
-            xy=(x + offsets["DNQ-DLC"], y_dnq),
-            xytext=(0, 11),
-            textcoords="offset points",
             ha="center",
-            va="bottom",
-            fontsize=5.45,
+            va="top",
+            fontsize=5.35,
             color=NAVY,
             bbox=dict(boxstyle="round,pad=0.18", facecolor="white",
                       edgecolor=NEUTRAL_LIGHT, linewidth=0.55, alpha=0.95),
+            zorder=5,
         )
     ax_c.set_xticks([0, 1], ["N=4–6\ntraining range", "N=7–8\nextrapolation"])
     ax_c.set_ylim(0, 102)
