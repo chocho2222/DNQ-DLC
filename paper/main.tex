@@ -1,0 +1,1304 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{cite}
+\usepackage{xspace}
+\usepackage{placeins}
+
+\newcommand{\method}{DNQ-DLC\xspace}
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\tabnote}[1]{%
+\vspace{1mm}\parbox{0.98\textwidth}{\footnotesize\textit{Note:} #1}}
+
+\begin{document}
+
+\title{Dynamic-Neighborhood Quality-Guided World Models for Online Multi-Car Overtaking in Autonomous Racing}
+
+\author{Author names, affiliations, and ORCID identifiers to be inserted before submission}
+
+\markboth{IEEE Transactions on Intelligent Transportation Systems, Manuscript for Review}%
+{Dynamic-Neighborhood Quality-Guided World Models for Online Multi-Car Overtaking}
+
+\maketitle
+
+\begin{abstract}
+Online multi-car overtaking requires the interaction representation to
+change as nearby vehicles become more or less relevant. This paper
+presents Dynamic-Neighborhood Quality-Guided Deep Latent Competition
+(DNQ-DLC), a world-model planning framework that combines online graph
+construction with quality-guided prediction and control. At each real
+control step, DNQ-DLC scores map-conditioned traffic relations,
+reconstructs an ego-centric interaction graph, and encodes the selected
+vehicles in a bounded mask-padded tensor. This design keeps the neural
+interface fixed while the represented vehicle identities and traffic
+density change. A Graph-DLC world model predicts short-horizon packed
+states, reward, boundary risk, and uncertainty. A receding-horizon
+objective then selects overtaking actions by balancing progress,
+interaction quality, and track adherence. On a 200-case matched
+simulator benchmark, DNQ-DLC achieved an 85.5\% overtaking-success rate,
+compared with 71.5\% for Rule Expert, corresponding to a paired increase
+of 14.0 percentage points. These results support a pass-completion
+advantage for the complete controller in the evaluated simulator.
+Component tests do not show that every module is individually superior.
+Code, data, checkpoints, figures, and simulation videos are available at
+\url{https://chocho2222.github.io/DNQ-DLC/}.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Autonomous racing, overtaking, world models, dynamic interaction graphs,
+multi-agent decision making, receding-horizon planning.
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+\IEEEPARstart{A}{utonomous} racing is a demanding testbed for
+intelligent transportation systems. Learning-based agents have reached
+champion-level performance in head-to-head simulated car racing
+\cite{wurman2022granturismo}, showing the need for fast closed-loop
+decision making near vehicle limits. Autonomous-driving evaluation also
+faces a scarcity of safety-critical interactions. Naturalistic and
+adversarial testing has therefore become important for exposing rare
+failures \cite{feng2021intelligenttest,liu2024rarity}.
+
+Overtaking concentrates these challenges into a short time window. The
+ego vehicle must find a passing opportunity, act on it, and remain within
+the track corridor as nearby competitors change position. The most
+relevant opponent can change from a leading vehicle to a lateral or
+rear vehicle within one maneuver. Online overtaking is therefore both a
+control problem and an interaction-selection problem.
+
+Full-stack racing systems have demonstrated high-speed time-trial and
+oval operation \cite{betz2023tum,wischnewski2022iac}. Head-to-head and
+multi-vehicle studies extend this setting to changing opponent behavior
+\cite{jung2023kaist,raji2022multivehicle}. Tube-based control provides a
+further model-based approach to multi-vehicle racing
+\cite{wischnewski2023tube}. A survey of autonomous racing summarizes the main system-level
+challenges \cite{betz2022autonomous}. Reviews of learned driving discuss
+its broader strengths and limitations
+\cite{kiran2021drlsurvey,yurtsever2020survey}.
+Many learned controllers, however, still use a fixed observation layout
+or require retraining when the number and arrangement of surrounding
+vehicles change. This is restrictive in multi-car overtaking because the
+interaction topology changes online.
+
+World models allow a controller to compare short-horizon futures before
+executing an action. This idea supports general latent control
+\cite{hafner2023dreamerv3}, model-based driving
+\cite{hu2022mile,hu2023gaia}, and Deep Latent Competition (DLC) for
+racing \cite{schwarting2021dlc}. A fixed vehicle topology still limits
+such models. The planner may retain irrelevant agents or omit the vehicle
+that currently constrains the pass. A progress-only objective can also
+favor fast but off-track maneuvers.
+
+This paper proposes \method, a dynamic-neighborhood
+quality-guided world-model framework for online multi-car overtaking.
+At every decision step, the framework projects traffic states into a
+map-conditioned representation, reconstructs the interaction graph, and
+selects the most relevant surrounding vehicles. The variable physical
+neighborhood is converted into a bounded graph tensor and processed by a
+Graph-DLC world model for short-horizon prediction. Quality-guided action
+evaluation then converts predicted state, reward, boundary risk, and
+uncertainty into an overtaking decision. The physical interaction set
+can therefore change online without changing the neural input dimension
+or binding representation slots to fixed vehicle identities.
+
+The main technical contributions are:
+\begin{itemize}
+    \item We propose an online dynamic-neighborhood graph construction
+    mechanism for multi-car racing. It rebuilds map-conditioned
+    interactions from current vehicle states and represents changing
+    vehicle identities and counts through a bounded,
+    permutation-stable graph tensor.
+    \item We develop a dynamic-graph Graph-DLC world model with
+    quality-guided short-horizon planning. The model jointly predicts
+    future state, reward, boundary risk, and uncertainty, enabling
+    overtaking actions to be evaluated as interaction relationships
+    evolve.
+    \item We conduct extensive closed-loop experiments against
+    rule-based, DLC, and multi-seed reinforcement-learning baselines.
+    On 200 matched cases, DNQ-DLC achieves an 85.5\% overtaking-success
+    rate, exceeding Rule Expert by 14.0 percentage points. Held-out and
+    randomized evaluations provide complementary validation across
+    multiple tracks and scenarios with 4--8 vehicles.
+\end{itemize}
+The remainder of this paper is organized as follows. Section II reviews
+autonomous racing, learned policies, world models, and interaction-aware
+representations. Section III presents the dynamic-neighborhood interface,
+Graph-DLC world model, and quality-guided planner. Section IV describes
+the evaluation protocol and experimental results. Section V discusses
+the supported claims and their boundaries, and Section VI concludes the
+paper and outlines future real-vehicle validation.
+
+\section{Related Work}
+\label{sec:related_work}
+
+Autonomous racing has evolved into a high-speed full-stack benchmark
+for intelligent transportation systems. The survey by Betz
+et al.~\cite{betz2022autonomous} characterizes autonomous vehicle racing as
+a domain that simultaneously stresses perception, planning, control,
+vehicle dynamics, and system integration. System-level studies such as
+the TUM autonomous motorsport stack and the KAIST IAC system further
+show that head-to-head racing requires reliable real-time decision
+making under changing opponent behavior~\cite{betz2023tum,jung2023kaist}.
+More recent A2RL work demonstrates that autonomous racing continues to
+move toward full-scale multi-agent operation at the limits of vehicle
+handling~\cite{hoffmann2026a2rl}. These racing systems motivate the
+setting of this paper, but they also reveal a central difficulty: dense
+multi-car overtaking requires the planner not only to control the ego
+vehicle, but also to decide which surrounding vehicles should influence
+the next decision.
+
+Optimization-based racing planners provide one way to address this
+problem when the interaction structure is known or can be specified
+compactly. Multi-vehicle racing planners and tube-MPC formulations have
+shown strong performance in high-speed racing scenarios
+\cite{raji2022multivehicle,wischnewski2023tube}. Their strength lies in
+systematic optimization and constraint handling, but their performance
+depends on the quality of the assumed vehicle model, opponent model, and
+interaction set. In dense overtaking, the relevant opponents can change
+within a few decision steps: a forward vehicle may become irrelevant
+after the ego vehicle initiates a pass, while a lateral or rear vehicle
+may become the dominant constraint. This motivates a representation that
+selects the interaction set online rather than keeping it fixed.
+
+Learned policies provide another route to adaptive racing behavior.
+Deep reinforcement learning has demonstrated highly competitive racing
+performance in high-fidelity game environments~\cite{wurman2022granturismo}, and
+recent F1TENTH work shows that overtaking behaviors can be learned and
+transferred to a physical small-scale racing platform
+\cite{steiner2025f1tenth_overtaking}. Surveys of deep reinforcement
+learning for autonomous driving highlight the potential of learned
+policies for decision making under complex dynamics, but also point out
+their sensitivity to state representation, training distribution, and
+reward design~\cite{kiran2021drlsurvey}. This limitation is especially
+important for online multi-car overtaking. A policy trained with predetermined
+observation semantics may implicitly associate a particular input slot
+with a particular opponent role, even though the physical vehicle
+occupying that role may change during the maneuver. DNQ-DLC therefore
+separates proposal generation from interaction selection: learned actors
+consume a bounded mask-padded tensorization, while the
+dynamic-neighborhood module rebuilds the physical interaction graph and
+determines which vehicles are represented at the current decision step.
+
+The limitations of direct policy execution motivate predictive planners
+that can compare candidate actions before committing to one. World
+models learn dynamics that support planning in imagined futures
+\cite{hafner2023dreamerv3}. In autonomous driving, MILE connects
+model-based imitation learning with closed-loop urban driving
+\cite{hu2022mile}, while GAIA-1 demonstrates that generative world
+models can represent complex driving-scene evolution~\cite{hu2023gaia}.
+Recent driving world-model surveys summarize this direction as a
+promising way to model scene evolution and support interaction with
+dynamic environments~\cite{tu2025dwm_survey}. More recent
+planning-oriented world-model methods further emphasize that learned
+dynamics should be aligned with downstream planning objectives:
+AdaWM studies adaptive world-model planning under distribution shift
+\cite{wang2025adawm}, WorldRFT uses reinforcement fine-tuning to align
+latent world-model representations with safety-critical planning
+behavior~\cite{yang2026worldrft}, and VLA-World combines predictive
+imagination with reflective reasoning for autonomous-driving
+foresight~\cite{wang2026vlaworld}.
+
+These world-model studies show the value of prediction for decision
+making, but autonomous racing imposes a sharper requirement. The planner
+must decide whether an overtaking attempt is desirable under short
+horizons, narrow lateral margins, and close interactions. A rollout that
+maximizes progress alone may still produce off-track exposure or unsafe
+side-by-side behavior. Therefore, DNQ-DLC uses the world model for
+candidate action evaluation rather than passive forecasting. Candidate
+rollouts are ranked by overtaking progress, track adherence, lateral
+quality, close-gap risk, predicted boundary risk, rollout uncertainty,
+and consistency with learned actor priors.
+
+For world-model planning to be effective in traffic, the model must
+receive an interaction representation that remains valid as the number
+and relevance of nearby agents change. A recent survey of autonomous
+vehicle motion forecasting emphasizes that predicting the future
+behavior of surrounding traffic participants is essential for downstream
+decision making~\cite{shi2025motionforecasting}. Large-scale datasets
+such as Waymo Open Motion and Argoverse 2 provide benchmarks for
+interactive multi-agent prediction~\cite{ettinger2021waymo,
+wilson2023argoverse2}. Transformer-based forecasting models such as
+Scene Transformer and Wayformer show that attention-based interaction
+modeling can capture dependencies among multiple agents
+\cite{ngiam2021scene,nayakanti2023wayformer}. Map-relative and
+vectorized representations also play an important role: DenseTNT
+formulates trajectory prediction through dense goal sets, and HiVT uses
+hierarchical vectorized interaction modeling for multi-agent motion
+prediction~\cite{gu2021densetnt,zhou2022hivt}.
+
+Most of these interaction models target forecasting or urban traffic
+prediction rather than online racing control. Related game-theoretic
+and traffic-generation methods further emphasize the importance of
+explicit multi-agent relations, as seen in GameFormer and
+TrafficGen~\cite{huang2023gameformer,feng2023trafficgen}. DNQ-DLC
+adapts these interaction-modeling ideas to a receding-horizon racing
+controller. At each decision step, the method rebuilds a map-relative
+ego-centered graph, tensorizes the currently relevant vehicles into a
+bounded masked observation, and uses this runtime graph representation
+inside a world-model planner. Thus, the graph is not only a forecasting
+input; it determines which vehicles are imagined, scored, and acted upon
+in the next overtaking decision.
+
+\section{Methodology}
+\label{sec:method}
+
+This section presents DNQ-DLC, a dynamic-neighborhood
+quality-guided world-model planner for online multi-car overtaking in
+autonomous racing. DNQ-DLC operates as a receding-horizon decision layer
+above the low-level vehicle dynamics controller. At each decision step,
+it constructs a map-conditioned dynamic-neighborhood graph, packs the
+selected interaction-relevant vehicles into a bounded mask-padded graph
+tensor, predicts short-horizon futures under candidate controls, and
+executes the first action of the highest-scoring rollout.
+
+The method contains three main computational stages after problem
+formulation: dynamic map-conditioned neighborhood encoding,
+Graph-DLC world modeling, and quality-guided receding-horizon planning.
+The packed-observation layout, self-feature definition, network
+architecture, and numerical configuration are detailed in Supplementary
+Section I. Training labels, losses, and baseline budgets are reported in
+Supplementary Section II. Candidate generation and scoring are specified
+in Supplementary Section III, and metric definitions and experimental
+protocols are defined in Supplementary Section IV.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/lct_placeholder.png}
+\caption{Overall DNQ-DLC methodology pipeline. Stage I projects the ego and surrounding vehicles into a map-relative frame, ranks interaction-relevant neighbors, and packs the selected relations into a bounded masked tensor. Stage II encodes self, relation, and action features in the Graph-DLC world model and predicts latent state, reward, risk, and uncertainty. Stage III generates candidate actions, evaluates $H$-step imagined rollouts, applies safety-quality scoring and recovery logic, and executes the first action. The lower feedback loop shows that the neighborhood graph is rebuilt after every real observation.}
+\label{fig:method_overview}
+\end{figure*}
+
+\textit{Notation convention.}
+Subscript $t$ denotes the physical decision time. Superscript $q$
+denotes an arbitrary vehicle when defining local geometric quantities,
+superscript $j$ denotes a surrounding vehicle in an ego-neighbor
+relation, superscript $i$ denotes an agent-centered row, superscript
+$k$ denotes a packed relation slot, and superscript $(n)$ denotes a
+candidate rollout. A hatted variable denotes an imagined quantity
+predicted by the world model. The notation $t+k|t$ denotes a $k$-step
+prediction made from decision time $t$. Variables without row
+superscript refer to the controlled ego row; for example,
+$z_t\equiv z_t^0$ and $h_t\equiv h_t^0$.
+
+\subsection{Problem Formulation}
+\label{subsec:problem}
+
+At decision time $t$, the ego vehicle observes a track map
+$\mathcal{M}$, its own state $x_t^0$, and a set of surrounding vehicles
+\begin{equation}
+\mathcal{I}_t=\{1,2,\ldots,N_t^{\mathrm{veh}}\}.
+\end{equation}
+The ego state includes position, velocity, heading, track-relative
+progress, lateral deviation, and driving-status indicators. Surrounding
+vehicles are represented by the same physical quantities when
+available. State normalization is specified in Supplementary Section I-B and
+Table SII. The frozen numerical configuration is listed in
+Supplementary Section I-G and Table SIV.
+
+The controller outputs a normalized low-level racing action
+\begin{equation}
+a_t=[\delta_t,u_t,b_t]^\top\in\mathcal{A},
+\end{equation}
+where $\delta_t$, $u_t$, and $b_t$ denote steering, throttle, and brake.
+The admissible action set is
+\begin{equation}
+\mathcal{A}
+=
+[\delta_{\min},\delta_{\max}]
+\times
+[u_{\min},u_{\max}]
+\times
+[b_{\min},b_{\max}].
+\end{equation}
+
+For each candidate first action $a_t^{(n)}$, DNQ-DLC forms a
+short-horizon action continuation
+\begin{equation}
+\mathbf{A}_t^{(n)}
+=
+(a_t^{(n)},\hat a_{t+1|t}^{(n)},\ldots,
+\hat a_{t+H-1|t}^{(n)}),
+\end{equation}
+evaluates the imagined future with a multi-objective score
+$J(\mathbf{A}_t^{(n)})$, and executes only the first action. Candidate
+generation and scoring are described in Section~\ref{subsec:planning}.
+
+\subsection{Dynamic Map-Conditioned Neighborhood Encoding}
+\label{subsec:graph}
+
+Dense racing traffic changes rapidly. A predetermined vehicle ordering may
+include irrelevant vehicles or miss the currently decisive opponent.
+DNQ-DLC therefore selects interaction-relevant vehicles online,
+rebuilds the local interaction graph, and tensorizes that graph through
+bounded masked relation slots.
+
+\textit{Track-conditioned self geometry.}
+For any vehicle $q\in\{0\}\cup\mathcal{I}_t$, let
+$c(\eta_t^q)$ be the closest centerline point to the vehicle, and let
+$\hat{\mathbf t}(\eta_t^q)$ and $\hat{\mathbf n}(\eta_t^q)$ be the
+corresponding local tangent and normal unit vectors. The track-relative
+self geometry is
+\begin{equation}
+\Delta x_{c,t}^q
+=
+p_{x,t}^q-c_x(\eta_t^q),
+\qquad
+\Delta y_{c,t}^q
+=
+p_{y,t}^q-c_y(\eta_t^q),
+\end{equation}
+\begin{equation}
+\ell_t^q
+=
+\frac{
+\langle p_t^q-c(\eta_t^q),\hat{\mathbf n}(\eta_t^q)\rangle
+}{w_t^q+\epsilon},
+\qquad
+e_{\psi,t}^q
+=
+\mathrm{wrap}(\psi_c(\eta_t^q)-\psi_t^q).
+\end{equation}
+This sign convention follows the submitted telemetry builder, where the
+heading-error features are represented by
+$\sin(\psi_c(\eta_t^q)-\psi_t^q)$ and
+$\cos(\psi_c(\eta_t^q)-\psi_t^q)$. The self feature block
+$\phi_t^q$ combines these track-conditioned quantities with normalized
+global position, velocity, progress, and driving-status flags. Its exact
+layout is reported in Supplementary Section I-D and Table SII.
+
+For the controlled ego row, we also define the local map context
+\begin{equation}
+\mathcal{F}_t^0
+=
+\{c(\eta_t^0),\hat{\mathbf t}(\eta_t^0),
+\hat{\mathbf n}(\eta_t^0),w_t^0,\kappa_t^0\},
+\end{equation}
+where $w_t^0$ is the local track-width scale and $\kappa_t^0$ is a
+look-ahead curvature feature.
+
+\textit{Map-conditioned relation and interaction selection.}
+For each surrounding vehicle $j\in\mathcal{I}_t$, DNQ-DLC forms the
+ego-neighbor physical relation vector
+\begin{equation}
+r_t^{0j}
+=
+[
+\Delta f_{b,t}^{0j},
+\Delta l_{b,t}^{0j},
+\Delta v_{x,t}^{0j},
+\Delta v_{y,t}^{0j},
+d_t^j,
+\sin(\Delta\psi_t^{0j}),
+\cos(\Delta\psi_t^{0j})
+]^\top .
+\end{equation}
+Here $\Delta f_{b,t}^{0j}$ and $\Delta l_{b,t}^{0j}$ are the
+ego-body forward and left displacements used by the submitted telemetry
+builder, $\Delta v_{x,t}^{0j}$ and $\Delta v_{y,t}^{0j}$ are normalized
+global velocity differences, $d_t^j$ is the normalized ego-neighbor
+distance, and $\Delta\psi_t^{0j}=\psi_t^j-\psi_t^0$ is the pairwise
+heading difference. Thus, the relation slot is map-conditioned through
+the ego state and local map context, but it is not a purely
+centerline-frame relation in every channel.
+
+The interaction relevance score is written abstractly as
+\begin{equation}
+\rho_j(t)
+=
+\mathrm{Score}_{\mathrm{int}}(r_t^{0j},\mathcal{F}_t^0),
+\end{equation}
+and the eligible local neighborhood is
+\begin{equation}
+\mathcal{N}_t
+=
+\mathrm{Gate}_{\mathrm{int}}
+(
+\mathcal{I}_t,
+\{\rho_j(t)\}_j,
+\mathcal{F}_t^0
+).
+\end{equation}
+All reported experiments use the implemented runtime interaction
+selector specified in Supplementary Section I-F (Runtime Interaction
+Selector). The
+abstract $\mathrm{Score}_{\mathrm{int}}$ and
+$\mathrm{Gate}_{\mathrm{int}}$ notation is used to describe the general
+role of relevance-based interaction selection in the method pipeline.
+
+\textit{Bounded graph tensorization and validity mask.}
+The selected ego-centric graph is denoted by
+\begin{equation}
+G_t^0=(V_t^0,\mathcal{E}_t^0,\mathbf m_t^0),
+\end{equation}
+where $V_t^0$ contains the controlled ego vehicle and selected
+neighbors, $\mathcal{E}_t^0$ contains ego-neighbor relation edges, and
+$\mathbf m_t^0$ is the deterministic validity mask generated by
+bounded slot tensorization. Let $K_{\max}$ denote the relation capacity
+used to batch the runtime graph. Vehicles in $\mathcal{N}_t$ are sorted by
+$\rho_j(t)$, and
+\begin{equation}
+j_t^k=\mathrm{TopK}_k(\mathcal{N}_t;\rho),
+\qquad
+k=1,\ldots,K_{\max},
+\end{equation}
+denotes the $k$-th highest-ranked valid neighbor when it exists. The
+validity mask is
+\begin{equation}
+m_t^{0,k}
+=
+\mathbb{I}
+[
+k\le\min(|\mathcal{N}_t|,K_{\max})
+],
+\end{equation}
+and the packed physical relation is
+\begin{equation}
+\tilde r_{\mathrm{phy},t}^{0,k}
+=
+\begin{cases}
+r_t^{0j_t^k}, & m_t^{0,k}=1,\\
+\mathbf{0}, & m_t^{0,k}=0.
+\end{cases}
+\end{equation}
+Thus,
+\begin{equation}
+\mathbf m_t^0=\{m_t^{0,k}\}_{k=1}^{K_{\max}},
+\qquad
+y_t^{0,k}=[\tilde r_{\mathrm{phy},t}^{0,k},m_t^{0,k}].
+\end{equation}
+The resulting bounded tensor representation of the runtime graph is
+\begin{equation}
+\bar{o}_t
+=
+\mathrm{Pack}(G_t^0,\mathcal{M})
+=
+[
+\phi_t^0,
+y_t^{0,1},
+\ldots,
+y_t^{0,K_{\max}}
+].
+\end{equation}
+Padded slots contain zero physical relation features and have zero
+validity mask. When $|\mathcal{N}_t|>K_{\max}$, only the $K_{\max}$
+highest-ranked vehicles are represented by the network at that
+decision step. Thus, ``dynamic neighborhood'' means that the physical
+interaction graph and represented vehicle identities are rebuilt online;
+bounded masked tensorization is used for computation and is not a
+predetermined vehicle topology. The submitted slot capacity and exact
+packed-observation layout are given in Supplementary Section I-B
+(Packed Observation Layout).
+
+\textit{Graph-context encoding.}
+For row $i$, the self feature block
+$\phi_t^i\in\mathbb{R}^{d_\phi}$ is encoded as
+\begin{equation}
+e_{\mathrm{self},t}^i
+=
+\mathrm{MLP}_{\mathrm{ego}}(\phi_t^i).
+\end{equation}
+The physical part of the $k$-th relation slot is encoded as
+\begin{equation}
+e_{\mathrm{rel},t}^{i,k}
+=
+\mathrm{MLP}_{\mathrm{rel}}(\tilde r_{\mathrm{phy},t}^{i,k}).
+\end{equation}
+The validity mask is used for masked attention:
+\begin{equation}
+b_t^{i,k}
+=
+\mathrm{Linear}_{\mathrm{att}}(e_{\mathrm{rel},t}^{i,k}),
+\end{equation}
+\begin{equation}
+\alpha_t^{i,k}
+=
+\frac{
+m_t^{i,k}\exp(b_t^{i,k})
+}{
+\epsilon+\sum_{\ell=1}^{K_{\max}}
+m_t^{i,\ell}\exp(b_t^{i,\ell})
+}.
+\end{equation}
+The relation context is
+\begin{equation}
+\bar e_{\mathrm{rel},t}^{i}
+=
+\sum_{k=1}^{K_{\max}}
+\alpha_t^{i,k}e_{\mathrm{rel},t}^{i,k}.
+\end{equation}
+The graph-context embedding for row $i$ is
+\begin{equation}
+z_t^i
+=
+[
+e_{\mathrm{self},t}^{i},
+\bar e_{\mathrm{rel},t}^{i}
+].
+\end{equation}
+For the controlled ego row, $z_t\equiv z_t^0$. Thus, $\bar{o}_t$ is the
+pre-encoding packed observation, whereas $z_t$ is the encoded
+graph-context representation used by the world model.
+
+\subsection{Graph-DLC World Model}
+\label{subsec:world_model}
+
+The Graph-DLC world model predicts short-horizon consequences under
+candidate actions. Its current observation input is $\bar{o}_t$, which
+is encoded into $z_t$, and its control input is a candidate action
+$a_t$. The action is encoded as
+\begin{equation}
+e_{\mathrm{act},t}
+=
+\mathrm{MLP}_{\mathrm{act}}(a_t).
+\end{equation}
+
+The implementation evaluates valid agent-centered rows in a shared
+batch. Let
+\begin{equation}
+\mathcal{R}_t=\{0\}\cup\mathcal{I}_t
+\end{equation}
+be the row set, where row $0$ corresponds to the controlled ego
+vehicle. For row $i$, the row-wise action embedding is
+\begin{equation}
+e_{\mathrm{act},t}^i
+=
+\mathrm{MLP}_{\mathrm{act}}(a_t^i).
+\end{equation}
+The global self and action summaries are
+\begin{equation}
+\bar e_{\mathrm{self},t}
+=
+\frac{1}{|\mathcal{R}_t|}
+\sum_{i\in\mathcal{R}_t}
+e_{\mathrm{self},t}^i,
+\qquad
+\bar e_{\mathrm{act},t}
+=
+\frac{1}{|\mathcal{R}_t|}
+\sum_{i\in\mathcal{R}_t}
+e_{\mathrm{act},t}^i.
+\end{equation}
+The fusion input and transition hidden state are
+\begin{equation}
+\Phi_t^i
+=
+[
+z_t^i,
+e_{\mathrm{act},t}^i,
+\bar e_{\mathrm{self},t},
+\bar e_{\mathrm{act},t}
+],
+\end{equation}
+\begin{equation}
+h_t^i
+=
+\mathrm{MLP}_{\mathrm{fusion}}(\Phi_t^i).
+\end{equation}
+Since $z_t^i=[e_{\mathrm{self},t}^i,\bar e_{\mathrm{rel},t}^i]$, this is
+equivalent to the five-summary input
+$[e_{\mathrm{self},t}^i,\bar e_{\mathrm{rel},t}^i,
+e_{\mathrm{act},t}^i,\bar e_{\mathrm{self},t},\bar e_{\mathrm{act},t}]$.
+In the decision layer, $h_t\equiv h_t^0$. The treatment of
+non-controlled row actions is specified in Supplementary Section I-F
+(Runtime Interaction Selector).
+
+DNQ-DLC keeps a DLC-style latent interface:
+\begin{equation}
+p_\theta(s_t|h_t)
+=
+\mathcal{N}
+(
+\mu_t^p,
+\mathrm{diag}((\sigma_t^p)^2)
+),
+\end{equation}
+\begin{equation}
+q_\phi(s_t|h_t,\bar{o}_{t+1})
+=
+\mathcal{N}
+(
+\mu_t^q,
+\mathrm{diag}((\sigma_t^q)^2)
+).
+\end{equation}
+The posterior uses $\bar{o}_{t+1}$ only during training. During online
+candidate ranking, the submitted checkpoint uses deterministic mean
+rollouts and the deterministic latent state
+\begin{equation}
+s_t^{\mathrm{eval}}=\mu_t^p .
+\end{equation}
+Therefore, the uncertainty penalty is derived from the
+observation and reward log-variance heads rather than from
+KL-regularized latent sampling.
+
+The prediction heads operate on
+\begin{equation}
+\xi_t=[h_t,s_t].
+\end{equation}
+They are implemented as linear heads:
+\begin{equation}
+(\mu_{t+1|t}^{o},\lambda_{t+1|t}^{o})
+=
+\mathrm{Linear}_{\mathrm{obs}}(\xi_t),
+\end{equation}
+\begin{equation}
+(\mu_{t+1|t}^{r},\lambda_{t+1|t}^{r})
+=
+\mathrm{Linear}_{\mathrm{rew}}(\xi_t),
+\end{equation}
+\begin{equation}
+z_{t+1|t}^{\chi}
+=
+\mathrm{Linear}_{\mathrm{risk}}(\xi_t),
+\qquad
+\hat{\chi}_{t+1|t}
+=
+\sigma(z_{t+1|t}^{\chi}).
+\end{equation}
+Here $\mu_{t+1|t}^{o}$ and $\lambda_{t+1|t}^{o}$ parameterize the next
+packed-observation distribution, $\mu_{t+1|t}^{r}$ and
+$\lambda_{t+1|t}^{r}$ parameterize the reward distribution, and
+$\hat{\chi}_{t+1|t}$ is a boundary-risk probability. The implementation also contains an auxiliary quality head. Its loss
+weight is zero in the submitted checkpoint, so the head does not
+contribute to quality guidance (Supplementary Section II-C).
+
+The general world-model objective is
+\begin{equation}
+\begin{aligned}
+\mathcal{L}_{\mathrm{wm}}
+=
+\mathbb{E}_{q_\phi}
+[
+&
+\mathcal{L}_{o}
++
+\mathcal{L}_{r}
++
+\lambda_{\chi}
+\mathrm{BCE}(\chi_{t+1},\hat{\chi}_{t+1|t})
++
+\lambda_q\mathcal{L}_q
+]
+\\
+&
++
+\beta_{\mathrm{KL}}
+D_{\mathrm{KL}}(q_\phi\|p_\theta).
+\end{aligned}
+\end{equation}
+In the submitted checkpoint, $\lambda_q=0$ and
+$\beta_{\mathrm{KL}}=0$. Therefore, the auxiliary quality loss and KL
+regularization are inactive in world-model training.
+Quality guidance in the planner comes from the separately
+trained quality-biased actor, overtaking and recovery templates, and
+online safety-efficiency scoring terms. The Gaussian likelihoods,
+dataset size and validation splits are reported in Supplementary
+Section II-A. The loss definitions and checkpoint-specific interpretation
+are given in Supplementary Section II-C, and actor training is detailed
+in Supplementary Section II-D.
+
+\subsection{Quality-Guided Receding-Horizon Planning}
+\label{subsec:planning}
+
+DNQ-DLC converts prediction into control by combining learned actor
+proposals, analytic overtaking templates, recovery actions, safety
+actions, and local perturbations. The analytic templates and recovery
+guard are not claimed as learned modules; they serve as structured
+racing priors that expand the candidate set and prevent degenerate
+learned proposals under boundary or recovery conditions. Before
+candidate scoring, a deterministic recovery guard is evaluated. If the
+guard is active, DNQ-DLC executes the recovery action directly;
+otherwise it ranks candidate rollouts by the score below. Candidate-pool
+construction, duplicate removal, passing templates, braking templates,
+and the recovery guard are reported in Supplementary Section III
+(Candidate Generation and Scoring).
+
+The learned proposals are
+\begin{equation}
+a_t^{\mathrm{base}}
+=
+\mathrm{ActorMLP}_{\mathrm{base}}(\bar{o}_t),
+\qquad
+a_t^{\mathrm{qual}}
+=
+\mathrm{ActorMLP}_{\mathrm{qual}}(\bar{o}_t).
+\end{equation}
+Thus, $\bar{o}_t$ serves three roles: it is encoded into graph context
+$z_t$, consumed by the proposal actors, and recursively used as the
+state interface during imagined rollout.
+
+Analytic passing proposals are activated when the local geometry admits
+an attack:
+\begin{equation}
+I_{\mathrm{pass}}
+=
+\mathbb{I}
+[
+|\ell_t^0|<\ell_{\mathrm{att}},
+\ 
+\cos(e_{\psi,t}^0)>\eta_{\mathrm{att}},
+\ 
+n_{\mathrm{front}}+n_{\mathrm{side}}>0
+].
+\end{equation}
+When activated, left- and right-side passing actions are generated as
+\begin{equation}
+a_t^{\mathrm{pass}}(s,\Delta)
+=
+[
+\mathrm{clip}
+(s\Delta-\lambda_\psi e_{\psi,t}^0,\delta_{\min},\delta_{\max}),
+\ 
+u_{\mathrm{pass}}(\kappa_t^0),
+\ 
+0
+]^\top .
+\end{equation}
+The concrete trigger values and template constants are provided in
+Supplementary Section III (Candidate Generation and Scoring).
+
+For candidate $n$, the imagined rollout starts from
+\begin{equation}
+\hat{\bar{o}}_{t|t}^{(n)}=\bar{o}_t,
+\qquad
+\hat a_{t|t}^{(n)}=a_t^{(n)}.
+\end{equation}
+For future imagined steps $k>0$, the continuation action is
+\begin{equation}
+\begin{aligned}
+\hat a_{t+k|t}^{(n)}
+=
+&
+(1-\alpha_q)
+\mathrm{ActorMLP}_{\mathrm{base}}
+(
+\hat{\bar{o}}_{t+k|t}^{(n)}
+)
+\\
+&
++
+\alpha_q
+\mathrm{ActorMLP}_{\mathrm{qual}}
+(
+\hat{\bar{o}}_{t+k|t}^{(n)}
+).
+\end{aligned}
+\end{equation}
+The same Graph-DLC pipeline is applied to
+$\hat{\bar{o}}_{t+k|t}^{(n)}$ and $\hat a_{t+k|t}^{(n)}$, and the next
+imagined packed observation is updated by
+\begin{equation}
+\hat{\bar{o}}_{t+k+1|t}^{(n)}
+=
+\mathrm{PostPack}
+(
+\mu_{t+k+1|t}^{o,(n)},
+\hat{\mathbf m}_{t+k|t}^{0,(n)}
+).
+\end{equation}
+In the submitted short-horizon rollout, relation-slot identities are
+not explicitly tracked as persistent physical agents. The predicted
+mean provides continuous self and relation features, while the validity
+mask channels are post-processed by $\mathrm{PostPack}(\cdot)$ for the
+next masked aggregation. At the next real simulator step, the
+neighborhood is rebuilt from telemetry and repacked by
+$\mathrm{Pack}(\cdot)$. Implementation details for
+$\mathrm{PostPack}(\cdot)$ are provided in Supplementary
+Section III-A (Mask Handling During Imagined Rollout).
+
+Each candidate rollout is scored by
+\begin{equation}
+\begin{aligned}
+J(\mathbf{A}_t^{(n)})
+=
+\sum_{k=0}^{H-1}\gamma^k
+[
+&
+\lambda_{\mathrm{prog}}R_{\mathrm{prog}}^{(n,k)}
++
+\lambda_{\mathrm{ovt}}R_{\mathrm{ovt}}^{(n,k)}
+\\
+&
+-
+\lambda_{\mathrm{off}}C_{\mathrm{off}}^{(n,k)}
+-
+\lambda_{\mathrm{lat}}C_{\mathrm{lat}}^{(n,k)}
+\\
+&
+-
+\lambda_{\mathrm{close}}C_{\mathrm{close}}^{(n,k)}
+-
+\lambda_{\mathrm{risk}}C_{\mathrm{risk}}^{(n,k)}
+\\
+&
+-
+\lambda_{\mathrm{unc}}C_{\mathrm{unc}}^{(n,k)}
+-
+\lambda_{\mathrm{imit}}C_{\mathrm{imit}}^{(n,k)}
+].
+\end{aligned}
+\end{equation}
+Full scoring definitions are given in Supplementary Section III-B
+(Scoring Terms).
+
+The selected action is
+\begin{equation}
+n^\star=\arg\max_n J(\mathbf{A}_t^{(n)}),
+\qquad
+a_t^\star=a_t^{(n^\star)}.
+\end{equation}
+DNQ-DLC applies $a_t^\star$, observes telemetry at $t+1$, rebuilds
+$G_{t+1}^0$ and $\bar{o}_{t+1}$, and replans. Since this layer uses
+weighted penalties rather than formal hard constraints, we describe it
+as safety-aware multi-objective scoring rather than strict
+safety-constrained optimization.
+
+\section{Experiments and Results}
+\label{sec:experiments}
+
+\subsection{Experimental Setup and Metrics}
+
+The primary benchmark contains 200 matched cases per algorithm over
+$N\in\{4,5,6,7,8\}$ vehicles. The $N=4$--6 cases match the training
+vehicle-count range, whereas $N=7$--8 tests vehicle-count extrapolation.
+Frozen-checkpoint validation evaluates the world model and quality actor
+on episode-disjoint procedural, Hairpin, and S-Curve data. The component
+study uses matched randomized cases in which start slots and vehicle
+spacing change. Every policy observes all vehicles and selects $K=3$
+neighbors; failed cases are retained.
+
+The benchmark compares \method with Rule Expert, Safety Rule, PPO,
+SAC, TD3 \cite{schulman2017ppo,haarnoja2018sac,fujimoto2018td3}, and
+three DLC variants. Rule Expert combines lane following, adaptive
+driving, and passing modes. Safety Rule uses more conservative barrier
+and traffic-density thresholds. Their implementation is described in
+Supplementary Section II-B.
+
+DLC-IT, DLC-JT, and DLC-JTO denote the individual-transition,
+joint-transition, and joint-transition-plus-observer variants of
+Schwarting \etal~\cite{schwarting2021dlc}. We retrained each variant
+from four seeds using 120 episodes, 96000 transitions, and 80 updates.
+A frozen checkpoint was chosen by a predefined round-robin validation
+rule. These baselines use fixed but non-identical training budgets and
+architectures. Table~\ref{tab:dlc_multicheckpoint} tests all four final
+DLC-JTO checkpoints on eight new matched cases.
+
+The legacy PPO, SAC, and TD3 checkpoints use one seed and 50k environment
+steps. The training-budget analysis adds three 200k-step seeds for each
+RL family and evaluates them on 12 new randomized $N=4$ cases. Full
+training budgets and checkpoint rules are given in Supplementary
+Section II-B.
+
+The analysis designates binary overtaking success as the primary
+closed-loop endpoint. On-track and desirable overtaking, rank gain,
+target grass exposure, the contact proxy, and conditional completion
+time are secondary endpoints. Episode-level on-track and desirable
+proportions use all cases, with zero assigned when a case has no
+completed overtake. Completion time and target-grass summaries are
+conditioned on successful cases and always report their sample counts.
+
+Because every algorithm was evaluated on the same 200 case identifiers,
+primary contrasts use the paired success-rate difference. We report a
+50,000-resample paired case-bootstrap 95\% confidence interval and a
+two-sided exact McNemar test. Holm adjustment covers the six reported
+baseline contrasts. Absolute success rates retain Wilson intervals for
+scale, and vehicle-count strata are reported as sensitivity
+analyses rather than independent replications. Model validation reports
+state RMSE, reward MAE, risk AUROC, risk AUPRC, Brier score, expected
+calibration error, and $H$-step state RMSE. Metric definitions and
+statistical summaries are given in Supplementary Section IV-A. The matched primary and randomized attribution protocols are described
+in Supplementary Sections IV-B and IV-C, respectively.
+
+\subsection{Experiment 1: Basic Effectiveness}
+
+Figure~\ref{fig:e1} reports the 200 matched cases at the aggregate and
+vehicle-count levels. Table~\ref{tab:e1_primary_paired} gives the paired
+primary-endpoint tests for the same cases.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/figure_e1_core_evidence.pdf}
+\caption{Primary overtaking evidence on the 200-case matched benchmark. (a) Absolute success rates with Wilson 95\% confidence intervals. (b) Paired DNQ-DLC minus comparator differences with 50,000-resample paired bootstrap intervals. (c) Training-range and vehicle-count-extrapolation strata; labels report the paired difference from Rule Expert, with the corresponding intervals reported in Table~\ref{tab:e1_primary_paired}. (d) Completion time and grass exposure among successful cases. Panel (d) is survivor-conditioned and descriptive rather than an all-case safety comparison; marker area indicates the successful-case count.}
+\label{fig:e1}
+\end{figure*}
+
+\begin{table*}[t]
+\centering
+\caption{Matched primary-endpoint comparisons on the 200-case benchmark}
+\label{tab:e1_primary_paired}
+\begin{tabular}{lcccc}
+\toprule
+Method & Success & DNQ-DLC minus method [95\% CI] & Discordant & $p_{\mathrm{Holm}}$ \\
+\midrule
+DNQ-DLC & \textbf{171/200} & Reference & -- & -- \\
+Rule Expert & 143/200 & 0.140 [0.065, 0.215] & 46/18 & 0.000617 \\
+Safety Rule & 140/200 & 0.155 [0.085, 0.225] & 43/12 & 0.000066 \\
+DLC-JTO & 18/200 & 0.765 [0.700, 0.830] & 157/4 & $<10^{-40}$ \\
+PPO legacy & 55/200 & 0.580 [0.505, 0.650] & 119/3 & $<10^{-30}$ \\
+SAC legacy & 1/200 & 0.850 [0.800, 0.895] & 170/0 & $<10^{-50}$ \\
+TD3 legacy & 78/200 & 0.465 [0.390, 0.540] & 98/5 & $<10^{-22}$ \\
+\bottomrule
+\end{tabular}
+\tabnote{Effects are DNQ-DLC minus comparator. Confidence intervals use 50,000 paired case-bootstrap resamples. Discordant pairs are DNQ-DLC-only/comparator-only successes. McNemar $p$ values are Holm-adjusted. Legacy RL checkpoints are not training-budget matched. Boldface marks the highest success count.}
+\end{table*}
+
+Across the same 200 matched cases, \method achieved 85.5\% success
+(171/200), compared with 71.5\% for Rule Expert (143/200). The paired
+increase was 0.140 (95\% paired bootstrap CI, 0.065--0.215; exact
+McNemar $p=0.000617$). Both controllers succeeded in 125 cases, only
+\method succeeded in 46, only Rule Expert succeeded in 18, and neither
+succeeded in 11. Relative to Safety Rule, the paired increase was 0.155
+(95\% CI, 0.085--0.225; Holm-adjusted $p=0.000066$). Relative to
+DLC-JTO, the paired increase was 0.765 (95\% CI, 0.700--0.830;
+Holm-adjusted $p<10^{-40}$). Table~\ref{tab:e1_primary_paired} reports
+the complete matched comparison family.
+
+Secondary outcomes show a clear trade-off. Conditional
+mean completion time was 97.8 steps for \method, 126.0 for Rule Expert,
+and 131.1 for Safety Rule. These estimates use different successful-case
+sets and are not an all-case censored-time comparison. Mean desirable
+overtaking was 42.0\% for \method and 38.1\% for Rule Expert, but mean
+target grass exposure among successful cases was 62.9\% for \method and
+39.0\% for Rule Expert. Overtaking success is therefore an effectiveness
+endpoint, not a surrogate for global safety or track adherence.
+
+The effect differed by vehicle count. Within
+$N=4$--6, success was 86.7\% for \method and 81.7\% for Rule Expert.
+The paired difference was 0.050 (95\% CI, $-0.033$--0.133; exact
+McNemar $p=0.327$), which does not establish a difference in this
+stratum. For $N=7$--8, success was 83.8\% for \method and 56.3\% for
+Rule Expert. The paired difference was 0.275 (95\% CI, 0.138--0.413;
+exact McNemar $p=0.000472$). This result supports vehicle-count
+extrapolation within the tested simulator range, not unrestricted
+out-of-distribution generalization.
+
+Table~\ref{tab:dlc_multicheckpoint} reports the checkpoint-sensitivity
+analysis. The four final DLC-JTO checkpoints were evaluated on eight new
+matched $N=4$ cases. No checkpoint was selected on these cases.
+
+\begin{table*}[t]
+\centering
+\caption{DLC-JTO checkpoint sensitivity on eight new matched $N=4$ cases}
+\label{tab:dlc_multicheckpoint}
+\begin{tabular}{lcccc}
+\toprule
+Controller/checkpoint & Success [95\% Wilson CI] & Desirable & Target grass & Rank gain \\
+\midrule
+DNQ-DLC fixed & \textbf{7/8 [0.529, 0.978]} & 0.175 & 0.536 & 0.750 \\
+Rule Expert fixed & 6/8 [0.409, 0.929] & \textbf{0.438} & 0.566 & \textbf{1.500} \\
+DLC-JTO train seed 0 & 0/8 [0.000, 0.324] & 0.000 & 0.529 & 0.000 \\
+DLC-JTO train seed 1 & 0/8 [0.000, 0.324] & 0.000 & 0.528 & 0.000 \\
+DLC-JTO train seed 2 & 0/8 [0.000, 0.324] & 0.000 & 0.791 & 0.000 \\
+DLC-JTO train seed 3 & 0/8 [0.000, 0.324] & 0.000 & \textbf{0.395} & 0.000 \\
+\bottomrule
+\end{tabular}
+\tabnote{DNQ-DLC and Rule Expert are fixed references. Boldface marks the best point estimate in each directly comparable performance column; it does not indicate statistical significance.}
+\end{table*}
+
+DNQ-DLC succeeded in 7/8 cases, Rule Expert in 6/8, and every DLC-JTO
+checkpoint in 0/8. The paired DNQ-DLC minus DLC-JTO difference was 0.875
+for each checkpoint (95\% CI, 0.625--1.000). The individual exact
+McNemar value was 0.0156, while Holm adjustment across the four
+checkpoint comparisons gave 0.0625. The small evaluation set makes this
+a sensitivity result rather than a second confirmatory benchmark.
+
+\subsection{Training-Budget Sensitivity: Multi-seed RL Baselines}
+
+Table~\ref{tab:rl_multiseed} summarizes 12 evaluation cases for each of
+three independently trained PPO, SAC, and TD3 policies, together with
+the fixed DNQ-DLC and rule-based references.
+
+\begin{table*}[t]
+\centering
+\caption{Three-seed evaluation of 200k-step RL baselines}
+\label{tab:rl_multiseed}
+\begin{tabular}{lrrrr}
+\toprule
+Family & Success & Desirable & Grass & Rank gain \\
+\midrule
+\method & \textbf{1.000} & 0.054 & 0.115 & 2.167 \\
+Rule Expert & 0.917 & \textbf{0.417} & 0.220 & 2.000 \\
+Safety Rule & 0.917 & 0.347 & 0.151 & \textbf{2.333} \\
+PPO & 0.694 [0.667, 0.750] & 0.410 [0.333, 0.500] & 0.876 [0.743, 0.957] & 0.278 [0.000, 0.750] \\
+SAC & 0.889 [0.833, 0.917] & 0.287 [0.000, 0.444] & 0.236 [0.161, 0.379] & 1.250 [0.500, 2.250] \\
+TD3 & 0.806 [0.750, 0.917] & 0.148 [0.028, 0.333] & \textbf{0.080 [0.000, 0.192]} & 0.917 [0.083, 2.500] \\
+\bottomrule
+\end{tabular}
+\tabnote{Evaluation uses 12 new procedural $N=4$ cases. RL entries are means and ranges across three training seeds; ranges are not confidence intervals. DNQ-DLC and rule controllers are fixed. Boldface marks the best mean point estimate.}
+\end{table*}
+
+Longer RL training improves several baselines, but no controller leads
+on every metric in Table~\ref{tab:rl_multiseed}. The unchanged DNQ-DLC controller
+completes an overtake in all 12 cases and has substantially lower grass
+exposure than PPO, SAC, and Rule Expert. However, Rule Expert and PPO
+have much higher desirable-overtaking rates, Safety Rule has higher mean
+rank gain, and TD3 has lower mean grass exposure. The RL family ranges
+also reveal material training-seed variability. These results reinforce
+the central trade-off: \method prioritizes completion in this short
+horizon, but does not dominate behavior-quality endpoints.
+
+\subsection{Experiment 2: Frozen World-Model Validation}
+
+Table~\ref{tab:wm_validation} reports one-step and ten-step prediction
+results for three episode-disjoint validation strata, with eight
+episodes and 4800 transitions in each stratum.
+
+\begin{table*}[t]
+\centering
+\caption{Episode-disjoint validation of the frozen graph world model}
+\label{tab:wm_validation}
+\begin{tabular}{lcccccc}
+\toprule
+Stratum & One-step state RMSE & Reward MAE & Risk prevalence & AUROC & AUPRC & $H=10$ RMSE \\
+\midrule
+Procedural, $N=4$--6 & \textbf{0.124} & \textbf{0.198} & 0.005 & \textbf{0.999} & 0.982 & \textbf{0.239} \\
+Hairpin, $N=8$ & 0.248 & 0.569 & 0.353 & 0.996 & 0.995 & 0.409 \\
+S-Curve, $N=8$ & 0.176 & 0.535 & 0.339 & \textbf{0.999} & \textbf{0.999} & 0.370 \\
+\bottomrule
+\end{tabular}
+\tabnote{The risk target is the implemented boundary/unstable-driving label, not physical collision probability. Each stratum contains eight episodes and 4800 transitions. Boldface marks the lowest prediction error or highest discrimination value; risk prevalence is not ranked.}
+\end{table*}
+
+Table~\ref{tab:wm_validation} shows that the frozen transition model is
+most accurate in the procedural $N=4$--6 stratum. One-step state RMSE
+approximately doubles on Hairpin with eight vehicles, and $H=10$ error
+increases in both out-of-distribution strata. The risk head remains
+highly discriminative and well calibrated for its implemented
+boundary-risk target (ECE 0.0006, 0.0080, and 0.0036, respectively), but
+this does not establish collision prediction or real-world safety. The risk head remains useful for short-horizon ranking, but state
+prediction transfers less well over longer horizons.
+
+\subsection{Experiment 3: Quality-Proposal Validation}
+
+Table~\ref{tab:quality_validation} compares the quality actor with the
+training-set mean-action predictor on newly collected accepted-event
+states from the three validation strata.
+
+\begin{table*}[t]
+\centering
+\caption{Episode-disjoint validation of the quality-proposal actor}
+\label{tab:quality_validation}
+\begin{tabular}{lrrrrr}
+\toprule
+Stratum & Episodes with samples & Samples & Accepted events & Actor MSE & Mean-action MSE \\
+\midrule
+Procedural, $N=4$--6 & 3/8 & 250 & 3 & \textbf{0.015} & 0.031 \\
+Hairpin, $N=8$ & 8/8 & 1446 & 16 & 0.139 & \textbf{0.028} \\
+S-Curve, $N=8$ & 8/8 & 758 & 8 & 0.114 & \textbf{0.029} \\
+\bottomrule
+\end{tabular}
+\tabnote{Validation uses newly collected accepted-event states. Actor MSE is compared with a constant predictor equal to the mean action in the training set. Boldface marks the lower MSE within each stratum.}
+\end{table*}
+
+The quality actor outperforms the mean-action predictor only in the
+procedural training-range stratum. Its error is much higher on both
+unseen $N=8$ tracks, mainly because it predicts too much throttle. The
+actor is therefore useful as an additional proposal, but it does not
+show out-of-distribution generalization. Closed-loop results apply to
+the complete controller rather than to this actor alone.
+
+\subsection{Experiment 4: Same-Track Interaction Sequence}
+
+Figure~\ref{fig:e4_sequence} shows synchronized top-down and ego views
+from one shared-scene run. DNQ-DLC starts behind Rule Expert, TD3, and
+DLC-JTO in the same simulator instance.
+
+
+
+The sequence makes the maneuver order visible without serving as a
+baseline estimate. The four controllers do not have matched training
+budgets, and the case was chosen for qualitative inspection. The full
+video is available at
+\url{https://chocho2222.github.io/DNQ-DLC/#videos}.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/figure_s1_same_track_simulation_sequence.pdf}
+\caption{Same-track qualitative interaction sequence. The top and bottom rows show synchronized top-down and ego views during approach, side-by-side interaction, and pass completion. DNQ-DLC starts from the rear and shares the scene with Rule Expert, TD3, and DLC-JTO. The sequence illustrates one maneuver and is not used for population-level comparison.}
+\label{fig:e4_sequence}
+\end{figure*}
+
+\subsection{Experiment 5: Mechanism Explanation}
+
+Figure~\ref{fig:e5} combines one annotated overtaking sequence with the
+32-case graph-repacking summary and paired component effects.
+
+
+
+Panels (a)--(c) show A9 moving from one tile behind A4 to equal
+progress and then two tiles ahead. The enlarged views make the change in relative progress clear.
+Panel (d) shows that all 32 full-controller cases changed their ranked
+top-three relations, with a median of 43 switches per case. The $N=8$
+cases also used more distinct relation sets than the $N=6$ cases.
+Panel (e) supports effects from risk/uncertainty scoring, safety-quality
+scoring, and the quality proposal's reduction in grass exposure. The
+dynamic-selector intervals cross zero in this matrix.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/figure_e5_mechanism_attribution.pdf}
+\caption{Runtime graph repacking and matched component evidence. (a)--(c) Magnified top-down views of one ten-vehicle overtaking event. A9 closes on A4 at step 101, reaches equal lap-tile progress at step 129, and leads by two tiles at step 157. Cyan and orange annotations identify A9 and A4, respectively. (d) Unique ranked top-three sets across the 32 full-controller cases in the randomized $N=6/8$ matrix. Violin envelopes show density, boxes show the interquartile range and median, and points show individual cases. (e) Paired full-controller effects for the same cases. Positive values favour the full controller; blue intervals exclude zero and grey intervals cross zero.}
+\label{fig:e5}
+\end{figure*}
+\FloatBarrier
+
+\subsection{Experiment 6: Randomized Component Attribution}
+
+Table~\ref{tab:e6_randomized} summarizes all 288 runs in the randomized
+$N=6/8$ attribution matrix. Figure~\ref{fig:e5}(e) shows the paired
+confidence intervals for the effects discussed below.
+
+
+
+Table~\ref{tab:e6_randomized} reports all prespecified randomized
+cases. Removing the learned risk and uncertainty costs reduces the
+desirable rate by a paired mean of 0.201 (95\% bootstrap CI
+[0.066, 0.341]), although it produces one additional success. Removing
+all safety-quality terms reduces desirable behavior by 0.224
+[0.042, 0.397] and raises grass exposure by 0.136 [0.019, 0.260]. The
+quality proposal has a measurable grass effect: removing it raises
+grass exposure by 0.183 [0.086, 0.283], while its desirable-rate and
+rank-gain effects remain uncertain at this sample size.
+
+The selector variants all succeed in 30/32 cases, and their paired
+intervals overlap for desirable behavior, grass exposure, and rank gain.
+Hard recovery also has little aggregate effect. Removing handcrafted
+candidates improves all four point estimates at $N=6/8$. The
+higher-density test below gives a different result.
+
+A separate $N=10/12$ mixed-traffic test contains 32 matched cases.
+The full, fixed-identity, and nearest-neighbor controllers each succeed
+in 32/32 cases. Fixed identity has a higher desirable-rate point estimate
+(0.822 versus 0.703). The full controller has lower grass exposure than
+nearest neighbor (0.287 versus 0.396; paired difference $-0.108$, 95\%
+CI [$-0.202,-0.014$]). Removing handcrafted candidates reduces success
+to 27/32. Selector and candidate effects therefore depend on traffic
+density. Dynamic packing is supported as a changing interaction
+representation, not as a universally better selection policy.
+
+\begin{table*}[t]
+\centering
+\caption{Randomized component attribution across tracks and vehicle counts}
+\label{tab:e6_randomized}
+\begin{tabular}{lrrrr}
+\toprule
+Variant & Success (95\% Wilson CI) & Desirable & Grass & Rank gain \\
+\midrule
+Full controller & 0.938 [0.799, 0.983] & 0.799 & 0.465 & 2.562 \\
+Nearest-neighbor slots & 0.938 [0.799, 0.983] & 0.760 & 0.406 & 2.375 \\
+Fixed-identity slots & 0.938 [0.799, 0.983] & 0.730 & 0.446 & 2.500 \\
+w/o quality proposal & 0.938 [0.799, 0.983] & 0.669 & 0.648 & 1.906 \\
+w/o risk/uncertainty & \textbf{0.969 [0.843, 0.994]} & 0.598 & 0.430 & 2.875 \\
+w/o all safety-quality terms & 0.906 [0.758, 0.968] & 0.575 & 0.602 & 2.344 \\
+w/o rule anchor & 0.938 [0.799, 0.983] & 0.701 & 0.377 & 2.812 \\
+w/o handcrafted candidates & \textbf{0.969 [0.843, 0.994]} & \textbf{0.890} & \textbf{0.367} & \textbf{3.031} \\
+w/o hard recovery & 0.938 [0.799, 0.983] & 0.758 & 0.465 & 2.625 \\
+\bottomrule
+\end{tabular}
+\tabnote{The matched design uses Hairpin and S-Curve, $N=6/8$, and eight seeds per stratum. All 288 runs completed. Grass is lower-is-better; the other metrics are higher-is-better. Boldface marks the best point estimate, not statistical significance.}
+\end{table*}
+
+\section{Discussion}
+\label{sec:discussion}
+
+The main result is that the complete \method controller improves
+overtaking success relative to Rule Expert, Safety Rule, and the
+evaluated DLC and legacy RL baselines. This result applies to the full
+controller. It does not show that the dynamic selector alone caused the
+increase. Overtaking success measures pass completion, not overall
+safety. Rule Expert still has lower grass exposure and a higher
+desirable-overtaking rate within $N=4$--6.
+
+The supporting experiments explain this result more clearly. The frozen
+world model ranks short-horizon boundary risk well, but its prediction
+error increases on unseen $N=8$ tracks. The quality actor works in the
+procedural training range but does not transfer to the two unseen
+$N=8$ tracks. Randomized ablations support several quality-related
+terms, whereas the dynamic-selector intervals cross zero. Longer RL
+training also improves several baselines, and the methods occupy
+different parts of the completion--desirable--grass trade-off. DNQ-DLC
+has the highest completion in the 12-case $N=4$ study, but it does not
+simultaneously provide the best desirable rate, grass rate, and rank
+gain.
+
+The framework also clarifies the role of structured priors. Rule Expert
+is both a strong comparator and an internal dependency of the deployed
+hybrid planner through the anchor action. Handcrafted candidate
+templates, speed limits, and recovery triggers provide additional
+inductive bias. The system should therefore be interpreted as learned
+short-horizon ranking around structured racing priors, rather than as a
+fully learned replacement for rule-based control.
+
+The evidence remains confined to simulation and does not establish
+real-vehicle safety, physical collision avoidance, tire-limit validity,
+or robustness to actuator delay. The implemented risk target is derived
+from off-track, backward-motion, and lateral-error telemetry rather than
+physical collision labels. The controller also assumes map-relative
+telemetry, leaving perception error, occlusion, localization drift, and
+asynchronous sensing outside the evaluated setting. Within imagined
+rollouts, relation slots remain fixed; the physical graph is rebuilt
+only after the next real simulator observation. The legacy E2/E3 sweeps
+are therefore retained as deterministic functional checks rather than
+independent scenario evidence.
+
+Training-budget and opponent diversity also constrain comparison. The
+additional RL study covers three seeds, 200k steps, $N=4$, and 12 final
+checkpoint evaluations without dense learning curves. The DLC suite
+uses four training seeds but a lower optimization budget
+than DNQ-DLC. The quality actor is trained from 24 filtered episodes and
+does not beat the mean-action predictor on two unseen $N=8$ tracks.
+Moreover, the opponent set excludes adversarial blocking and human
+racecraft. Supplementary Section VI discusses these evidence limits.
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+This paper introduced \method, a hybrid world-model planner for
+online multi-car overtaking. At each real control step, the method
+reconstructs a map-conditioned interaction graph, selects the currently
+relevant neighboring vehicles, and packs them into a bounded masked
+graph tensor. A Graph-DLC model then predicts short-horizon outcomes,
+while a quality-guided receding-horizon planner ranks learned and
+structured action candidates. This design separates the changing
+physical interaction set from the fixed-dimensional neural interface.
+
+On the 200-case matched benchmark, the complete controller achieved
+85.5\% overtaking success, compared with 71.5\% for Rule Expert. The
+paired improvement was 14.0 percentage points (95\% CI,
+6.5--21.5 percentage points). The advantage was also observed in the
+tested $N=7$--8 vehicle-count extrapolation stratum. Frozen-model
+validation supports short-horizon boundary-risk ranking, and randomized
+attribution supports contributions from risk and safety-quality scoring.
+However, the method did not dominate every secondary endpoint, and the
+dynamic selector's independent performance advantage was not established.
+
+Future work will move the framework from telemetry-based simulation to
+closed-course real-vehicle overtaking experiments. The controller will
+be integrated with onboard perception, multi-vehicle tracking,
+localization, and a supervisory safety layer, and its latency and
+robustness will be evaluated under sensor noise and actuator delay.
+Hardware-in-the-loop tests will precede progressively more demanding
+multi-vehicle track experiments.
+
+\section*{Data and Code Availability}
+The implementation, configurations, self-trained checkpoints, source
+data, figures, and simulation videos will be released after submission
+at \url{https://github.com/chocho2222/DNQ-DLC}. A frozen versioned
+release and archival DOI will be added after the public package is
+finalized.
+
+% TODO(author): Insert final funding, acknowledgments, author
+% contributions, affiliations, ORCID identifiers, and corresponding
+% author information after the manuscript and grant records are frozen.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

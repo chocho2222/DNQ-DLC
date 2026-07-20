@@ -352,63 +352,118 @@ def aggregate_repacking():
 
 
 def plot_mechanism_attribution():
-    mech_path = ROOT / "outputs/tits_dynamic_graph_expanded/video_evidence_raw/e5_mechanism_from_clean_e3_n10/tables/e5_dynamic_neighborhood_mechanism_source_data.csv"
-    mech = pd.read_csv(mech_path)
     attr_path = ROOT / "outputs/tits_dynamic_graph_expanded/randomized_attribution_confirmatory_20260710/aggregate/randomized_attribution_report.json"
     attr = json.loads(attr_path.read_text(encoding="utf-8"))["paired_full_minus_ablation"]
     screenshot_dir = ROOT / "outputs/tits_dynamic_graph_expanded/publication_first_person_visual_evidence_pack/E5_mechanism_dynamic_neighbor_N10_seed20000/screenshots_topdown"
     shots = [
-        (101, screenshot_dir / "v6_runtime_dynamic_neighborhood_safe_n10_seed20000_01_approach_step101.png", "Approach"),
-        (129, screenshot_dir / "v6_runtime_dynamic_neighborhood_safe_n10_seed20000_02_interaction_step129.png", "Interaction"),
-        (157, screenshot_dir / "v6_runtime_dynamic_neighborhood_safe_n10_seed20000_03_completion_step157.png", "Pass complete"),
+        (101, screenshot_dir / "v6_runtime_dynamic_neighborhood_safe_n10_seed20000_01_approach_step101.png",
+         "Approach: A9 closes on A4", "A9 behind by 1 tile"),
+        (129, screenshot_dir / "v6_runtime_dynamic_neighborhood_safe_n10_seed20000_02_interaction_step129.png",
+         "Interaction: A9 draws level", "A9 level with A4"),
+        (157, screenshot_dir / "v6_runtime_dynamic_neighborhood_safe_n10_seed20000_03_completion_step157.png",
+         "Completion: A9 moves ahead", "A9 ahead by 2 tiles"),
     ]
+    trace_path = ROOT / "outputs/tits_dynamic_graph_expanded/publication_visual_asset_pack_raw/E3_scale_N10_seed20000/traces/v6_runtime_dynamic_neighborhood_safe_n10_seed20000.trace.json"
+    trace = json.loads(trace_path.read_text(encoding="utf-8"))
+    trace_by_step = {int(row["step"]): row for row in trace}
+    track = np.load(ROOT / "tracks/oval_density_n10_scaled.npz")
+    road_points = np.concatenate([track["left"], track["right"]], axis=0)
+    lo = road_points.min(axis=0) - 30.0
+    hi = road_points.max(axis=0) + 30.0
+    span = np.maximum(hi - lo, 1.0)
+    scale = min(1799.0 / span[0], 1799.0 / span[1])
+    centered_span = np.array([1800.0, 1800.0]) / scale
+    pad = (centered_span - span) / 2.0
+
+    def screenshot_xy(world_positions):
+        xy = (np.asarray(world_positions, dtype=float) - (lo - pad)) * scale
+        xy[:, 1] = 1800.0 - xy[:, 1]
+        return xy
+
     repack = aggregate_repacking()
 
-    fig = plt.figure(figsize=(7.16, 4.32))
-    gs = fig.add_gridspec(2, 12, height_ratios=[0.90, 1.10], hspace=0.25, wspace=0.38)
+    fig = plt.figure(figsize=(7.16, 4.82))
+    gs = fig.add_gridspec(2, 12, height_ratios=[1.08, 1.00], hspace=0.24, wspace=0.18)
     top_axes = [
         fig.add_subplot(gs[0, 0:4]),
         fig.add_subplot(gs[0, 4:8]),
         fig.add_subplot(gs[0, 8:12]),
     ]
-    # Global crop applied identically to all three top-down frames.  It removes
-    # empty track area while retaining the full local vehicle pack and graph
-    # edges.  No local contrast, colour, or object-level edits are applied.
-    crop_box = (800, 250, 1800, 1150)
-    for i, (ax, (step, path, title)) in enumerate(zip(top_axes, shots)):
+    # A fixed high-resolution crop preserves scale and viewpoint across time.
+    # Vector annotations make the two vehicles and their relative progression
+    # readable at the final double-column journal size.
+    crop_box = (1100, 550, 1800, 1250)
+    crop_origin = np.asarray(crop_box[:2], dtype=float)
+    target_color = "#00A6D6"
+    opponent_color = "#F28E2B"
+    for i, (ax, (step, path, title, progress_text)) in enumerate(zip(top_axes, shots)):
         im = Image.open(path).convert("RGB").crop(crop_box)
-        ax.imshow(im)
+        ax.imshow(im, interpolation="none")
         ax.set_xticks([]); ax.set_yticks([])
         for spine in ax.spines.values():
             spine.set_visible(True)
-            spine.set_color("#D5DADE")
-            spine.set_linewidth(0.55)
-        ax.set_title(f"{title} (step {step})", fontsize=6.9, fontweight="bold", pad=2.5)
-        slots = selected_slots(mech, step)
+            spine.set_color("#AAB2B9")
+            spine.set_linewidth(0.70)
+
+        positions = screenshot_xy(trace_by_step[step]["positions"]) - crop_origin
+        p9, p4 = positions[9], positions[4]
+        for point, color in ((p9, target_color), (p4, opponent_color)):
+            ax.add_patch(Circle(point, 31, fill=False, edgecolor="white",
+                                linewidth=3.6, zorder=5))
+            ax.add_patch(Circle(point, 28, facecolor=color, alpha=0.18,
+                                edgecolor=color, linewidth=2.5, zorder=6))
+
+        ax.annotate(
+            "A9  DNQ-DLC", xy=p9, xytext=(-67, 31), textcoords="offset points",
+            ha="left", va="center", fontsize=6.1, fontweight="bold",
+            color="white", zorder=8,
+            bbox=dict(boxstyle="round,pad=0.22", facecolor=target_color,
+                      edgecolor="white", linewidth=0.65, alpha=0.96),
+            arrowprops=dict(arrowstyle="-|>", color="white", linewidth=1.15,
+                            shrinkA=2, shrinkB=22, mutation_scale=8),
+        )
+        ax.annotate(
+            "A4  overtaken vehicle", xy=p4, xytext=(-84, -30), textcoords="offset points",
+            ha="left", va="center", fontsize=5.85, fontweight="bold",
+            color="white", zorder=8,
+            bbox=dict(boxstyle="round,pad=0.22", facecolor=opponent_color,
+                      edgecolor="white", linewidth=0.65, alpha=0.96),
+            arrowprops=dict(arrowstyle="-|>", color="white", linewidth=1.15,
+                            shrinkA=2, shrinkB=22, mutation_scale=8),
+        )
+
+        ax.set_title(title, fontsize=7.05, fontweight="bold", pad=3.0)
         ax.text(
             0.02,
             0.035,
-            "ranked slots  " + " → ".join(map(str, slots)),
+            progress_text,
             transform=ax.transAxes,
             ha="left",
             va="bottom",
-            fontsize=5.65,
-            color="white",
-            bbox=dict(boxstyle="round,pad=0.20", facecolor=NAVY,
-                      edgecolor="white", linewidth=0.5, alpha=0.90),
+            fontsize=6.1,
+            fontweight="bold",
+            color=NAVY,
+            bbox=dict(boxstyle="round,pad=0.24", facecolor="white",
+                      edgecolor=NAVY, linewidth=0.65, alpha=0.94),
         )
         ax.text(
-            0.018,
-            0.975,
+            0.02,
+            0.98,
             chr(ord("a") + i),
             transform=ax.transAxes,
             ha="left",
             va="top",
             fontsize=8.2,
             fontweight="bold",
-            color="white",
-            bbox=dict(boxstyle="round,pad=0.12", facecolor=NAVY,
-                      edgecolor="none", alpha=0.82),
+            color=NAVY,
+            bbox=dict(boxstyle="round,pad=0.13", facecolor="white",
+                      edgecolor=NAVY, linewidth=0.60, alpha=0.94),
+        )
+        ax.text(
+            0.98, 0.98, f"step {step}", transform=ax.transAxes,
+            ha="right", va="top", fontsize=5.8, color=NAVY,
+            bbox=dict(boxstyle="round,pad=0.18", facecolor="white",
+                      edgecolor="#AAB2B9", linewidth=0.50, alpha=0.92),
         )
 
     ax_d = fig.add_subplot(gs[1, 0:5])

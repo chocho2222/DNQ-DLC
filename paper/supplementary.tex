@@ -1,0 +1,1084 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{xspace}
+
+\newcommand{\method}{DNQ-DLC\xspace}
+\renewcommand{\thetable}{S\Roman{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\begin{document}
+
+\title{Supplementary Material for ``Dynamic-Neighborhood Quality-Guided World Models for Online Multi-Car Overtaking in Autonomous Racing''}
+\author{Author names and affiliations to be inserted before submission}
+\maketitle
+
+\section*{Supplementary Material for ``Dynamic-Neighborhood
+Quality-Guided World Models for Online Multi-Car Overtaking in
+Autonomous Racing''}
+
+This supplement gives the implementation details, training settings,
+evaluation protocols, secondary results, and reproducibility information
+needed to interpret the main paper.
+
+\section{Architecture, Packed Observation, and Hyperparameters}
+\label{supp:arch}
+
+\subsection{Notation Summary}
+\label{supp:notation}
+
+\begin{table}[t]
+\centering
+\caption{Notation used by DNQ-DLC.}
+\label{tab:supp_notation}
+\begin{tabular}{ll}
+\hline
+Symbol & Meaning \\
+\hline
+$t$ & physical decision time \\
+$q$ & arbitrary vehicle index for local geometric definitions \\
+$j$ & surrounding vehicle in an ego-neighbor relation \\
+$i$ & agent-centered row index \\
+$k$ & packed relation-slot index \\
+$(n)$ & candidate rollout index \\
+$t+k|t$ & $k$-step prediction made from decision time $t$ \\
+$\hat{x}$ & imagined quantity predicted by the world model \\
+$\bar{o}_t$ & packed graph observation for the controlled ego row \\
+$\phi_t^i$ & self feature block of row $i$ \\
+$y_t^{i,k}$ & packed relation slot $k$ of row $i$ \\
+$m_t^{i,k}$ & validity mask of relation slot $k$ in row $i$ \\
+$z_t^i$ & graph-context embedding of row $i$ \\
+$h_t^i$ & transition hidden state of row $i$ \\
+$z_t,h_t$ & shorthand for $z_t^0,h_t^0$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Packed Observation Layout}
+\label{supp:pack}
+
+The main manuscript denotes the bounded tensorization of the runtime
+graph by $\bar{o}_t$. The relation capacity is an implementation
+parameter rather than a fixed physical vehicle topology. In the
+submitted checkpoint, DNQ-DLC uses
+\begin{equation}
+d_o=41=17+3\times8.
+\end{equation}
+Thus, the packed observation contains one 17-dimensional self feature
+block and three masked relation slots:
+\begin{equation}
+K_{\max}=3,
+\qquad
+d_\phi=17.
+\end{equation}
+
+For the controlled ego row, the $k$-th relation slot is
+\begin{equation}
+y_t^{0,k}
+=
+[
+\tilde r_{\mathrm{phy},t}^{0,k},
+m_t^{0,k}
+]
+\in\mathbb{R}^{8},
+\end{equation}
+where
+\begin{equation}
+\tilde r_{\mathrm{phy},t}^{0,k}
+=
+[
+\Delta f_b,
+\Delta l_b,
+\Delta v_x,
+\Delta v_y,
+d,
+\sin\Delta\psi,
+\cos\Delta\psi
+]^\top
+\in\mathbb{R}^{7}.
+\end{equation}
+The complete packed observation is
+\begin{equation}
+\bar{o}_t
+=
+[
+\phi_t^0,
+y_t^{0,1},
+y_t^{0,2},
+y_t^{0,3}
+]
+\in\mathbb{R}^{41}.
+\end{equation}
+The relation encoder consumes only the seven physical components
+$\tilde r_{\mathrm{phy},t}^{0,k}$; the mask $m_t^{0,k}$ is used for
+padding control and masked aggregation. In the submitted telemetry
+builder, $\Delta f_b$ and $\Delta l_b$ are ego-body forward and left
+displacements normalized by \texttt{PLAYFIELD}, whereas
+$\Delta v_x$ and $\Delta v_y$ are global velocity differences
+normalized by 50. Therefore, the relation slot is an ego-conditioned
+telemetry relation rather than a purely centerline-frame relation.
+
+\subsection{Validity Mask Generation}
+\label{supp:mask}
+
+The validity mask is generated during bounded graph tensorization and is not
+learned. Let $\mathcal{N}_t$ be the eligible interaction neighborhood
+constructed by the runtime selector, and let
+$j_t^k=\mathrm{TopK}_k(\mathcal{N}_t;\rho)$ be the $k$-th
+highest-relevance neighbor when it exists. For the controlled ego row,
+\begin{equation}
+m_t^{0,k}
+=
+\mathbb{I}
+[
+k\le \min(|\mathcal{N}_t|,K_{\max})
+],
+\qquad
+k=1,\ldots,K_{\max}.
+\end{equation}
+The packed physical relation is
+\begin{equation}
+\tilde r_{\mathrm{phy},t}^{0,k}
+=
+\begin{cases}
+r_t^{0j_t^k}, & m_t^{0,k}=1,\\
+\mathbf{0}, & m_t^{0,k}=0.
+\end{cases}
+\end{equation}
+Thus, padded slots contain zero physical relation features and have
+zero validity masks. When $|\mathcal{N}_t|>K_{\max}$, all vehicles are
+scored by the interaction selector, but only the $K_{\max}$ highest
+ranked vehicles are tensorized into the bounded masked representation
+used at that decision step. The physical graph and represented
+identities are nevertheless rebuilt from telemetry at every real step.
+
+The submitted checkpoint uses $K_{\max}=3$ as a deliberate
+capacity-latency trade-off. This setting yielded usable performance in
+the evaluated scenarios, but its causal sufficiency was not isolated.
+More complex congestion may require a larger slot capacity or
+hierarchical selection. Sensitivity to $K_{\max}$ is left as future
+work.
+
+\subsection{Self Feature Block}
+\label{supp:self_feature}
+
+The self feature block $\phi_t^i\in\mathbb{R}^{17}$ is the normalized
+row-wise vehicle and local-map descriptor exported by the telemetry
+extractor. It is fixed across training and evaluation. It combines
+global state, track-relative progress, centerline-offset features,
+heading-error features, and driving-status flags.
+
+\begin{table*}[t]
+\centering
+\caption{Self feature block $\phi_t^i$ used in the submitted checkpoint.
+All continuous entries are normalized before being passed to the
+network. The order is taken from the telemetry-dynamic observation
+builder used for the submitted checkpoint.}
+\label{tab:self_feature_block}
+\begin{tabular}{llll}
+\hline
+Index & Symbol / Code field & Meaning & Normalization \\
+\hline
+1  & \texttt{ego\_x} & global $x$ position of vehicle $i$ & $p_x^i/\texttt{PLAYFIELD}$ \\
+2  & \texttt{ego\_y} & global $y$ position of vehicle $i$ & $p_y^i/\texttt{PLAYFIELD}$ \\
+3  & \texttt{ego\_vx} & global $x$ velocity & $v_x^i/50$ \\
+4  & \texttt{ego\_vy} & global $y$ velocity & $v_y^i/50$ \\
+5  & \texttt{ego\_speed} & speed magnitude & $\|v^i\|_2/50$ \\
+6  & \texttt{ego\_heading\_sin} & sine of vehicle heading & $\sin\psi^i$ \\
+7  & \texttt{ego\_heading\_cos} & cosine of vehicle heading & $\cos\psi^i$ \\
+8  & \texttt{ego\_angular\_velocity} & yaw angular velocity & $\dot{\psi}^i/5$ \\
+9  & \texttt{track\_progress} & nearest centerline-index progress & $\eta^i/\max(|\mathcal{T}|-1,1)$ \\
+10 & \texttt{tile\_progress} & visited-tile lap progress & $n_{\mathrm{tile}}^i/|\mathcal{T}|$ \\
+11 & \texttt{centerline\_dx} & global $x$ offset from nearest centerline point & $(p_x^i-c_x(\eta^i))/\texttt{TRACK\_WIDTH}$ \\
+12 & \texttt{centerline\_dy} & global $y$ offset from nearest centerline point & $(p_y^i-c_y(\eta^i))/\texttt{TRACK\_WIDTH}$ \\
+13 & \texttt{lateral\_error} & signed centerline-normal offset & $\langle p^i-c(\eta^i),\hat{\mathbf n}(\eta^i)\rangle/\texttt{TRACK\_WIDTH}$ \\
+14 & \texttt{heading\_error\_sin} & sine of centerline-heading error & $\sin(\psi_c(\eta^i)-\psi^i)$ \\
+15 & \texttt{heading\_error\_cos} & cosine of centerline-heading error & $\cos(\psi_c(\eta^i)-\psi^i)$ \\
+16 & \texttt{on\_grass} & off-track exposure flag & binary \\
+17 & \texttt{driving\_backward} & reverse-driving flag & binary \\
+\hline
+\end{tabular}
+\end{table*}
+
+Because the submitted self feature block includes normalized global
+position and velocity fields, the representation should be interpreted
+as map-conditioned rather than strictly map-relative in every channel.
+The track-relative components provide local map context, while the
+global components preserve compatibility with the telemetry builder used
+for the submitted checkpoint.
+
+\subsection{Network Modules}
+\label{supp:net}
+
+\begin{table*}[t]
+\centering
+\caption{Concrete learned network architecture used by DNQ-DLC.
+Hidden layers use ELU activation.}
+\label{tab:supp_network}
+\begin{tabular}{p{0.16\linewidth}p{0.34\linewidth}p{0.24\linewidth}p{0.10\linewidth}}
+\hline
+Module & Architecture & Input $\rightarrow$ Output & Role \\
+\hline
+$\mathrm{MLP}_{\mathrm{ego}}$ &
+Linear(17,$d_h$)-ELU-Linear($d_h,d_h$)-ELU-Linear($d_h,d_h$) &
+$\phi_t^i\rightarrow e_{\mathrm{self},t}^i$ &
+Self encoding \\
+
+$\mathrm{MLP}_{\mathrm{rel}}$ &
+Linear(7,$d_h$)-ELU-Linear($d_h,d_h$)-ELU-Linear($d_h,d_h$) &
+$\tilde r_{\mathrm{phy},t}^{i,k}\rightarrow e_{\mathrm{rel},t}^{i,k}$ &
+Relation-slot encoding \\
+
+$\mathrm{Linear}_{\mathrm{att}}$ &
+Linear($d_h$,1) followed by masked softmax or masked mean &
+$\{e_{\mathrm{rel},t}^{i,k},m_t^{i,k}\}\rightarrow \bar e_{\mathrm{rel},t}^i$ &
+Masked aggregation \\
+
+$\mathrm{MLP}_{\mathrm{act}}$ &
+Linear(3,$d_h$)-ELU-Linear($d_h,d_h$)-ELU-Linear($d_h,d_h$) &
+$a_t^i\rightarrow e_{\mathrm{act},t}^i$ &
+Action encoding \\
+
+$\mathrm{MLP}_{\mathrm{fusion}}$ &
+Linear(5$d_h,d_h$)-ELU-Linear($d_h,d_h$)-ELU-Linear($d_h,d_h$) &
+$[z_t^i,e_{\mathrm{act},t}^i,\bar e_{\mathrm{self},t},\bar e_{\mathrm{act},t}]
+\rightarrow h_t^i$ &
+Transition representation \\
+
+Prior head &
+Diagonal Gaussian linear heads &
+$h_t\rightarrow p_\theta(s_t|h_t)$ &
+DLC-style latent interface \\
+
+Posterior head &
+Diagonal Gaussian linear heads &
+$(h_t,\bar{o}_{t+1})\rightarrow q_\phi(s_t|h_t,\bar{o}_{t+1})$ &
+Training posterior \\
+
+$\mathrm{Linear}_{\mathrm{obs}}$ &
+Linear heads from $\xi_t=[h_t,s_t]$ &
+$\xi_t\rightarrow(\mu^o,\lambda^o)$ &
+Observation prediction \\
+
+$\mathrm{Linear}_{\mathrm{rew}}$ &
+Linear heads from $\xi_t$ &
+$\xi_t\rightarrow(\mu^r,\lambda^r)$ &
+Reward prediction \\
+
+$\mathrm{Linear}_{\mathrm{risk}}$ &
+Linear head followed by sigmoid &
+$\xi_t\rightarrow z^\chi\rightarrow\hat\chi$ &
+Boundary-risk prediction \\
+
+$\mathrm{Linear}_{\mathrm{qual}}$ &
+Linear head &
+$\xi_t\rightarrow\hat{\mathbf q}^{\mathrm{qual}}$ &
+Inactive auxiliary head in submitted checkpoint \\
+
+$\mathrm{ActorMLP}_{\mathrm{base}}$ &
+Self MLP 17$\rightarrow d_p\rightarrow d_p\rightarrow d_p$;
+relation MLP 7$\rightarrow d_p\rightarrow d_p\rightarrow d_p$;
+actor MLP $2d_p\rightarrow d_p\rightarrow d_p\rightarrow3$ &
+$\bar{o}_t\rightarrow a_t^{\mathrm{base}}$ &
+Base proposal \\
+
+$\mathrm{ActorMLP}_{\mathrm{qual}}$ &
+Same architecture as base actor &
+$\bar{o}_t\rightarrow a_t^{\mathrm{qual}}$ &
+Quality-biased proposal \\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Runtime Interaction Selector}
+\label{supp:selector}
+
+The runtime interaction selector uses the implemented interaction mode
+rather than a direct numeric instantiation of the symbolic
+$\mathrm{Score}_{\mathrm{int}}(\cdot)$ in the main manuscript. The local
+radius is $R_{\mathrm{loc}}=80$ m. A vehicle is treated as forward
+traffic when
+\[
+0<\Delta f_b<70~\mathrm{m},
+\qquad
+|\Delta l_b|<24~\mathrm{m},
+\]
+as alongside traffic when
+\[
+|\Delta f_b|<14~\mathrm{m},
+\qquad
+|\Delta l_b|<18~\mathrm{m},
+\]
+and as rear pressure when
+\[
+-18~\mathrm{m}<\Delta f_b\le0,
+\qquad
+|\Delta l_b|<14~\mathrm{m},
+\]
+and closing speed exceeds 1 m/s. The implemented score uses weights
+3.6 for forward occupancy, 2.8 for alongside overlap, 1.7 for rear
+pressure, 1.1 for inverse distance gap, 0.25 for closing speed, 0.18
+for heading alignment, and $-0.015$ for metric distance. There is no
+separate positive $\rho_{\min}$ in the submitted runtime code; vehicles
+that fail the radius or interaction gate receive a large negative score
+and are excluded before top-slot packing.
+
+For online ego planning, non-controlled agent-centered row actions are
+filled by background telemetry policies. At each imagined step, the
+implementation first evaluates the configured background policy cycle,
+\texttt{telemetry\_cruise}, \texttt{telemetry\_yield}, and
+\texttt{telemetry\_lane}, for non-target vehicles. The target row is
+then overwritten by the committed candidate action at $k=0$ or by the
+blended base/quality actor continuation for $k>0$. Thus, $a_t^i$ for
+$i\ne0$ is generated by the runtime background-policy model during
+online planning.
+
+\subsection{Numerical Configuration}
+\label{supp:config}
+
+\begin{table}[t]
+\centering
+\caption{Frozen numerical configuration used in the submitted DNQ-DLC evaluation.}
+\label{tab:supp_config}
+\begin{tabular}{lll}
+\hline
+Quantity & Symbol & Value \\
+\hline
+Graph observation dimension & $d_o$ & 41 \\
+Self feature dimension & $d_\phi$ & 17 \\
+Relation slot count & $K_{\max}$ & 3 \\
+Action dimension & $d_a$ & 3 \\
+World-model hidden dimension & $d_h$ & 192 \\
+Actor hidden dimension & $d_p$ & 128 \\
+Quality head dimension & -- & 4 \\
+Rollout horizon & $H$ & 4 \\
+Candidate budget & -- & 12 \\
+Risk-loss weight & $\lambda_\chi$ & 1.20 \\
+Quality auxiliary weight & $\lambda_q$ & 0.00 \\
+Latent regularization & $\beta_{\mathrm{KL}}$ & 0.00 \\
+Discount factor & $\gamma$ & 0.985 \\
+Progress weight & $\lambda_{\mathrm{prog}}$ & 1.20 \\
+Overtaking weight & $\lambda_{\mathrm{ovt}}$ & 2.40 \\
+Off-track penalty & $\lambda_{\mathrm{off}}$ & 2.00 \\
+Lateral-quality penalty & $\lambda_{\mathrm{lat}}$ & 0.42 \\
+Close-gap penalty & $\lambda_{\mathrm{close}}$ & 0.65 \\
+Risk penalty & $\lambda_{\mathrm{risk}}$ & 1.65 \\
+Uncertainty penalty & $\lambda_{\mathrm{unc}}$ & 0.40 \\
+Actor imitation penalty & $\lambda_{\mathrm{imit}}$ & 0.06 \\
+Actor rollout blend & $\alpha_q$ & 0.25 \\
+Planner target speed & $v_{\mathrm{ref}}$ & 22.0 m/s \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Labels, Losses, and Training}
+\label{supp:training}
+
+\subsection{World-Model and Quality-Actor Data}
+\label{supp:wm_training}
+
+The submitted world model was trained on 160 simulator episodes,
+347963 transitions, and 1775508 agent samples collected with 4--6
+vehicles using telemetry lane, yield, cruise, and overtaking expert
+policies. The optimizer was Adam with learning rate $3\times10^{-4}$,
+batch size 512, 1800 gradient steps, and gradient clipping at 25.0.
+The original training run did not reserve an episode-disjoint
+validation split. To avoid reporting training loss as predictive
+validity, the revised evidence package evaluates the frozen checkpoint
+on new seeds 7300--7307 for procedural $N=4$--6, 7400--7407 for
+Hairpin $N=8$, and 7500--7507 for S-Curve $N=8$. Each stratum contains
+4800 transitions. One-step state/reward errors, boundary-risk AUROC,
+AUPRC, Brier score, 10-bin expected calibration error, and
+$H\in\{1,3,5,10\}$ rollout errors are stored in
+\texttt{heldout\_world\_model\_validation.json}. The validation data
+were generated after the checkpoint was frozen and were not used for
+model selection.
+
+The boundary-risk label for agent $i$ at $t+1$ is
+\begin{equation}
+\chi_{t+1}^i
+=
+\mathbb{I}
+[
+o_{t+1}^{i,\mathrm{off}}=1
+\vee
+o_{t+1}^{i,\mathrm{back}}=1
+\vee
+|\ell_{t+1}^i|>0.45
+].
+\end{equation}
+This label captures boundary and unstable-driving risk. Close-gap
+proximity is handled separately by $C_{\mathrm{close}}$ in the planner.
+
+The implementation includes an auxiliary quality target
+\begin{equation}
+\mathbf q_{t+1}^{i,\mathrm{qual}}
+=
+[
+q_{\mathrm{track}},
+q_{\mathrm{off}},
+q_{\mathrm{lat}},
+q_{\mathrm{clear}}
+]^\top .
+\end{equation}
+The submitted main checkpoint has
+$\lambda_q=0$, so these quality-head targets were implemented but did
+not contribute to its training objective. Quality-guided action
+proposals instead come from a separate Graph-BC checkpoint trained on
+1526 selected states from 24 episodes (seeds 5200--5223). The revised
+validation uses disjoint seeds 8200--8207, 8300--8307, and 8400--8407
+for the procedural, Hairpin, and S-Curve strata, respectively. This
+test measures conditional action imitation on states selected around
+accepted overtaking events; it is not a closed-loop safety metric.
+
+\subsection{Baseline Training Budgets}
+\label{supp:baseline_training}
+
+Rule Expert and Safety Rule are author-implemented deterministic
+telemetry controllers rather than algorithms adopted from an external
+paper. Rule Expert gates among lane-following, adaptive, overtaking, and
+recovery behaviors using local telemetry. Safety Rule uses the
+barrier-expert implementation, which adds density-dependent speed
+reduction and stricter lateral and heading recovery thresholds. Their
+registry names are \texttt{rule\_expert\_gate} and
+\texttt{rule\_safety\_gate}, respectively.
+
+PPO, SAC, and TD3 follow their original algorithm definitions
+\cite{schulman2017ppo,haarnoja2018sac,fujimoto2018td3} and are
+implemented with Stable-Baselines3 \cite{raffin2021sb3}. For the RL
+training-budget sensitivity study, they are trained from three
+independent seeds (9101--9103), each for 200000
+environment steps with four vehicles. On every reset, the simulator
+seed is incremented, the procedural track is regenerated, background
+start order is shuffled while the target remains last, line spacing is
+sampled from \{4,5,6\}, and lateral spacing is jittered. Checkpoints are
+stored in seed-specific directories, preventing the overwrite bug in
+the earlier training script. Wall-clock training time is approximately
+2.0 h per PPO seed, 2.4 h per SAC seed, and 2.2 h per TD3 seed on the
+reported workstation. Frozen checkpoints are evaluated on seeds
+9701--9712 with the same 600-step horizon used for every controller.
+The source report first aggregates 12 evaluation cases within each
+training seed and then reports the mean and range over three training
+seeds. The range is not a confidence interval. No best-of-seed
+checkpoint selection is performed. Because the training run did not
+store dense learning curves or intermediate checkpoints, convergence
+diagnostics remain a limitation despite the larger budget.
+
+DLC-IT, DLC-JT, and DLC-JTO are our implementations of the
+individual-transition, joint-transition, and joint-transition-plus-
+observer variants in Deep Latent Competition
+\cite{schwarting2021dlc}. Each variant was trained from seeds 0--3 using
+120 simulator episodes, 96000 transitions, and 80 actor/world-model
+updates. Checkpoints were retained after 20, 40, and 80 updates. Seed 1
+was selected by the predefined mean score from within-suite round-robin
+validation. The DLC training budget differs from DNQ-DLC and does not
+reproduce the original 500-race protocol exactly.
+
+\subsection{Targets, Losses, and Submitted Checkpoint}
+\label{supp:training_objective}
+
+The four implemented components of $\mathbf q^{\mathrm{qual}}$ are
+\begin{equation}
+q_{\mathrm{track}}
+=
+\mathbb{I}
+[
+o^{\mathrm{off}}=0,\ 
+o^{\mathrm{back}}=0,\ 
+|\ell|\le0.46,\ 
+\cos e_\psi\ge0.70
+],
+\end{equation}
+\begin{equation}
+q_{\mathrm{off}}
+=
+\mathbb{I}[o^{\mathrm{off}}=1],
+\end{equation}
+\begin{equation}
+q_{\mathrm{lat}}
+=
+\frac{
+\mathrm{clip}(|\ell|+0.55|e_\psi|,0,2.2)
+}{2.2},
+\end{equation}
+\begin{equation}
+q_{\mathrm{clear}}
+=
+\begin{cases}
+\displaystyle
+\min_{j\in\mathcal{A}_{\mathrm{front}}}
+\mathrm{clip}
+\left(
+\frac{\Delta f^{0j}}{65},0,1
+\right),
+& |\mathcal{A}_{\mathrm{front}}|>0,\\[2mm]
+1,
+& |\mathcal{A}_{\mathrm{front}}|=0.
+\end{cases}
+\end{equation}
+Here $\mathcal{A}_{\mathrm{front}}$ contains valid vehicles ahead within
+65 m and with lateral separation below 18 m. Larger values are better
+for $q_{\mathrm{track}}$ and $q_{\mathrm{clear}}$, while smaller values
+are better for $q_{\mathrm{off}}$ and $q_{\mathrm{lat}}$.
+
+The next-observation distribution is
+\begin{equation}
+p_\theta(\bar{o}_{t+1}|h_t,s_t)
+=
+\mathcal{N}
+(
+\mu_{t+1|t}^{o},
+\mathrm{diag}(\exp(\lambda_{t+1|t}^{o}))
+),
+\end{equation}
+and the reward distribution is
+\begin{equation}
+p_\theta(r_{t+1}|h_t,s_t)
+=
+\mathcal{N}
+(
+\mu_{t+1|t}^{r},
+\exp(\lambda_{t+1|t}^{r})
+).
+\end{equation}
+The observation negative log-likelihood is
+\begin{equation}
+\mathcal{L}_{o}
+=
+\frac{1}{2}
+\sum_{d=1}^{d_o}
+[
+\exp(-\lambda_{t+1|t,d}^{o})
+(\bar{o}_{t+1,d}-\mu_{t+1|t,d}^{o})^2
++
+\lambda_{t+1|t,d}^{o}
+],
+\end{equation}
+and the reward negative log-likelihood is
+\begin{equation}
+\mathcal{L}_{r}
+=
+\frac{1}{2}
+[
+\exp(-\lambda_{t+1|t}^{r})
+(r_{t+1}-\mu_{t+1|t}^{r})^2
++
+\lambda_{t+1|t}^{r}
+].
+\end{equation}
+The auxiliary quality loss is
+\begin{equation}
+\mathcal{L}_q
+=
+\|
+\hat{\mathbf q}_{t+1|t}^{\mathrm{qual}}
+-
+\mathbf q_{t+1}^{\mathrm{qual}}
+\|_2^2.
+\end{equation}
+The general loss is
+\begin{equation}
+\begin{aligned}
+\mathcal{L}_{\mathrm{wm}}
+=
+\mathbb{E}_{q_\phi}
+[
+&
+\mathcal{L}_o
++
+\mathcal{L}_r
++
+\lambda_\chi
+\mathrm{BCE}
+(
+\chi_{t+1},
+\hat{\chi}_{t+1|t}
+)
++
+\lambda_q\mathcal{L}_q
+]
+\\
+&
++
+\beta_{\mathrm{KL}}
+D_{\mathrm{KL}}(q_\phi\|p_\theta).
+\end{aligned}
+\end{equation}
+
+In the submitted checkpoint, $\lambda_q=0.00$ and
+$\beta_{\mathrm{KL}}=0.00$. The auxiliary quality loss and KL term are
+therefore inactive. Quality guidance comes from the separately trained
+quality actor, candidate actions, and multi-objective scoring. Online
+planning uses deterministic mean rollouts, with uncertainty computed
+from predicted observation and reward log variances.
+
+\subsection{Actor Training}
+\label{supp:actor_training}
+
+The quality actor was trained by behavior cloning on a filtered
+overtaking dataset. The dataset contains 24 collection episodes and
+1526 state-action samples. Samples were retained from on-track
+overtaking events using a window from 30 steps before the event to 45
+steps after completion. The accepted target policies were telemetry
+expert gate, fast expert, barrier expert, and adaptive expert policies.
+The stored filtering mode is \texttt{on\_track}; failed events are not
+retained.
+
+The base actor is trained jointly with the Graph-DLC transition model.
+It uses the same collected world-model dataset described above. During
+training, the proposal loss is the mean-squared error between
+$\mathrm{ActorMLP}_{\mathrm{base}}(\bar{o}_t)$ and the collected
+normalized action. The transition model and base actor share one Adam
+optimizer with learning rate $3\times10^{-4}$, batch size 512, 1800
+gradient steps, proposal-loss weight 0.35, and gradient clipping at
+25.0.
+
+\section{Candidate Generation and Scoring}
+\label{supp:planning}
+
+The submitted evaluation scores 12 candidate actions per decision step
+when the hard recovery guard is inactive. The implementation does not
+reserve a fixed number of candidates for each subset. Instead, it builds
+an ordered pool from the base actor, background/safety prior, quality
+actor, chase action, geometry-aware anchored action when enabled,
+lateral passing templates, braking templates, recovery templates, and
+local action perturbations. Duplicate candidates are removed after
+rounding each action component to three decimals, and the first 12
+unique candidates are retained.
+
+The ordered candidate pool starts with the base actor action and the
+speed-limited anchor action from the barrier expert. If the quality
+actor is available, its action is appended as an extra target. Under
+overtake-aware planning, the pool then adds a chase action, optionally
+a geometry-anchored blend of the base and anchor actions, lateral
+passing templates, a close-gap braking template, recovery templates
+when recovery is needed, and local perturbations around the base action.
+
+For passing templates, attack is permitted when recovery is not needed,
+$|\ell|<0.34$, heading cosine exceeds 0.84, and a forward or alongside
+vehicle exists. In sharp-turn geometry, the passing throttle is 0.52;
+otherwise it is 0.64. The passing brake is 0. The steering grid is
+$\{0.08,0.16,0.24\}$ in sharp turns and $\{0.12,0.22,0.32\}$ otherwise,
+with heading correction $-0.12e_\psi$. If the nearest forward gap is
+below 11 m and $|\Delta l|<8$ m, the braking template uses steering
+$-0.25\mathrm{sign}(\Delta l)$, throttle 0.04, and brake 0.46.
+Recovery templates steer against $2e_\psi+0.80\ell$, use throttle
+0.46--0.52 depending on off-track state, and use brake 0 or 0.18
+depending on speed. A hard recovery guard bypasses candidate scoring
+when the vehicle is backward, severely off track, $|\ell|>0.62$, or
+heading cosine is below 0.55; in that case a track-follow recovery
+action is executed after speed limiting.
+
+\subsection{Mask Handling During Imagined Rollout}
+\label{supp:rollout_mask}
+
+During real execution, $\bar{o}_{t+1}$ is rebuilt from simulator
+telemetry by the full dynamic-neighborhood selector and
+$\mathrm{Pack}(\cdot)$. During imagined rollout, however, the world
+model operates only on predicted packed observations and does not have
+access to new physical telemetry. Therefore, the submitted short-horizon
+rollout treats the predicted mean observation as a continuous packed
+state and applies a deterministic post-processing operator
+$\mathrm{PostPack}(\cdot)$ before the next actor query and graph
+encoding.
+
+Let $\mu_{t+k+1|t}^{o,(n)}$ be the predicted mean of the next packed
+observation. The post-processed imagined observation is
+\begin{equation}
+\hat{\bar{o}}_{t+k+1|t}^{(n)}
+=
+\mathrm{PostPack}
+(
+\mu_{t+k+1|t}^{o,(n)},
+\hat{\mathbf m}_{t+k|t}^{0,(n)}
+).
+\end{equation}
+The continuous self and relation physical features are taken from
+$\mu_{t+k+1|t}^{o,(n)}$. The validity-mask channels are clipped to
+$[0,1]$ and used as soft validity weights in the next masked
+aggregation:
+\begin{equation}
+\hat m_{t+k+1|t}^{0,k,(n)}
+=
+\mathrm{clip}
+(
+\mu_{t+k+1|t,m(k)}^{o,(n)},
+0,
+1
+).
+\end{equation}
+This matches the submitted implementation: during denormalization, physical slot features are denormalized and mask channels are passed through \texttt{np.clip(mask, 0.0, 1.0)}. The implementation does not copy masks from the previous imagined observation and does not threshold masks into binary values during imagined rollout. Mask handling is therefore deterministic and is not treated as an additional learned discrete sampling process. Physical vehicle identities are not persistently tracked
+inside imagined rollouts; at the next real simulator step, slot
+identities are rebuilt from telemetry by the runtime interaction
+selector.
+
+\subsection{Scoring Terms}
+\label{supp:scoring_terms}
+
+Let $\hat{\bar{o}}_{t+k|t}^{(n)}$ and
+$\hat{\bar{o}}_{t+k+1|t}^{(n)}$ be consecutive imagined packed
+observations for candidate $n$, and let
+\begin{equation}
+\Pi=
+\{
+\mathrm{ActorMLP}_{\mathrm{base}},
+\mathrm{ActorMLP}_{\mathrm{qual}}
+\}.
+\end{equation}
+The progress reward is
+\begin{equation}
+R_{\mathrm{prog}}
+=
+\hat{\eta}_{t+k+1|t}
+-
+\hat{\eta}_{t+k|t}.
+\end{equation}
+Let $v_c=\min(v_{\mathrm{ref}},18)$. The overtaking reward is
+{\small
+\begin{equation}
+\begin{aligned}
+R_{\mathrm{ovt}}
+=
+&
+1.2
+\mathbb{I}[g_f^k<\infty,\ g_f^{k+1}=\infty]
++
+\mathrm{clip}
+\left(
+\frac{g_f^k-g_f^{k+1}}{65},
+-0.4,
+0.8
+\right)
+\\
+&
++
+0.35[n_{\mathrm{ahead}}^k-n_{\mathrm{ahead}}^{k+1}]_+
+\\
+&
++
+0.03[v_{t+k+1}-v_c]_+.
+\end{aligned}
+\end{equation}
+}
+The lateral-quality cost is
+\begin{equation}
+\begin{aligned}
+C_{\mathrm{lat}}
+=
+&
+|\hat{\ell}_{t+k+1|t}|
++
+0.55|e_{\psi,t+k+1|t}|
++
+1.8[|\hat{\ell}_{t+k+1|t}|-0.32]_+
+\\
+&
++
+1.2[0.82-\cos(e_{\psi,t+k+1|t})]_+.
+\end{aligned}
+\end{equation}
+The off-track cost is
+\begin{equation}
+\begin{aligned}
+C_{\mathrm{off}}
+= {}&
+2.5\mathbb{I}[o^{\mathrm{off}}=1]
++
+1.2\mathbb{I}[o^{\mathrm{back}}=1]
+\\
+&+
+0.8[|\hat{\ell}_{t+k+1|t}|-0.46]_+.
+\end{aligned}
+\end{equation}
+The close-gap cost is
+\begin{equation}
+C_{\mathrm{close}}
+=
+\frac{[10-g_f^{k+1}]_+}{10}.
+\end{equation}
+Since $\hat{\chi}_{t+k+1|t}$ is already a sigmoid probability, the risk
+cost is
+\begin{equation}
+C_{\mathrm{risk}}
+=
+\hat{\chi}_{t+k+1|t}.
+\end{equation}
+The uncertainty cost is
+\begin{equation}
+C_{\mathrm{unc}}
+=
+\mathrm{clip}
+\left(
+\frac{1}{d_o}
+\sum_{d=1}^{d_o}
+\lambda_{t+k+1|t,d}^{o}
++
+\lambda_{t+k+1|t}^{r},
+-2,
+4
+\right).
+\end{equation}
+The imitation cost is
+\begin{equation}
+C_{\mathrm{imit}}
+=
+\min_{\pi\in\Pi}
+\|
+\hat a_{t+k|t}^{(n)}
+-
+\pi(\hat{\bar{o}}_{t+k|t}^{(n)})
+\|_2^2.
+\end{equation}
+
+The planner's forward interaction corridor is
+$0<\Delta f<65$ m and $|\Delta l|<18$ m in the packed map-relative
+observation. The alongside corridor is $|\Delta f|\le14$ m and
+$|\Delta l|<14$ m. The nearest forward gap $g_f$ is the smallest
+positive $\Delta f$ in the forward corridor; if no vehicle satisfies
+the corridor test, $g_f=\infty$. The planner uses the local wrapped
+map-relative observation supplied by the telemetry extractor.
+
+\section{Evaluation Metrics and Experimental Protocols}
+\label{supp:metrics_protocols}
+
+\subsection{Metric Definitions and Statistical Summaries}
+\label{supp:metric_definitions}
+
+This section defines the primary metrics referenced by the main
+manuscript. Let $\mathcal{E}$ be the set of evaluated episodes and let
+$\mathcal{S}\subseteq\mathcal{E}$ be the subset in which an overtaking
+event is completed by the target vehicle. For episode $e$, let $N_{\mathrm{ovt}}^e$ be the number of
+completed overtakes, $N_{\mathrm{on}}^e$ the number whose event windows
+have no off-track exposure, and $N_{\mathrm{des}}^e$ the number that
+are on-track, non-reverse, laterally bounded, heading-consistent, and
+free of the contact proxy. The binary success indicator is
+$\mathbb{I}_{\mathrm{succ}}^e=\mathbb{I}[N_{\mathrm{ovt}}^e>0]$,
+and the success rate is
+\begin{equation}
+P_{\mathrm{succ}}
+=
+\frac{1}{|\mathcal{E}|}
+\sum_{e\in\mathcal{E}}
+\mathbb{I}_{\mathrm{succ}}^{e}.
+\end{equation}
+The episode-level on-track and desirable proportions are
+\begin{equation}
+p_{\mathrm{on}}^e
+=
+\frac{N_{\mathrm{on}}^e}{\max(N_{\mathrm{ovt}}^e,1)},
+\qquad
+p_{\mathrm{des}}^e
+=
+\frac{N_{\mathrm{des}}^e}{\max(N_{\mathrm{ovt}}^e,1)}.
+\end{equation}
+Thus, episodes with no completed overtake contribute zero. The reported
+rates average these episode-level proportions over all cases:
+\begin{equation}
+P_{\mathrm{on}}
+=
+\frac{1}{|\mathcal{E}|}
+\sum_{e\in\mathcal{E}}p_{\mathrm{on}}^e,
+\qquad
+P_{\mathrm{des}}
+=
+\frac{1}{|\mathcal{E}|}
+\sum_{e\in\mathcal{E}}p_{\mathrm{des}}^e.
+\end{equation}
+For successful episodes, the completion time is
+\begin{equation}
+\bar{T}_{\mathrm{comp}}
+=
+\frac{1}{|\mathcal{S}|}
+\sum_{e\in\mathcal{S}}
+(t_{\mathrm{complete}}^{e}-t_{\mathrm{start}}^{e}).
+\end{equation}
+Completion time is reported conditionally over successful overtakes
+because it is undefined when no pass is completed.
+
+For episode $e$ with horizon $T_e$, target grass exposure is
+\begin{equation}
+P_{\mathrm{grass}}^{e}
+=
+\frac{1}{T_e}
+\sum_{t=1}^{T_e}
+\mathbb{I}[o_{t,\mathrm{grass}}^{e}=1],
+\end{equation}
+where $o_{t,\mathrm{grass}}^{e}$ is the target vehicle's simulator
+grass flag. The E1 grass summary reported in the main manuscript is
+conditioned on successful episodes:
+\begin{equation}
+\bar{P}_{\mathrm{grass}\mid\mathrm{succ}}
+=
+\frac{1}{|\mathcal{S}|}
+\sum_{e\in\mathcal{S}}
+P_{\mathrm{grass}}^{e}.
+\end{equation}
+It is not interchangeable with an all-episode off-track mean.
+For the 200-case E1 table, binary success rates use Wilson 95\%
+confidence intervals. Nonzero episode-level desirable proportions and
+successful-episode continuous metrics use percentile case bootstrap
+intervals with 4000 resamples and random seed 2026. When all 200
+desirable proportions are zero, the empirical all-zero result is
+reported without treating a degenerate bootstrap interval as population
+uncertainty. Conditional completion estimates based on fewer than 20
+successes are labelled descriptive and highly unstable.
+\subsection{Matched Primary-Endpoint Analysis}
+\label{supp:primary_endpoint}
+
+The analysis designates binary overtaking success as the primary
+closed-loop endpoint. All algorithms in E1 share the same 200 case
+identifiers, defined by benchmark, vehicle count, and simulator seed.
+For comparator $b$, let $Y_e^{D}$ and $Y_e^{b}$ denote the DNQ-DLC and
+comparator success indicators for matched case $e$. The reported effect
+is
+\begin{equation}
+\widehat{\Delta}_{D-b}
+=
+\frac{1}{200}\sum_{e=1}^{200}\left(Y_e^{D}-Y_e^{b}\right).
+\end{equation}
+Its 95\% interval is the percentile interval from 50,000 bootstrap
+resamples of matched case rows, using random seed 20260716. Binary
+symmetry is tested with the two-sided exact McNemar test on the
+DNQ-DLC-only and comparator-only cells. Holm adjustment covers the six
+comparators shown in Table~\ref{tab:supp_primary_paired}. Absolute rates
+use Wilson intervals only to display each method's scale.
+
+\begin{table*}[t]
+\centering
+\caption{Paired details for the E1 overtaking-success endpoint. Difference is DNQ-DLC minus comparator. Exact $p$ is unadjusted; $p_{\mathrm{Holm}}$ covers the six comparisons.}
+\label{tab:supp_primary_paired}
+\begin{tabular}{lcccccccc}
+\toprule
+Comparator & $n$ & Difference [95\% CI] & Both & DNQ only & Comparator only & Neither & Exact $p$ & $p_{\mathrm{Holm}}$ \\
+\midrule
+Rule Expert & 200 & 0.140 [0.065, 0.215] & 125 & 46 & 18 & 11 & 0.000617 & 0.000617 \\
+Safety Rule & 200 & 0.155 [0.085, 0.225] & 128 & 43 & 12 & 17 & 0.000033 & 0.000066 \\
+DLC-JTO & 200 & 0.765 [0.700, 0.830] & 14 & 157 & 4 & 25 & $1.89\times10^{-41}$ & $9.46\times10^{-41}$ \\
+PPO legacy & 200 & 0.580 [0.505, 0.650] & 52 & 119 & 3 & 26 & $1.14\times10^{-31}$ & $4.56\times10^{-31}$ \\
+SAC legacy & 200 & 0.850 [0.800, 0.895] & 1 & 170 & 0 & 29 & $1.34\times10^{-51}$ & $8.02\times10^{-51}$ \\
+TD3 legacy & 200 & 0.465 [0.390, 0.540] & 73 & 98 & 5 & 24 & $1.82\times10^{-23}$ & $5.45\times10^{-23}$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The sample size was fixed at 200 matched cases before comparison, and no
+case was excluded according to its outcome. Precision is reported with
+the paired confidence interval rather than post hoc observed power. For
+Rule Expert, the interval corresponds to a 6.5--21.5-percentage-point
+increase.
+
+The two vehicle-count strata are sensitivity analyses. In $N=4$--6,
+the paired difference from Rule Expert is 0.050 (95\% CI,
+$-0.033$--0.133; exact $p=0.327$). In $N=7$--8, it is 0.275 (95\% CI,
+0.138--0.413; exact $p=0.000472$). The latter is evidence for operation
+outside the training vehicle-count range tested here, not for arbitrary
+traffic-scale or opponent-policy generalization.
+
+\begin{table*}[t]
+\centering
+\caption{Detailed secondary outcomes for retrained DLC and direct rule comparators in E1. Success uses Wilson 95\% intervals. Desirable overtaking uses all 200 cases. Completion time is conditioned on successful cases, whose count is shown in parentheses. DLC-JT and DLC-JTO completion estimates are descriptive because only 2 and 18 cases succeeded.}
+\label{tab:supp_dlc_secondary}
+\begin{tabular}{lccc}
+\toprule
+Method & Success & Desirable overtaking & Completion time, steps \\
+\midrule
+DLC-IT & 0.000 [0.000, 0.019] & 0.000 & -- (0) \\
+DLC-JT & 0.010 [0.003, 0.036] & 0.000 & 1583.5 [1079.0, 2088.0] (2) \\
+DLC-JTO & 0.090 [0.058, 0.138] & 0.000 & 1346.1 [1220.4, 1465.1] (18) \\
+Rule Expert & 0.715 [0.649, 0.773] & 0.381 [0.321, 0.442] & 126.0 [96.0, 160.0] (143) \\
+Safety Rule & 0.700 [0.633, 0.759] & 0.379 [0.319, 0.442] & 131.1 [94.7, 174.2] (140) \\
+DNQ-DLC & \textbf{0.855 [0.800, 0.897]} & \textbf{0.420 [0.363, 0.476]} & \textbf{97.8 [81.8, 117.8] (171)} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Latency and Randomized Component-Attribution Protocol}
+\label{supp:attribution_protocol}
+
+The online decision latency is measured around one full call to the
+policy and reported as the mean and 95th percentile:
+\begin{equation}
+\bar{L}
+=
+\frac{1}{N_L}
+\sum_{q=1}^{N_L} L_q,
+\qquad
+L_{95}
+=
+\mathrm{Quantile}_{0.95}(\{L_q\}_{q=1}^{N_L}).
+\end{equation}
+
+Experiment 6 uses a matched-seed randomized matrix over Hairpin and
+S-Curve, $N=6/8$, and seeds 6101--6108. For each attribution case, the seed
+randomizes the background start slots, line spacing, and lateral
+spacing while retaining the target vehicle in the last start slot. The
+environment exposes all neighbor identities and each policy packs its
+own $K=3$ relation slots. The full controller is compared with fixed
+identity slots, nearest-neighbor slots, no quality proposal, no learned
+risk/uncertainty cost, no safety-quality costs, no rule anchor, no
+handcrafted candidates, and no hard recovery. No run is discarded because of its outcome.
+
+The completed matrix contains 288 valid summaries, zero invalid
+randomization flags, zero configuration-integrity mismatches, and zero
+failed cases. Each algorithm has 31--32 unique physical metric
+signatures. Paired bootstrap results show that the full controller
+improves desirable overtaking by 0.201 [0.066, 0.341] relative to the
+no-risk/no-uncertainty variant. Relative to removal of all
+safety-quality terms, it improves desirable behavior by 0.224
+[0.042, 0.397] and lowers grass exposure by 0.136 [0.019, 0.260].
+Relative to removal of the quality proposal, it lowers grass exposure
+by 0.183 [0.086, 0.283]. Fixed-identity, nearest-neighbor, and
+interaction-priority selection have identical success (30/32) and
+overlapping paired intervals for the other reported endpoints. Removing
+handcrafted candidates gives 31/32 success and improves all four tabled
+point estimates in the $N=6/8$ matrix. A subsequent, separately frozen
+$N=10/12$ mixed-traffic stress test reverses the success finding:
+removal of handcrafted candidates gives 27/32 success, versus 32/32 for
+the unchanged full controller. Fixed-identity and nearest-neighbor
+selection also retain 32/32 success; fixed identity has higher desirable
+behavior, while the full controller has significantly lower grass
+exposure than nearest neighbor. These results show that selector and candidate effects depend on traffic
+density.
+
+\section{Supplementary Videos}
+\label{supp:visual_evidence}
+
+The project portal provides the videos associated with the qualitative
+sequences in the main paper, together with additional fixed-case stress
+runs. These videos support visual inspection of the simulated maneuvers.
+They are not used to estimate success rates or component effects, which
+are calculated from the complete randomized case sets.
+
+\section{Reproducibility and Evidence Limits}
+\label{supp:claim_boundary}
+
+The private repository at
+\url{https://github.com/chocho2222/DNQ-DLC} contains the DNQ-DLC code,
+baseline runners, environment specification, self-trained checkpoints,
+source data, and media site. It will be made public after manuscript
+submission. A versioned release will then be archived in a DOI-issuing
+repository.
+
+The evidence is limited to simulation. The experiments do not establish
+real-vehicle safety, robustness to perception errors, tire-limit
+validity, or guaranteed safety against adversarial opponents. The
+weighted decision score is not a formal safety constraint.
+
+DNQ-DLC is a hybrid planner, so performance cannot be assigned only to
+its learned modules. The legacy E2/E3 sweeps are deterministic checks,
+not independent multi-seed trials. PPO, SAC, and TD3 are not
+training-budget-matched primary baselines, and the DLC budget differs
+from DNQ-DLC. The quality actor also fails both unseen $N=8$ validation
+strata. The supported conclusion is therefore limited to improved
+overtaking completion for the full controller in the evaluated
+simulator settings.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

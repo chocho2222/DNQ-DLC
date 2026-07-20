@@ -7,18 +7,18 @@ Local integrity record for the DNQ-DLC GitHub and archival release.
 - Release status: `local_manifest_only`
 - External DOI: not assigned
 - External archive URL: not assigned
-- File count: 198
-- Total size: 52631754 bytes
+- File count: 211
+- Total size: 58843383 bytes
 
 ## Category summary
 
 | Category | Files | Size (bytes) |
 |---|---:|---:|
 | checkpoints | 18 | 28679361 |
-| code | 32 | 439759 |
+| code | 33 | 441181 |
 | configs | 2 | 26558 |
-| docs | 98 | 20885900 |
-| governance | 29 | 53453 |
+| docs | 98 | 21544145 |
+| governance | 41 | 5605415 |
 | source_data | 19 | 2546723 |
 
 ## Integrity
