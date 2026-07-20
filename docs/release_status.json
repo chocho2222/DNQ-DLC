@@ -1,6 +1,6 @@
 {
   "status": "private_github_release_candidate",
-  "checked_date": "2026-07-16",
+  "checked_date": "2026-07-20",
   "public_video_url": null,
   "public_code_repository": null,
   "private_code_repository": "https://github.com/chocho2222/DNQ-DLC",
@@ -29,9 +29,8 @@
   },
   "notes": [
     "The private author-owned GitHub repository exists and main is pushed.",
-    "The CI workflow passed on the initial remote commit.",
-    "A private v0.1.0-rc.1 draft prerelease exists with ZIP and SHA-256 assets.",
-    "The Pages workflow is ready and intentionally skipped while the repository is private.",
+    "The research-artifact portal contains 22 illustrative videos and browser-linked frozen source data.",
+    "The CI and Pages workflows are prepared; Pages deployment is intentionally skipped while the repository is private.",
     "Complete custom-track and rendered-media provenance review before public release.",
     "No public deployment or archival DOI has been created."
   ],
@@ -47,5 +46,12 @@
     "dnq_successes": 7,
     "rule_expert_successes": 6,
     "holm_p_across_four": 0.0625
+  },
+  "reserved_public_site_url": "https://chocho2222.github.io/DNQ-DLC/",
+  "site_contents": {
+    "simulation_videos": 22,
+    "source_data_directory": "docs/data",
+    "editable_figures": true,
+    "audit_files": true
   }
 }

@@ -1,0 +1,826 @@
+{
+  "root": "outputs/tits_dynamic_graph_expanded/rl_multiseed_randomized_eval_20260714",
+  "protocol": "Each RL family is summarized first within each independent training seed, then across three training-seed means. Evaluation cases are not treated as independent training replicates.",
+  "row_count": 144,
+  "invalid": [],
+  "checkpoint_reports": {
+    "DNQ-DLC|fixed": {
+      "family": "DNQ-DLC",
+      "training_seed": "fixed",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 1.0,
+        "elegant_overtake_rate": 0.05416666666666667,
+        "target_grass_rate": 0.11494252815221746,
+        "rank_gain": 2.1666666666666665,
+        "target_progress": 0.1893212224880015,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "PPO|9101": {
+      "family": "PPO",
+      "training_seed": "9101",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.75,
+        "elegant_overtake_rate": 0.3958333333333333,
+        "target_grass_rate": 0.743103452026844,
+        "rank_gain": 0.75,
+        "target_progress": 0.06175488916881383,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "PPO|9102": {
+      "family": "PPO",
+      "training_seed": "9102",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.6666666666666666,
+        "elegant_overtake_rate": 0.3333333333333333,
+        "target_grass_rate": 0.928879310687383,
+        "rank_gain": 0.08333333333333333,
+        "target_progress": 0.028326578510269082,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "PPO|9103": {
+      "family": "PPO",
+      "training_seed": "9103",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.6666666666666666,
+        "elegant_overtake_rate": 0.5,
+        "target_grass_rate": 0.9570402204990387,
+        "rank_gain": 0.0,
+        "target_progress": 0.023816612721651673,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "Rule expert|fixed": {
+      "family": "Rule expert",
+      "training_seed": "fixed",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.9166666666666666,
+        "elegant_overtake_rate": 0.4166666666666667,
+        "target_grass_rate": 0.21997126409163079,
+        "rank_gain": 2.0,
+        "target_progress": 0.13871311611046797,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "SAC|9101": {
+      "family": "SAC",
+      "training_seed": "9101",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.9166666666666666,
+        "elegant_overtake_rate": 0.0,
+        "target_grass_rate": 0.16925287215660015,
+        "rank_gain": 0.5,
+        "target_progress": 0.0967689551618902,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "SAC|9102": {
+      "family": "SAC",
+      "training_seed": "9102",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.9166666666666666,
+        "elegant_overtake_rate": 0.4166666666666667,
+        "target_grass_rate": 0.3793103446563085,
+        "rank_gain": 1.0,
+        "target_progress": 0.16720411500040225,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "SAC|9103": {
+      "family": "SAC",
+      "training_seed": "9103",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.8333333333333334,
+        "elegant_overtake_rate": 0.4444444444444444,
+        "target_grass_rate": 0.1606321829992036,
+        "rank_gain": 2.25,
+        "target_progress": 0.16121437207186304,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "Safety rule|fixed": {
+      "family": "Safety rule",
+      "training_seed": "fixed",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.9166666666666666,
+        "elegant_overtake_rate": 0.34722222222222215,
+        "target_grass_rate": 0.15129310404881835,
+        "rank_gain": 2.3333333333333335,
+        "target_progress": 0.15328460140695763,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "TD3|9101": {
+      "family": "TD3",
+      "training_seed": "9101",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.75,
+        "elegant_overtake_rate": 0.3333333333333333,
+        "target_grass_rate": 0.19166666734963655,
+        "rank_gain": 0.16666666666666666,
+        "target_progress": 0.08141093149012829,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "TD3|9102": {
+      "family": "TD3",
+      "training_seed": "9102",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.9166666666666666,
+        "elegant_overtake_rate": 0.027777777777777776,
+        "target_grass_rate": 0.04827586173390349,
+        "rank_gain": 2.5,
+        "target_progress": 0.18453445030063273,
+        "collision_or_contact_proxy": 0.0
+      }
+    },
+    "TD3|9103": {
+      "family": "TD3",
+      "training_seed": "9103",
+      "evaluation_cases": 12,
+      "metrics": {
+        "overtake_success_rate": 0.75,
+        "elegant_overtake_rate": 0.08333333333333333,
+        "target_grass_rate": 0.0,
+        "rank_gain": 0.08333333333333333,
+        "target_progress": 0.08765176434761496,
+        "collision_or_contact_proxy": 0.0
+      }
+    }
+  },
+  "family_reports": {
+    "DNQ-DLC": {
+      "training_seed_count": 1,
+      "evaluation_cases_per_seed": [
+        12
+      ],
+      "metrics": {
+        "overtake_success_rate": {
+          "mean_across_training_seeds": 1.0,
+          "min_training_seed": 1.0,
+          "max_training_seed": 1.0,
+          "values": [
+            1.0
+          ]
+        },
+        "elegant_overtake_rate": {
+          "mean_across_training_seeds": 0.05416666666666667,
+          "min_training_seed": 0.05416666666666667,
+          "max_training_seed": 0.05416666666666667,
+          "values": [
+            0.05416666666666667
+          ]
+        },
+        "target_grass_rate": {
+          "mean_across_training_seeds": 0.11494252815221746,
+          "min_training_seed": 0.11494252815221746,
+          "max_training_seed": 0.11494252815221746,
+          "values": [
+            0.11494252815221746
+          ]
+        },
+        "rank_gain": {
+          "mean_across_training_seeds": 2.1666666666666665,
+          "min_training_seed": 2.1666666666666665,
+          "max_training_seed": 2.1666666666666665,
+          "values": [
+            2.1666666666666665
+          ]
+        },
+        "target_progress": {
+          "mean_across_training_seeds": 0.1893212224880015,
+          "min_training_seed": 0.1893212224880015,
+          "max_training_seed": 0.1893212224880015,
+          "values": [
+            0.1893212224880015
+          ]
+        },
+        "collision_or_contact_proxy": {
+          "mean_across_training_seeds": 0.0,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.0,
+          "values": [
+            0.0
+          ]
+        }
+      }
+    },
+    "PPO": {
+      "training_seed_count": 3,
+      "evaluation_cases_per_seed": [
+        12
+      ],
+      "metrics": {
+        "overtake_success_rate": {
+          "mean_across_training_seeds": 0.6944444444444443,
+          "min_training_seed": 0.6666666666666666,
+          "max_training_seed": 0.75,
+          "values": [
+            0.75,
+            0.6666666666666666,
+            0.6666666666666666
+          ]
+        },
+        "elegant_overtake_rate": {
+          "mean_across_training_seeds": 0.40972222222222215,
+          "min_training_seed": 0.3333333333333333,
+          "max_training_seed": 0.5,
+          "values": [
+            0.3958333333333333,
+            0.3333333333333333,
+            0.5
+          ]
+        },
+        "target_grass_rate": {
+          "mean_across_training_seeds": 0.8763409944044219,
+          "min_training_seed": 0.743103452026844,
+          "max_training_seed": 0.9570402204990387,
+          "values": [
+            0.743103452026844,
+            0.928879310687383,
+            0.9570402204990387
+          ]
+        },
+        "rank_gain": {
+          "mean_across_training_seeds": 0.2777777777777778,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.75,
+          "values": [
+            0.75,
+            0.08333333333333333,
+            0.0
+          ]
+        },
+        "target_progress": {
+          "mean_across_training_seeds": 0.03796602680024486,
+          "min_training_seed": 0.023816612721651673,
+          "max_training_seed": 0.06175488916881383,
+          "values": [
+            0.06175488916881383,
+            0.028326578510269082,
+            0.023816612721651673
+          ]
+        },
+        "collision_or_contact_proxy": {
+          "mean_across_training_seeds": 0.0,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.0,
+          "values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "Rule expert": {
+      "training_seed_count": 1,
+      "evaluation_cases_per_seed": [
+        12
+      ],
+      "metrics": {
+        "overtake_success_rate": {
+          "mean_across_training_seeds": 0.9166666666666666,
+          "min_training_seed": 0.9166666666666666,
+          "max_training_seed": 0.9166666666666666,
+          "values": [
+            0.9166666666666666
+          ]
+        },
+        "elegant_overtake_rate": {
+          "mean_across_training_seeds": 0.4166666666666667,
+          "min_training_seed": 0.4166666666666667,
+          "max_training_seed": 0.4166666666666667,
+          "values": [
+            0.4166666666666667
+          ]
+        },
+        "target_grass_rate": {
+          "mean_across_training_seeds": 0.21997126409163079,
+          "min_training_seed": 0.21997126409163079,
+          "max_training_seed": 0.21997126409163079,
+          "values": [
+            0.21997126409163079
+          ]
+        },
+        "rank_gain": {
+          "mean_across_training_seeds": 2.0,
+          "min_training_seed": 2.0,
+          "max_training_seed": 2.0,
+          "values": [
+            2.0
+          ]
+        },
+        "target_progress": {
+          "mean_across_training_seeds": 0.13871311611046797,
+          "min_training_seed": 0.13871311611046797,
+          "max_training_seed": 0.13871311611046797,
+          "values": [
+            0.13871311611046797
+          ]
+        },
+        "collision_or_contact_proxy": {
+          "mean_across_training_seeds": 0.0,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.0,
+          "values": [
+            0.0
+          ]
+        }
+      }
+    },
+    "SAC": {
+      "training_seed_count": 3,
+      "evaluation_cases_per_seed": [
+        12
+      ],
+      "metrics": {
+        "overtake_success_rate": {
+          "mean_across_training_seeds": 0.8888888888888888,
+          "min_training_seed": 0.8333333333333334,
+          "max_training_seed": 0.9166666666666666,
+          "values": [
+            0.9166666666666666,
+            0.9166666666666666,
+            0.8333333333333334
+          ]
+        },
+        "elegant_overtake_rate": {
+          "mean_across_training_seeds": 0.28703703703703703,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.4444444444444444,
+          "values": [
+            0.0,
+            0.4166666666666667,
+            0.4444444444444444
+          ]
+        },
+        "target_grass_rate": {
+          "mean_across_training_seeds": 0.2363984666040374,
+          "min_training_seed": 0.1606321829992036,
+          "max_training_seed": 0.3793103446563085,
+          "values": [
+            0.16925287215660015,
+            0.3793103446563085,
+            0.1606321829992036
+          ]
+        },
+        "rank_gain": {
+          "mean_across_training_seeds": 1.25,
+          "min_training_seed": 0.5,
+          "max_training_seed": 2.25,
+          "values": [
+            0.5,
+            1.0,
+            2.25
+          ]
+        },
+        "target_progress": {
+          "mean_across_training_seeds": 0.14172914741138518,
+          "min_training_seed": 0.0967689551618902,
+          "max_training_seed": 0.16720411500040225,
+          "values": [
+            0.0967689551618902,
+            0.16720411500040225,
+            0.16121437207186304
+          ]
+        },
+        "collision_or_contact_proxy": {
+          "mean_across_training_seeds": 0.0,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.0,
+          "values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "Safety rule": {
+      "training_seed_count": 1,
+      "evaluation_cases_per_seed": [
+        12
+      ],
+      "metrics": {
+        "overtake_success_rate": {
+          "mean_across_training_seeds": 0.9166666666666666,
+          "min_training_seed": 0.9166666666666666,
+          "max_training_seed": 0.9166666666666666,
+          "values": [
+            0.9166666666666666
+          ]
+        },
+        "elegant_overtake_rate": {
+          "mean_across_training_seeds": 0.34722222222222215,
+          "min_training_seed": 0.34722222222222215,
+          "max_training_seed": 0.34722222222222215,
+          "values": [
+            0.34722222222222215
+          ]
+        },
+        "target_grass_rate": {
+          "mean_across_training_seeds": 0.15129310404881835,
+          "min_training_seed": 0.15129310404881835,
+          "max_training_seed": 0.15129310404881835,
+          "values": [
+            0.15129310404881835
+          ]
+        },
+        "rank_gain": {
+          "mean_across_training_seeds": 2.3333333333333335,
+          "min_training_seed": 2.3333333333333335,
+          "max_training_seed": 2.3333333333333335,
+          "values": [
+            2.3333333333333335
+          ]
+        },
+        "target_progress": {
+          "mean_across_training_seeds": 0.15328460140695763,
+          "min_training_seed": 0.15328460140695763,
+          "max_training_seed": 0.15328460140695763,
+          "values": [
+            0.15328460140695763
+          ]
+        },
+        "collision_or_contact_proxy": {
+          "mean_across_training_seeds": 0.0,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.0,
+          "values": [
+            0.0
+          ]
+        }
+      }
+    },
+    "TD3": {
+      "training_seed_count": 3,
+      "evaluation_cases_per_seed": [
+        12
+      ],
+      "metrics": {
+        "overtake_success_rate": {
+          "mean_across_training_seeds": 0.8055555555555555,
+          "min_training_seed": 0.75,
+          "max_training_seed": 0.9166666666666666,
+          "values": [
+            0.75,
+            0.9166666666666666,
+            0.75
+          ]
+        },
+        "elegant_overtake_rate": {
+          "mean_across_training_seeds": 0.14814814814814814,
+          "min_training_seed": 0.027777777777777776,
+          "max_training_seed": 0.3333333333333333,
+          "values": [
+            0.3333333333333333,
+            0.027777777777777776,
+            0.08333333333333333
+          ]
+        },
+        "target_grass_rate": {
+          "mean_across_training_seeds": 0.07998084302784668,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.19166666734963655,
+          "values": [
+            0.19166666734963655,
+            0.04827586173390349,
+            0.0
+          ]
+        },
+        "rank_gain": {
+          "mean_across_training_seeds": 0.9166666666666666,
+          "min_training_seed": 0.08333333333333333,
+          "max_training_seed": 2.5,
+          "values": [
+            0.16666666666666666,
+            2.5,
+            0.08333333333333333
+          ]
+        },
+        "target_progress": {
+          "mean_across_training_seeds": 0.11786571537945865,
+          "min_training_seed": 0.08141093149012829,
+          "max_training_seed": 0.18453445030063273,
+          "values": [
+            0.08141093149012829,
+            0.18453445030063273,
+            0.08765176434761496
+          ]
+        },
+        "collision_or_contact_proxy": {
+          "mean_across_training_seeds": 0.0,
+          "min_training_seed": 0.0,
+          "max_training_seed": 0.0,
+          "values": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    }
+  },
+  "paired_dnq_minus_each_checkpoint": {
+    "PPO|9101": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.25
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.3416666666666666
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.6281609238746265
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 1.4166666666666667
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.12756633331918765
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "PPO|9102": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.3333333333333333
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.2791666666666667
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.8139367825351655
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 2.0833333333333335
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.16099464397773242
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "PPO|9103": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.3333333333333333
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.4458333333333333
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.8420976923468212
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 2.1666666666666665
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.16550460976634984
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "Rule expert|fixed": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.08333333333333333
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.3625
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.10502873593941331
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.16666666666666666
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.05060810637753351
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "SAC|9101": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.08333333333333333
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.05416666666666667
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.05431034400438269
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 1.6666666666666667
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.09255226732611131
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "SAC|9102": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.08333333333333333
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.3625
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.264367816504091
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 1.1666666666666667
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.022117107487599246
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "SAC|9103": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.16666666666666666
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.3902777777777778
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.04568965484698614
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.08333333333333333
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.028106850416138446
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "Safety rule|fixed": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.08333333333333333
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.29305555555555557
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.03635057589660088
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.16666666666666666
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.03603662108104388
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "TD3|9101": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.25
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.2791666666666667
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.07672413919741909
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 2.0
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.10791029099787323
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "TD3|9102": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.08333333333333333
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.026388888888888892
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.06666666641831398
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.3333333333333333
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.004786772187368768
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    },
+    "TD3|9103": {
+      "overtake_success_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.25
+      },
+      "elegant_overtake_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": -0.029166666666666664
+      },
+      "target_grass_rate": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.11494252815221746
+      },
+      "rank_gain": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 2.0833333333333335
+      },
+      "target_progress": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.10166945814038654
+      },
+      "collision_or_contact_proxy": {
+        "paired_n": 12,
+        "dnq_minus_baseline_mean": 0.0
+      }
+    }
+  }
+}

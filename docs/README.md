@@ -1,12 +1,14 @@
-# DNQ-DLC Reproducibility and Video Evidence Site
+# DNQ-DLC Research Artifacts Site
 
-This folder is a self-contained static release candidate for the DNQ-DLC paper.
-It can be deployed unchanged with GitHub Pages, Netlify Drop, or a standard
-static web server.
+This folder is a self-contained static source-data, video, figure, and
+reproducibility portal for the DNQ-DLC paper. It can be deployed unchanged
+with GitHub Pages, Netlify Drop, or a standard static web server.
 
 ## Included evidence
 
 - 22 MP4 simulation videos with explicit illustrative-evidence labels;
+- a browser-accessible data catalogue under `data/` containing the frozen
+  source-data package;
 - the 200-case matched overtaking-success analysis and pairing audit;
 - an eight-case sensitivity evaluation of four DLC-JTO training checkpoints;
 - the revised publication figures in PDF, SVG, and PNG;
@@ -29,4 +31,5 @@ claim is supported by the matched 200-case source table and paired analysis.
    DOI-issuing repository.
 
 Do not publish through the simulator's upstream remote. Before publication,
-replace the URL/DOI placeholders and confirm third-party asset licences.
+replace the DOI placeholders and confirm third-party asset licences. The
+reserved Pages URL is `https://chocho2222.github.io/DNQ-DLC/`.

@@ -1,0 +1,7 @@
+comparator,comparator_label,n_paired,both_success,dnq_only_success,comparator_only_success,neither_success,discordant_pairs
+rule_expert_gate,Rule Expert,200,125,46,18,11,64
+rule_safety_gate,Safety Rule,200,128,43,12,17,55
+dlc_joint_transition_observer,DLC-JTO,200,14,157,4,25,161
+ppo_continuous,PPO legacy,200,52,119,3,26,122
+sac_continuous,SAC legacy,200,1,170,0,29,170
+td3_continuous,TD3 legacy,200,73,98,5,24,103

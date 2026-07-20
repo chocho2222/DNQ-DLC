@@ -84,10 +84,11 @@ trajectory-level reproducibility.
 
 ## Figures and video evidence
 
-The Pages site in `docs/` contains editable SVG/PDF figures, source tables and
-22 MP4 simulation clips linked to the corresponding experiments. After the
-repository is public, configure GitHub Pages to deploy from `main` and
-`/docs`. Until then, open `docs/index.html` locally.
+The research-artifact site in `docs/` contains editable SVG/PDF figures,
+downloadable frozen source data, and 22 MP4 simulation clips linked to the
+corresponding experiments. After the repository is public, the prepared Pages
+workflow will deploy it at `https://chocho2222.github.io/DNQ-DLC/`. Until then,
+open `docs/index.html` locally.
 
 ## Licensing and responsible use
 

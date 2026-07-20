@@ -3,13 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DNQ-DLC Video Evidence Pack</title>
+  <title>DNQ-DLC Research Artifacts</title>
+  <meta name="description" content="Official DNQ-DLC source-data, simulation-video, figure, and reproducibility portal.">
   <style>
     body { margin:0; font-family: Arial, Helvetica, sans-serif; background:#eef3f7; color:#172033; }
     header { padding:34px 46px 24px; background:#10233f; color:white; }
     header h1 { margin:0 0 8px; font-size:30px; }
     header p { max-width:1120px; line-height:1.55; color:#d7e3f2; }
+    nav { display:flex; flex-wrap:wrap; gap:9px; margin-top:18px; }
+    nav a { color:white; text-decoration:none; border:1px solid #6f8fb8; border-radius:6px; padding:7px 11px; font-weight:700; font-size:13px; }
     main { padding:26px 34px 48px; }
+    .overview { max-width:1180px; margin:0 auto 34px; }
+    .status { border-left:5px solid #d29a28; background:#fff8e8; padding:13px 16px; border-radius:6px; line-height:1.5; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:14px; margin:20px 0; }
+    .stat { background:white; border:1px solid #dbe3ee; border-radius:8px; padding:16px; }
+    .stat strong { display:block; color:#17365f; font-size:24px; margin-bottom:4px; }
+    .data-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+    .data-card { background:white; border:1px solid #dbe3ee; border-radius:8px; padding:17px; }
+    .data-card h3 { margin-top:0; }
     .band { display:grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap:22px; margin-bottom:36px; }
     .band > h2 { grid-column:1/-1; font-size:23px; margin:4px 0 -4px; }
     .card { background:white; border:1px solid #dbe3ee; border-radius:8px; padding:18px; box-shadow:0 8px 24px rgba(16,35,63,.08); }
@@ -27,15 +38,38 @@
     .button { background:#235a9f; color:white; }
     .reject { color:#8b2d2d; }
     footer { padding:0 46px 36px; color:#526070; }
+    @media (max-width:650px) { header { padding:28px 22px 20px; } main { padding:22px 16px 40px; } .band { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
   <header>
-    <h1>DNQ-DLC Video Evidence Pack v1</h1>
-    <p><strong>Evidence boundary:</strong> every video on this page is a selected, illustrative fixed-case diagnostic. Videos do not estimate success rates, prove generalization, or validate a component. Confirmatory conclusions come from all prespecified randomized cases, including failures.</p>
-    <p><a class="button" href="tables/primary_endpoint/e1_primary_paired_success.csv">Open matched success analysis</a><a class="button" href="tables/dlc_checkpoint_sensitivity/dlc_jto_multicheckpoint_summary.csv">Open DLC checkpoint sensitivity</a><a class="button" href="assets/analysis_figures/revision/figure_e1_core_evidence.pdf">Open primary result figure</a><a class="button" href="tables/randomized_attribution_report.json">Open 288-run randomized report</a><a class="button" href="tables/video_evidence_audit.csv">Open video audit CSV</a><a class="button" href="release_status.json">Open release status</a><a class="button" href="revision_manifest.json">Open revised figure bundle</a><a class="button" href="tables/rejected_e6_video_screening.csv">Open rejected screening CSV</a></p>
+    <h1>DNQ-DLC Research Artifacts</h1>
+    <p>Official source-data, simulation-video, figure, and reproducibility portal for <em>Dynamic-Neighborhood Quality-Guided Deep Latent Competition</em>.</p>
+    <nav><a href="https://github.com/chocho2222/DNQ-DLC">GitHub repository</a><a href="#data">Experimental data</a><a href="#videos">Simulation videos</a><a href="release_status.json">Release status</a></nav>
   </header>
-  <main><section class="band" data-section="Illustrative selected videos"><h2>Illustrative selected videos</h2>
+  <main>
+    <section class="overview" id="overview">
+      <p class="status"><strong>Release status:</strong> this is a private release candidate during manuscript preparation. The repository and this Pages site will be made public immediately after manuscript submission, after the documented track/media provenance review.</p>
+      <div class="stats">
+        <div class="stat"><strong>200</strong>matched primary cases</div>
+        <div class="stat"><strong>85.5%</strong>DNQ-DLC success rate</div>
+        <div class="stat"><strong>+14.0 pp</strong>paired gain over Rule Expert</div>
+        <div class="stat"><strong>22</strong>illustrative MP4 clips</div>
+      </div>
+      <p><strong>Evidence boundary:</strong> confirmatory conclusions come from the prespecified matched and randomized experiments, including failures. Videos are selected diagnostic illustrations; they do not estimate success rates, prove unrestricted generalization, or independently validate a component.</p>
+    </section>
+
+    <section class="overview" id="data">
+      <h2>Experimental data and reproducibility materials</h2>
+      <div class="data-grid">
+        <article class="data-card"><h3>Primary endpoint</h3><p>Matched 200-case success analysis, discordance audit, confidence intervals, and vehicle-count strata.</p><a class="link" href="data/E1_primary/online_benchmark_nature_direct_source_data.csv">source CSV</a><a class="link" href="data/E1_primary/e1_primary_endpoint_report.json">statistical report</a></article>
+        <article class="data-card"><h3>Component attribution</h3><p>Randomized track-by-density case ledger and all algorithm-level rows used for the component analysis.</p><a class="link" href="data/component_attribution/randomized_attribution_rows.csv">all rows</a><a class="link" href="data/component_attribution/case_ledger.csv">case ledger</a></article>
+        <article class="data-card"><h3>Baseline evaluations</h3><p>Three-seed RL results and DLC-JTO checkpoint-sensitivity records.</p><a class="link" href="data/rl_multiseed/rl_multiseed_rows.csv">RL rows</a><a class="link" href="data/dlc_checkpoint_sensitivity/dlc_jto_multicheckpoint_summary.csv">DLC summary</a></article>
+        <article class="data-card"><h3>Figures and audit files</h3><p>Editable publication figures, plot source tables, video audit, and release manifests.</p><a class="link" href="assets/analysis_figures/revision/figure_e1_core_evidence.svg">Fig. 2 SVG</a><a class="link" href="assets/analysis_figures/revision/figure_e5_mechanism_attribution.svg">Fig. 3 SVG</a><a class="link" href="tables/video_evidence_audit.csv">video audit</a></article>
+      </div>
+    </section>
+
+    <section class="band" id="videos" data-section="Illustrative selected videos"><h2>Illustrative simulation videos</h2>
         <article class="card main">
           <div class="tag">E2 · main</div>
           <h3>Environmental generalization: Monza-like topology</h3>
@@ -105,6 +139,6 @@
           
         </article>
         </section></main>
-  <footer>Generated from local experiment artifacts. All videos are illustrative; none is used as confirmatory statistical evidence.</footer>
+  <footer>Official project repository: <a href="https://github.com/chocho2222/DNQ-DLC">github.com/chocho2222/DNQ-DLC</a>. Generated from frozen experiment artifacts; selected videos are illustrative and are not used as confirmatory statistical evidence.</footer>
 </body>
 </html>

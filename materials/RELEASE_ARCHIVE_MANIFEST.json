@@ -7,8 +7,8 @@
     "note": "No external DOI or repository accession has been assigned yet."
   },
   "summary": {
-    "file_count": 178,
-    "size_bytes": 50128696,
+    "file_count": 197,
+    "size_bytes": 52603435,
     "by_category": {
       "checkpoints": {
         "file_count": 18,
@@ -23,12 +23,12 @@
         "size_bytes": 26558
       },
       "docs": {
-        "file_count": 79,
-        "size_bytes": 18386841
+        "file_count": 98,
+        "size_bytes": 20861520
       },
       "governance": {
         "file_count": 28,
-        "size_bytes": 49454
+        "size_bytes": 49514
       },
       "source_data": {
         "file_count": 19,
@@ -154,8 +154,8 @@
     {
       "path": "README.md",
       "category": "governance",
-      "size_bytes": 5278,
-      "sha256": "0cc6096ca5cb80d8711c2d45e49fe0e8d77d26b204590af3744c37d2b34e6442"
+      "size_bytes": 5338,
+      "sha256": "8fbb03a163db3593b2f55124247754c099ffd5b78609dd06b0fb1f4e1b9baa7d"
     },
     {
       "path": "RELEASE_CHECKLIST.md",
@@ -496,14 +496,14 @@
     {
       "path": "docs/OPEN_SCIENCE_STATUS.md",
       "category": "docs",
-      "size_bytes": 1352,
-      "sha256": "c37de852f571e603bfa953143525f4f77a3a28f0d8bb86e05c1b0aaab560abd3"
+      "size_bytes": 1462,
+      "sha256": "5f8346a383775f2a9d24bf6a1ea6a44ad2f28dbee2766d9a32e4c7d6ee2e20fc"
     },
     {
       "path": "docs/README.md",
       "category": "docs",
-      "size_bytes": 1508,
-      "sha256": "b688294632d154b223f0ac7d015476957aed83a8879f54167b6d6d5c8e4d640b"
+      "size_bytes": 1689,
+      "sha256": "1af34c788010e692291c459cd584118779195d902264d8c2d5ceda758bf30009"
     },
     {
       "path": "docs/assets/analysis_figures/E2/figure_tits_dynamic_graph_online_overtake_summary.pdf",
@@ -538,38 +538,38 @@
     {
       "path": "docs/assets/analysis_figures/revision/figure_e1_core_evidence.pdf",
       "category": "docs",
-      "size_bytes": 32768,
-      "sha256": "dac6dd641bd2d93b00df5f01f4a26bf903947e18c68c869f1804b9abc8b0f65f"
+      "size_bytes": 32286,
+      "sha256": "2b3f5d318c729c7a3f64d8e4cb9b92ece2410e8342533f2fc5c11b15f57d1fae"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_e1_core_evidence.png",
       "category": "docs",
-      "size_bytes": 592385,
-      "sha256": "610b044ea8ddfe2b3e505349356be9ae09ce9f27b5365d7ab8f9ea3255b44469"
+      "size_bytes": 571023,
+      "sha256": "d9e351eb8b9365293725edda41521e21d6ee90b32c944ff1e2d5dde3936a2d80"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_e1_core_evidence.svg",
       "category": "docs",
-      "size_bytes": 58715,
-      "sha256": "912c1c69b87f0b4274c0c77250e5555c2ba417639972bd5ca26f2f49f313de15"
+      "size_bytes": 59374,
+      "sha256": "9ac3b824e51c12a831d1f75ccc0771ffc73e8658c0c977e5bf488a1677f04bb4"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_e5_mechanism_attribution.pdf",
       "category": "docs",
-      "size_bytes": 47895,
-      "sha256": "025a7071556bee803b5434e7b5936fdea643e2bab323de2cb8272bd4283162fb"
+      "size_bytes": 48201,
+      "sha256": "71758fb5bf58e333a33f840ed828fedeb5c6326ccf0bf543d6d0c18615320f86"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_e5_mechanism_attribution.png",
       "category": "docs",
-      "size_bytes": 680288,
-      "sha256": "e801b0b41e03f13030a614e742fdf403fdc01e2dece2606c9fcedd85d81a1fa6"
+      "size_bytes": 607774,
+      "sha256": "2417429a5ef71d21d6cd4e0325a169cf11220983e2512ad9f7fd35bf2ec882b6"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_e5_mechanism_attribution.svg",
       "category": "docs",
-      "size_bytes": 60049,
-      "sha256": "06b8ec3257fdbe9795c59011abf175469913bfd186ac71b1e2e72ee4c1513749"
+      "size_bytes": 71352,
+      "sha256": "42a7d202f7a1f7d990a80c8dec2dee597f891ec8990ce26cbe36e0561a45a9d6"
     },
     {
       "path": "docs/assets/analysis_figures/revision/figure_method_dnq_dlc_runtime_graph.pdf",
@@ -754,8 +754,8 @@
     {
       "path": "docs/code/figure_generation/build_tits_submission_figures_20260716.py",
       "category": "docs",
-      "size_bytes": 23821,
-      "sha256": "4ad2bf040630dcf7f6635af5294d7f3740fce50354ffa3389226cc393131a3d5"
+      "size_bytes": 26179,
+      "sha256": "16ae0b283c511a95230d37c6c14b6e1c3aa3678127e75db9d6c18710cead56e6"
     },
     {
       "path": "docs/code/statistics/export_e1_primary_endpoint_analysis.py",
@@ -776,22 +776,136 @@
       "sha256": "422591285c66d512cc1cc78d52c885ddb85036c7926fcf91a5da472247951135"
     },
     {
+      "path": "docs/data/E1_primary/README.md",
+      "category": "docs",
+      "size_bytes": 773,
+      "sha256": "fc30f42b4160ff6cd1d5011d4312d227371b90694736929603977f411bb49543"
+    },
+    {
+      "path": "docs/data/E1_primary/e1_primary_discordance.csv",
+      "category": "docs",
+      "size_bytes": 416,
+      "sha256": "88a150bfe29a1a19365306665e3216d200064f2dc52a38b4bc77311ebd32747a"
+    },
+    {
+      "path": "docs/data/E1_primary/e1_primary_endpoint_report.json",
+      "category": "docs",
+      "size_bytes": 7791,
+      "sha256": "91d4c75b96d09643be3db7afbb1b88cf98f58c45334818c529f6befdfe638841"
+    },
+    {
+      "path": "docs/data/E1_primary/e1_primary_paired_success.csv",
+      "category": "docs",
+      "size_bytes": 1071,
+      "sha256": "1da5f6471c22e6039cd3b3be530d2e449054c03dbcba4e1d32a45e0d81a54ae9"
+    },
+    {
+      "path": "docs/data/E1_primary/e1_vehicle_count_strata.csv",
+      "category": "docs",
+      "size_bytes": 1071,
+      "sha256": "9fa926fff058adf46606d1d522be16c5197b3a07820eafafafa8cdb7ca862c8e"
+    },
+    {
+      "path": "docs/data/E1_primary/online_benchmark_nature_direct_source_data.csv",
+      "category": "docs",
+      "size_bytes": 2177370,
+      "sha256": "6c98a2ba7444dffaf03c4e55e792150b1716908fc4c79ba9a8406b8f3a7e5eb1"
+    },
+    {
+      "path": "docs/data/E1_primary/online_benchmark_nature_direct_statistics.csv",
+      "category": "docs",
+      "size_bytes": 7084,
+      "sha256": "6ab53dd74724c23c5cac4eae7267766680ad1122eac2a495dd8a218b1803e758"
+    },
+    {
+      "path": "docs/data/E1_primary/retrained_dlc_table_source.csv",
+      "category": "docs",
+      "size_bytes": 2258,
+      "sha256": "6ca37c1ac19f498ee4cc7b055e30ef7faffc776dea67b1ffaef4f677925c624d"
+    },
+    {
+      "path": "docs/data/component_attribution/case_ledger.csv",
+      "category": "docs",
+      "size_bytes": 33423,
+      "sha256": "702767c2656ce22953fd1ebd30907c0e05b5c9cb53cb4cb3514e4285fc1f4056"
+    },
+    {
+      "path": "docs/data/component_attribution/randomized_attribution_report.json",
+      "category": "docs",
+      "size_bytes": 136573,
+      "sha256": "e53fe8764da49ae20ec0274883aa7a55ccbdc27cd58064d936b0d84ee1d746a3"
+    },
+    {
+      "path": "docs/data/component_attribution/randomized_attribution_rows.csv",
+      "category": "docs",
+      "size_bytes": 89737,
+      "sha256": "309cc54d8a2311428b20c82c087442ce258771524ae77cee975b7f29aa81ea61"
+    },
+    {
+      "path": "docs/data/dlc_checkpoint_sensitivity/dlc_jto_multicheckpoint_paired.csv",
+      "category": "docs",
+      "size_bytes": 487,
+      "sha256": "cd614866873ceeb2e9c52f377108df86cbd1e73ec921862a72acb5674914250a"
+    },
+    {
+      "path": "docs/data/dlc_checkpoint_sensitivity/dlc_jto_multicheckpoint_report.json",
+      "category": "docs",
+      "size_bytes": 5087,
+      "sha256": "9f1bd14b5c3b823a9bcec79729ac6c1ce99aaa02f5036beb59a4b68e20688d1f"
+    },
+    {
+      "path": "docs/data/dlc_checkpoint_sensitivity/dlc_jto_multicheckpoint_rows.csv",
+      "category": "docs",
+      "size_bytes": 13758,
+      "sha256": "4bfd2fe817a22ff4f6d2a84f9cba500755f2bef950b862541cf42b2288b6c838"
+    },
+    {
+      "path": "docs/data/dlc_checkpoint_sensitivity/dlc_jto_multicheckpoint_summary.csv",
+      "category": "docs",
+      "size_bytes": 799,
+      "sha256": "1d68c856cdd8da08a1fd1b0b344e19b385d7dd46c982232e359018f8bb584577"
+    },
+    {
+      "path": "docs/data/dlc_checkpoint_sensitivity/run_manifest.json",
+      "category": "docs",
+      "size_bytes": 11039,
+      "sha256": "6efb819cac6b229d3d0a26fb604f1a3a2c324b3b165ef4c76a586ed41dae1a6e"
+    },
+    {
+      "path": "docs/data/rl_multiseed/rl_multiseed_report.json",
+      "category": "docs",
+      "size_bytes": 24031,
+      "sha256": "273713d01cabde812fbac4a373d78113e4653864a40128c3fa77d1f8c3a6fdc8"
+    },
+    {
+      "path": "docs/data/rl_multiseed/rl_multiseed_report.md",
+      "category": "docs",
+      "size_bytes": 1011,
+      "sha256": "4c94157bc32312799f8be83e20ad97b29cc0abc33a670a2350f30470800578b3"
+    },
+    {
+      "path": "docs/data/rl_multiseed/rl_multiseed_rows.csv",
+      "category": "docs",
+      "size_bytes": 32944,
+      "sha256": "bb482939f58c9905bc1994f46d489c425625efe7b1b51e746621d81ac14ce949"
+    },
+    {
       "path": "docs/index.html",
       "category": "docs",
-      "size_bytes": 12636,
-      "sha256": "fee61d09b21fb3eddd98232721505dc611d77f03a2a75087bf73259862cf1bf1"
+      "size_bytes": 15885,
+      "sha256": "e990c805b34f3107097a0396869e0031b63f2690231da20819d325c025f2f806"
     },
     {
       "path": "docs/release_status.json",
       "category": "docs",
-      "size_bytes": 1775,
-      "sha256": "10080c653132be753aacf494b98503a970b17b26541717b7e4eafbbf83611597"
+      "size_bytes": 1991,
+      "sha256": "941c47b595ccc5e4f742456819528694c28ba8f52a113d964dff396c8f9dd698"
     },
     {
       "path": "docs/revision_manifest.json",
       "category": "docs",
-      "size_bytes": 15616,
-      "sha256": "d89dd3d19b9630d8b5f1ffacc254a4e4f74fca66feb88d34c4e9e7fa50f6d1c9"
+      "size_bytes": 19548,
+      "sha256": "2af4d6df7cf5ad8955d9db83f07f084b56cbaa790078b609e1f5572ce10495ca"
     },
     {
       "path": "docs/tables/E2/online_metrics_n6_seed12006.csv",
@@ -947,7 +1061,7 @@
       "path": "docs/tables/public_site_link_audit.json",
       "category": "docs",
       "size_bytes": 81,
-      "sha256": "c2d9c28a65be62ebdb9fae42f70ea9e9a5b27cda337dec09a10f94367ccfa6fc"
+      "sha256": "dc3f5c36ff6bc928b16f40de833916de605db73866e0b3a41feccc6c9002d26b"
     },
     {
       "path": "docs/tables/randomized_attribution_report.json",

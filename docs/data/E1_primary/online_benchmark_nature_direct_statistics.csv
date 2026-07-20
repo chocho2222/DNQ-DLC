@@ -1,0 +1,55 @@
+metric,algorithm,algorithm_label,algorithm_family,n,mean,ci95_low,ci95_high,median,q25,q75
+overtake_success_rate,rule_expert_gate,Rule expert,Rule-based,200,0.715,0.6488465397039482,0.7730499699538271,1.0,0.0,1.0
+overtake_success_rate,rule_safety_gate,Safety rule,Rule-based,200,0.7,0.6332093162728074,0.7592525531762859,1.0,0.0,1.0
+overtake_success_rate,ppo_continuous,PPO,RL,200,0.275,0.21779700329307355,0.34068339357669647,0.0,0.0,1.0
+overtake_success_rate,sac_continuous,SAC,RL,200,0.005,0.0008831687156009814,0.02777370439789293,0.0,0.0,0.0
+overtake_success_rate,td3_continuous,TD3,RL,200,0.39,0.3250834313746962,0.4590625404283025,0.0,0.0,1.0
+overtake_success_rate,dlc_individual_transition,DLC-IT,DLC variants,200,0.0,1.734723475976807e-18,0.018845326377266575,0.0,0.0,0.0
+overtake_success_rate,dlc_joint_transition,DLC-JT,DLC variants,200,0.01,0.0027466581335444384,0.0357217617161768,0.0,0.0,0.0
+overtake_success_rate,dlc_joint_transition_observer,DLC-JTO,DLC variants,200,0.09,0.05768744886219316,0.13776571876716542,0.0,0.0,0.0
+overtake_success_rate,v6_runtime_dynamic_neighborhood_safe,Proposed,Ours,200,0.855,0.7995133246921847,0.8971064935799559,1.0,1.0,1.0
+on_track_overtake_rate,rule_expert_gate,Rule expert,Rule-based,200,0.38120039682539686,0.32349226190476194,0.4415894841269841,0.08333333333333333,0.0,1.0
+on_track_overtake_rate,rule_safety_gate,Safety rule,Rule-based,200,0.37920554445554444,0.3179690184815185,0.44107357954545456,0.0,0.0,1.0
+on_track_overtake_rate,ppo_continuous,PPO,RL,200,0.25908333333333333,0.2004145833333333,0.3199166666666667,0.0,0.0,0.6666666666666666
+on_track_overtake_rate,sac_continuous,SAC,RL,200,0.0,0.0,0.0,0.0,0.0,0.0
+on_track_overtake_rate,td3_continuous,TD3,RL,200,0.2242440476190476,0.16825982142857143,0.2784528273809524,0.0,0.0,0.0
+on_track_overtake_rate,dlc_individual_transition,DLC-IT,DLC variants,200,0.0,0.0,0.0,0.0,0.0,0.0
+on_track_overtake_rate,dlc_joint_transition,DLC-JT,DLC variants,200,0.0,0.0,0.0,0.0,0.0,0.0
+on_track_overtake_rate,dlc_joint_transition_observer,DLC-JTO,DLC variants,200,0.0,0.0,0.0,0.0,0.0,0.0
+on_track_overtake_rate,v6_runtime_dynamic_neighborhood_safe,Proposed,Ours,200,0.4198605144855145,0.36359442120379626,0.4764920898545899,0.3875,0.0,0.8333333333333334
+elegant_overtake_rate,rule_expert_gate,Rule expert,Rule-based,200,0.38120039682539686,0.32089300595238096,0.4421370535714286,0.08333333333333333,0.0,1.0
+elegant_overtake_rate,rule_safety_gate,Safety rule,Rule-based,200,0.37920554445554444,0.31947383658008655,0.44215827922077916,0.0,0.0,1.0
+elegant_overtake_rate,ppo_continuous,PPO,RL,200,0.25908333333333333,0.20274791666666667,0.31875,0.0,0.0,0.6666666666666666
+elegant_overtake_rate,sac_continuous,SAC,RL,200,0.0,0.0,0.0,0.0,0.0,0.0
+elegant_overtake_rate,td3_continuous,TD3,RL,200,0.2242440476190476,0.17198407738095237,0.2796197916666667,0.0,0.0,0.0
+elegant_overtake_rate,dlc_individual_transition,DLC-IT,DLC variants,200,0.0,0.0,0.0,0.0,0.0,0.0
+elegant_overtake_rate,dlc_joint_transition,DLC-JT,DLC variants,200,0.0,0.0,0.0,0.0,0.0,0.0
+elegant_overtake_rate,dlc_joint_transition_observer,DLC-JTO,DLC variants,200,0.0,0.0,0.0,0.0,0.0,0.0
+elegant_overtake_rate,v6_runtime_dynamic_neighborhood_safe,Proposed,Ours,200,0.4198605144855145,0.3631851561632812,0.4756378735847486,0.3875,0.0,0.8333333333333334
+completion_time_capped,rule_expert_gate,Rule expert,Rule-based,143,125.96503496503496,95.99807692307694,160.00786713286715,33.0,29.0,103.0
+completion_time_capped,rule_safety_gate,Safety rule,Rule-based,140,131.14285714285714,94.71321428571429,174.20785714285714,42.0,29.75,65.5
+completion_time_capped,ppo_continuous,PPO,RL,55,35.89090909090909,33.945454545454545,38.09090909090909,36.0,30.0,37.0
+completion_time_capped,sac_continuous,SAC,RL,1,1817.0,1817.0,1817.0,1817.0,1817.0,1817.0
+completion_time_capped,td3_continuous,TD3,RL,78,63.1025641025641,45.243589743589745,96.32083333333333,46.5,40.0,57.0
+completion_time_capped,dlc_individual_transition,DLC-IT,DLC variants,0,,,,,,
+completion_time_capped,dlc_joint_transition,DLC-JT,DLC variants,2,1583.5,1079.0,2088.0,1583.5,1331.25,1835.75
+completion_time_capped,dlc_joint_transition_observer,DLC-JTO,DLC variants,18,1346.0555555555557,1220.3833333333334,1465.063888888889,1381.0,1236.75,1518.25
+completion_time_capped,v6_runtime_dynamic_neighborhood_safe,Proposed,Ours,171,97.78362573099415,81.82997076023392,117.7720760233918,74.0,42.0,124.0
+target_grass_rate,rule_expert_gate,Rule expert,Rule-based,143,0.3896514214900928,0.3387744830432836,0.43944020166706577,0.23440366983413696,0.12270642071962357,0.734403669834137
+target_grass_rate,rule_safety_gate,Safety rule,Rule-based,140,0.4507339464666854,0.406693644752543,0.49479120442369356,0.41880734264850616,0.22935780137777328,0.6957568973302841
+target_grass_rate,ppo_continuous,PPO,RL,55,0.9397414489225908,0.9274720618128777,0.9494995768232779,0.9490825533866882,0.9408257007598877,0.957798182964325
+target_grass_rate,sac_continuous,SAC,RL,1,0.684403657913208,0.684403657913208,0.684403657913208,0.684403657913208,0.684403657913208,0.684403657913208
+target_grass_rate,td3_continuous,TD3,RL,78,0.8090037687275654,0.7622540331612795,0.8505592857988982,0.9176605343818665,0.773853212594986,0.9274082779884338
+target_grass_rate,dlc_individual_transition,DLC-IT,DLC variants,0,,,,,,
+target_grass_rate,dlc_joint_transition,DLC-JT,DLC variants,2,0.6841742992401123,0.5738531947135925,0.7944954037666321,0.6841742992401123,0.6290137469768524,0.7393348515033722
+target_grass_rate,dlc_joint_transition_observer,DLC-JTO,DLC variants,18,0.3516819592979219,0.27662653372519547,0.429969419269926,0.33233943581581116,0.19266055524349213,0.46158256381750107
+target_grass_rate,v6_runtime_dynamic_neighborhood_safe,Proposed,Ours,171,0.6292075757699752,0.6002224522664577,0.6559901266249866,0.6454128623008728,0.5020642280578613,0.7931192517280579
+grass_recovery_time_capped,rule_expert_gate,Rule expert,Rule-based,143,523.8783478759003,399.1179071423914,658.0671067568795,147.8181818181818,88.58333333333333,411.5
+grass_recovery_time_capped,rule_safety_gate,Safety rule,Rule-based,140,689.7359693877551,556.4763426870747,822.0844608843538,286.625,151.92857142857144,866.375
+grass_recovery_time_capped,ppo_continuous,PPO,RL,55,757.6727272727272,594.3660227272727,932.1367045454546,433.0,383.5,970.25
+grass_recovery_time_capped,sac_continuous,SAC,RL,1,1199.0,1199.0,1199.0,1199.0,1199.0,1199.0
+grass_recovery_time_capped,td3_continuous,TD3,RL,78,1790.7961538461539,1609.7388461538462,1958.233814102564,2200.0,2200.0,2200.0
+grass_recovery_time_capped,dlc_individual_transition,DLC-IT,DLC variants,0,,,,,,
+grass_recovery_time_capped,dlc_joint_transition,DLC-JT,DLC variants,2,2200.0,2200.0,2200.0,2200.0,2200.0,2200.0
+grass_recovery_time_capped,dlc_joint_transition_observer,DLC-JTO,DLC variants,18,1721.888888888889,1358.0555555555557,2033.3333333333333,2200.0,1075.0,2200.0
+grass_recovery_time_capped,v6_runtime_dynamic_neighborhood_safe,Proposed,Ours,171,361.35843058825515,258.4824758497675,469.5129468874206,57.0,24.0,208.91666666666669

@@ -1,10 +1,11 @@
 # DNQ-DLC Open-Science Status
 
-Checked: 2026-07-16
+Checked: 2026-07-20
 
 ## Ready locally
 
-- Self-contained static evidence site with 22 MP4 files.
+- Self-contained research-artifact site with 22 MP4 files and browser-linked
+  frozen source data.
 - Matched 200-case primary-endpoint CSV, discordance table, stratum analysis,
   JSON report, and generating Python script.
 - Four-checkpoint DLC-JTO sensitivity results and reproducible runner/summarizer.
@@ -17,7 +18,8 @@ Checked: 2026-07-16
 - The `main` branch has been pushed and its CI workflow passed.
 - Repository management settings, issue templates and release workflows are active.
 - A private `v0.1.0-rc.1` draft prerelease contains the release ZIP and checksum.
-- No public Pages URL will be created before manuscript submission.
+- The reserved public Pages URL is `https://chocho2222.github.io/DNQ-DLC/`;
+  deployment remains disabled before manuscript submission.
 - The Pages workflow is ready and is intentionally skipped while the repository is private.
 - No public versioned release or archival DOI exists.
 - Code, generated data and self-trained model terms are confirmed; custom-track

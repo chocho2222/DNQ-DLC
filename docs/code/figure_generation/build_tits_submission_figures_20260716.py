@@ -195,8 +195,11 @@ def plot_core_results():
     completion = metric_rows("completion_time_capped", ["DNQ-DLC", "Rule Expert", "Safety Rule", "DLC-JTO", "DLC-JT"])
     grass = metric_rows("target_grass_rate", ["DNQ-DLC", "Rule Expert", "Safety Rule", "DLC-JTO", "DLC-JT"])
 
-    fig = plt.figure(figsize=(7.20, 4.75))
-    gs = fig.add_gridspec(2, 2, height_ratios=[1.07, 0.93], hspace=0.50, wspace=0.42)
+    # IEEE T-ITS double-column width (about 183 mm).  The compact two-row
+    # grid keeps all text at 7--8 pt at final size without using slide-scale
+    # fonts or redundant whitespace.
+    fig = plt.figure(figsize=(7.16, 4.08))
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.00, 0.96], hspace=0.42, wspace=0.34)
     ax_a = fig.add_subplot(gs[0, 0])
     ax_b = fig.add_subplot(gs[0, 1])
     ax_c = fig.add_subplot(gs[1, 0])
@@ -253,14 +256,24 @@ def plot_core_results():
     dnq_strata = strata[strata.algorithm_label == "DNQ-DLC"].set_index("vehicle_count_stratum").loc[band_order]
     for x, row in zip([0, 1], dnq_strata.itertuples()):
         delta = row.paired_difference_vs_rule_expert * 100
-        lo = row.paired_bootstrap_ci95_low_vs_rule_expert * 100
-        hi = row.paired_bootstrap_ci95_high_vs_rule_expert * 100
-        ax_c.text(x, 99, f"paired Δ vs Rule: {delta:+.1f} pp\n95% CI [{lo:+.1f}, {hi:+.1f}]",
-                  ha="center", va="top", fontsize=5.65, color=NAVY, linespacing=1.15)
+        y_dnq = row.success_rate * 100
+        ax_c.annotate(
+            f"{delta:+.1f} pp vs Rule",
+            xy=(x + offsets["DNQ-DLC"], y_dnq),
+            xytext=(0, 11),
+            textcoords="offset points",
+            ha="center",
+            va="bottom",
+            fontsize=5.45,
+            color=NAVY,
+            bbox=dict(boxstyle="round,pad=0.18", facecolor="white",
+                      edgecolor=NEUTRAL_LIGHT, linewidth=0.55, alpha=0.95),
+        )
     ax_c.set_xticks([0, 1], ["N=4–6\ntraining range", "N=7–8\nextrapolation"])
-    ax_c.set_ylim(0, 105)
+    ax_c.set_ylim(0, 102)
     ax_c.set_ylabel("Overtake success (%)")
-    ax_c.legend(loc="lower left", bbox_to_anchor=(0.0, 0.16), fontsize=5.9)
+    ax_c.legend(loc="lower left", bbox_to_anchor=(0.0, 0.15), fontsize=5.65,
+                handlelength=1.5, labelspacing=0.25)
     panel_label(ax_c, "c")
     ax_c.set_title("Vehicle-count strata", loc="left", fontweight="bold", fontsize=8.0)
 
@@ -291,7 +304,7 @@ def plot_core_results():
     for ax in (ax_a, ax_b, ax_c, ax_d):
         ax.tick_params(labelsize=6.25)
         ax.grid(False)
-    fig.subplots_adjust(left=0.16, right=0.98, top=0.94, bottom=0.11)
+    fig.subplots_adjust(left=0.145, right=0.985, top=0.93, bottom=0.12)
 
     source_out = pd.concat([
         success.assign(panel="a_absolute_success"),
@@ -343,7 +356,7 @@ def plot_mechanism_attribution():
     mech = pd.read_csv(mech_path)
     attr_path = ROOT / "outputs/tits_dynamic_graph_expanded/randomized_attribution_confirmatory_20260710/aggregate/randomized_attribution_report.json"
     attr = json.loads(attr_path.read_text(encoding="utf-8"))["paired_full_minus_ablation"]
-    screenshot_dir = ROOT / "outputs/tits_dynamic_graph_expanded/publication_first_person_visual_evidence_pack/E5_mechanism_dynamic_neighbor_N10_seed20000/screenshots_first_person"
+    screenshot_dir = ROOT / "outputs/tits_dynamic_graph_expanded/publication_first_person_visual_evidence_pack/E5_mechanism_dynamic_neighbor_N10_seed20000/screenshots_topdown"
     shots = [
         (101, screenshot_dir / "v6_runtime_dynamic_neighborhood_safe_n10_seed20000_01_approach_step101.png", "Approach"),
         (129, screenshot_dir / "v6_runtime_dynamic_neighborhood_safe_n10_seed20000_02_interaction_step129.png", "Interaction"),
@@ -351,39 +364,112 @@ def plot_mechanism_attribution():
     ]
     repack = aggregate_repacking()
 
-    fig = plt.figure(figsize=(7.25, 5.15))
-    gs = fig.add_gridspec(2, 13, height_ratios=[1.02, 1.12], hspace=0.34, wspace=0.55)
-    top_axes = [fig.add_subplot(gs[0, 0:4]), fig.add_subplot(gs[0, 4:8]), fig.add_subplot(gs[0, 8:12])]
+    fig = plt.figure(figsize=(7.16, 4.32))
+    gs = fig.add_gridspec(2, 12, height_ratios=[0.90, 1.10], hspace=0.25, wspace=0.38)
+    top_axes = [
+        fig.add_subplot(gs[0, 0:4]),
+        fig.add_subplot(gs[0, 4:8]),
+        fig.add_subplot(gs[0, 8:12]),
+    ]
+    # Global crop applied identically to all three top-down frames.  It removes
+    # empty track area while retaining the full local vehicle pack and graph
+    # edges.  No local contrast, colour, or object-level edits are applied.
+    crop_box = (800, 250, 1800, 1150)
     for i, (ax, (step, path, title)) in enumerate(zip(top_axes, shots)):
-        im = Image.open(path).convert("RGB")
+        im = Image.open(path).convert("RGB").crop(crop_box)
         ax.imshow(im)
         ax.set_xticks([]); ax.set_yticks([])
-        for spine in ax.spines.values(): spine.set_visible(False)
-        ax.set_title(f"{title} · step {step}", fontsize=7.1, fontweight="bold", pad=3)
+        for spine in ax.spines.values():
+            spine.set_visible(True)
+            spine.set_color("#D5DADE")
+            spine.set_linewidth(0.55)
+        ax.set_title(f"{title} (step {step})", fontsize=6.9, fontweight="bold", pad=2.5)
         slots = selected_slots(mech, step)
-        ax.text(0.02, 0.04, "ranked slots: " + " → ".join(map(str, slots)), transform=ax.transAxes,
-                ha="left", va="bottom", fontsize=6.0, color="white",
-                bbox=dict(boxstyle="round,pad=0.22", facecolor=NAVY, edgecolor="white", alpha=0.88))
-        panel_label(ax, chr(ord('a') + i), x=-0.02, y=1.03)
+        ax.text(
+            0.02,
+            0.035,
+            "ranked slots  " + " → ".join(map(str, slots)),
+            transform=ax.transAxes,
+            ha="left",
+            va="bottom",
+            fontsize=5.65,
+            color="white",
+            bbox=dict(boxstyle="round,pad=0.20", facecolor=NAVY,
+                      edgecolor="white", linewidth=0.5, alpha=0.90),
+        )
+        ax.text(
+            0.018,
+            0.975,
+            chr(ord("a") + i),
+            transform=ax.transAxes,
+            ha="left",
+            va="top",
+            fontsize=8.2,
+            fontweight="bold",
+            color="white",
+            bbox=dict(boxstyle="round,pad=0.12", facecolor=NAVY,
+                      edgecolor="none", alpha=0.82),
+        )
 
-    ax_d = fig.add_subplot(gs[1, 0:6])
+    ax_d = fig.add_subplot(gs[1, 0:5])
     rng = np.random.default_rng(2026)
-    for x0, n, color in [(0, 6, BLUE_LIGHT), (1, 8, BLUE)]:
-        vals = repack.loc[repack.num_agents == n, "unique_top3_configurations"].to_numpy()
-        jitter = rng.uniform(-0.10, 0.10, len(vals))
-        ax_d.scatter(np.full(len(vals), x0) + jitter, vals, s=18, color=color, edgecolor=NAVY, lw=0.35, alpha=0.85)
-        ax_d.plot([x0-0.16, x0+0.16], [np.mean(vals), np.mean(vals)], color=NAVY, lw=1.6)
-    ax_d.set_xticks([0, 1], ["N=6", "N=8"])
-    ax_d.set_ylabel("Unique ranked top-3 configurations")
+    positions = [0, 1]
+    groups = [
+        repack.loc[repack.num_agents == n, "unique_top3_configurations"].to_numpy()
+        for n in (6, 8)
+    ]
+    violins = ax_d.violinplot(
+        groups,
+        positions=positions,
+        widths=0.62,
+        showmeans=False,
+        showmedians=False,
+        showextrema=False,
+        bw_method=0.45,
+    )
+    for body, color in zip(violins["bodies"], [BLUE_LIGHT, BLUE]):
+        body.set_facecolor(color)
+        body.set_edgecolor(NAVY)
+        body.set_linewidth(0.75)
+        body.set_alpha(0.28)
+
+    boxes = ax_d.boxplot(
+        groups,
+        positions=positions,
+        widths=0.20,
+        patch_artist=True,
+        showfliers=False,
+        whis=(5, 95),
+        boxprops=dict(facecolor="white", edgecolor=NAVY, linewidth=0.85, alpha=0.92),
+        whiskerprops=dict(color=NAVY, linewidth=0.8),
+        capprops=dict(color=NAVY, linewidth=0.8),
+        medianprops=dict(color=NAVY, linewidth=1.25),
+    )
+    for x0, vals, color in zip(positions, groups, [BLUE_LIGHT, BLUE]):
+        jitter = rng.uniform(-0.115, 0.115, len(vals))
+        ax_d.scatter(
+            np.full(len(vals), x0) + jitter,
+            vals,
+            s=15,
+            color=color,
+            edgecolor=NAVY,
+            lw=0.35,
+            alpha=0.78,
+            zorder=3,
+        )
+        median = float(np.median(vals))
+        ax_d.scatter(x0, median, s=18, color=RED, edgecolor="white", lw=0.45, zorder=5)
+    ax_d.set_xticks(positions, ["N=6", "N=8"])
+    ax_d.set_ylabel("Unique ranked top-3 sets")
     ax_d.set_ylim(0, max(repack.unique_top3_configurations) + 5)
     ax_d.text(0.03, 0.95,
-              f"32/32 cases repacked\nmedian {repack.switch_count.median():.0f} switches per case",
-              transform=ax_d.transAxes, ha="left", va="top", fontsize=6.2,
+              f"32/32 cases repacked\nmedian {repack.switch_count.median():.0f} switches/case",
+              transform=ax_d.transAxes, ha="left", va="top", fontsize=5.85,
               bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=NEUTRAL_LIGHT))
     panel_label(ax_d, "d")
-    ax_d.set_title("Runtime graph membership is not fixed", loc="left", fontsize=8.0, fontweight="bold")
+    ax_d.set_title("Runtime graph repacking", loc="left", fontsize=7.6, fontweight="bold")
 
-    ax_e = fig.add_subplot(gs[1, 7:13])
+    ax_e = fig.add_subplot(gs[1, 6:12])
     specs = [
         ("Risk/uncertainty\n(desirable)", "dnq_w_o_risk_uncertainty", "elegant_overtake_rate", 1),
         ("Safety-quality\n(desirable)", "dnq_w_o_safety_quality", "elegant_overtake_rate", 1),
@@ -409,11 +495,14 @@ def plot_mechanism_attribution():
     ax_e.set_xlim(-0.26, 0.44)
     ax_e.set_xlabel("Paired effect (positive favors full controller)")
     panel_label(ax_e, "e")
-    ax_e.set_title("Which innovation claims are supported?", loc="left", fontsize=8.0, fontweight="bold")
+    ax_e.set_title("Supported component effects", loc="left", fontsize=7.6, fontweight="bold")
     ax_e.text(0.98, 0.02, "n=32 matched cases", transform=ax_e.transAxes,
               ha="right", va="bottom", fontsize=5.8, color=NEUTRAL)
 
-    fig.subplots_adjust(left=0.08, right=0.985, top=0.94, bottom=0.10)
+    for ax in (ax_d, ax_e):
+        ax.tick_params(labelsize=6.15)
+        ax.grid(False)
+    fig.subplots_adjust(left=0.075, right=0.99, top=0.94, bottom=0.105)
     TAB.mkdir(parents=True, exist_ok=True)
     repack.to_csv(TAB / "figure_e5_runtime_repacking_source.csv", index=False)
     pd.DataFrame(forest_rows).to_csv(TAB / "figure_e5_component_effect_source.csv", index=False)
