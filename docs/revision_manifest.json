@@ -42,33 +42,33 @@
     },
     {
       "path": "assets/analysis_figures/revision/figure_e1_core_evidence.pdf",
-      "size_bytes": 32234,
-      "sha256": "5a267bd317f58f0b3853f1468e0aaba2f672abf29a5bf2e7c6ecc7d4aec76d11"
+      "size_bytes": 32383,
+      "sha256": "97301a62a4cb11fb5b0365a735ccba9d3be6854d86192d5a45c291d61c0bcc84"
     },
     {
       "path": "assets/analysis_figures/revision/figure_e1_core_evidence.png",
-      "size_bytes": 571653,
-      "sha256": "155ef1b848f828d91578cfeee71db95b6a4d2fc2f25da2923afed54800971c8b"
+      "size_bytes": 574008,
+      "sha256": "308aa4c5d41eb2eebd2de7ae3bbce8461c7ba1f64fa0e94f678a7560dc75738b"
     },
     {
       "path": "assets/analysis_figures/revision/figure_e1_core_evidence.svg",
-      "size_bytes": 59378,
-      "sha256": "9f215cd5c37623b38dea2a0c541d3f671431c72c9d799c263c3e9434297f8535"
+      "size_bytes": 58338,
+      "sha256": "b3bf3f56e1a5571e16404371be38afecfd1061dd5f8da82d387cd9b17804d05c"
     },
     {
       "path": "assets/analysis_figures/revision/figure_e5_mechanism_attribution.pdf",
-      "size_bytes": 234746,
-      "sha256": "843600e1402dcc987bcc2f8c84a86906af1382a18ee88216b219399751acb8b6"
+      "size_bytes": 234594,
+      "sha256": "769b9e5a6bd10a50084370624a174fa46760b687c1e43fca7eec7fbca0d02a81"
     },
     {
       "path": "assets/analysis_figures/revision/figure_e5_mechanism_attribution.png",
-      "size_bytes": 810280,
-      "sha256": "a990c624092159dbdfdd001a0de69cef5240aeabe1518d227c81c868a525c106"
+      "size_bytes": 807546,
+      "sha256": "f5df076c7c83ffa1fa43da194e960034676f0cb5369d4683de69d28b230b4ca8"
     },
     {
       "path": "assets/analysis_figures/revision/figure_e5_mechanism_attribution.svg",
-      "size_bytes": 361214,
-      "sha256": "7ce3bea87dbd18dae8c680b4e71b008cc854ff2623f05eb83c4e3f067bcc74a7"
+      "size_bytes": 358562,
+      "sha256": "b15f6790a5cad55214d6804b21ed57697dd8f4ac6df36345c76e5c352350b84e"
     },
     {
       "path": "assets/analysis_figures/revision/figure_method_dnq_dlc_runtime_graph.pdf",
@@ -87,18 +87,18 @@
     },
     {
       "path": "assets/analysis_figures/revision/figure_s1_same_track_simulation_sequence.pdf",
-      "size_bytes": 47216,
-      "sha256": "f114c5ca73985fb10708e589591ffffe12bdbb553db22c7f430e6d7e0fe90f80"
+      "size_bytes": 46842,
+      "sha256": "f5b912db592b76023cbae911a7ac4794b1854b33837723fecf67f1ceadbc0476"
     },
     {
       "path": "assets/analysis_figures/revision/figure_s1_same_track_simulation_sequence.png",
-      "size_bytes": 330600,
-      "sha256": "b613d89340fa91bf64242b52408ffe15019e26f84f20879dc7f61b0f0302cf69"
+      "size_bytes": 364570,
+      "sha256": "a39e48c926ce2344a5f600ab814420a7c077a1fa61ae37df18a41fea665ecf4c"
     },
     {
       "path": "assets/analysis_figures/revision/figure_s1_same_track_simulation_sequence.svg",
-      "size_bytes": 55751,
-      "sha256": "3a09cd7af9b5f98573322678a11f75250efa6aba400dc7c07afa08f29a7f4de9"
+      "size_bytes": 56117,
+      "sha256": "be94ff19c2eac3f3285b0d1e5ffc75ee85d3c26281039e03c42ef71b845ee4f7"
     },
     {
       "path": "assets/analysis_figures/video_evidence_metrics.png",
@@ -222,8 +222,8 @@
     },
     {
       "path": "code/figure_generation/build_tits_submission_figures_20260716.py",
-      "size_bytes": 29134,
-      "sha256": "5643da3523cc4f1d4da601b5bf2b217dc598fe2ac4643dc94f6221c5afbbf540"
+      "size_bytes": 28899,
+      "sha256": "8c33fee4984b1345be8b9e87ac85ea27f4d5a7d47a6f1bf4c8cae3a11228ea87"
     },
     {
       "path": "code/statistics/export_e1_primary_endpoint_analysis.py",

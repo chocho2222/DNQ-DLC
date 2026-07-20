@@ -217,8 +217,7 @@ def plot_core_results():
     ax_a.set_yticks(y, methods)
     ax_a.set_xlim(-2, 104)
     ax_a.set_xlabel("Overtake success (%)")
-    panel_label(ax_a, "a")
-    ax_a.set_title("Primary endpoint", loc="left", fontweight="bold", fontsize=8.0)
+    ax_a.set_title("(a) Primary endpoint", loc="left", fontweight="bold", fontsize=8.0)
 
     # b: matched-case effect sizes are the inferential hero panel.
     order = ["Rule Expert", "Safety Rule", "DLC-JTO", "PPO legacy", "SAC legacy", "TD3 legacy"]
@@ -237,8 +236,7 @@ def plot_core_results():
     ax_b.set_xlabel("DNQ-DLC minus comparator (percentage points)")
     ax_b.text(0.98, 0.97, "n=200 matched cases each", transform=ax_b.transAxes,
               ha="right", va="top", fontsize=5.9, color=NEUTRAL)
-    panel_label(ax_b, "b")
-    ax_b.set_title("Matched success gain", loc="left", fontweight="bold", fontsize=8.0)
+    ax_b.set_title("(b) Matched success gain", loc="left", fontweight="bold", fontsize=8.0)
 
     # c: prespecified training-range and vehicle-count-extrapolation strata.
     band_order = ["N=4-6 training range", "N=7-8 extrapolation"]
@@ -274,8 +272,7 @@ def plot_core_results():
     ax_c.set_ylabel("Overtake success (%)")
     ax_c.legend(loc="lower left", bbox_to_anchor=(0.0, 0.15), fontsize=5.65,
                 handlelength=1.5, labelspacing=0.25)
-    panel_label(ax_c, "c")
-    ax_c.set_title("Vehicle-count strata", loc="left", fontweight="bold", fontsize=8.0)
+    ax_c.set_title("(c) Vehicle-count strata", loc="left", fontweight="bold", fontsize=8.0)
 
     # d: secondary survivor-conditioned trade-off prevents a safety-dominance reading.
     trade_methods = ["DNQ-DLC", "Rule Expert", "Safety Rule", "DLC-JTO", "DLC-JT"]
@@ -298,8 +295,7 @@ def plot_core_results():
     ax_d.set_ylabel("Grass exposure (successful cases)")
     ax_d.text(0.02, 0.96, "secondary, survivor-conditioned", transform=ax_d.transAxes,
               va="top", fontsize=5.8, color=NEUTRAL)
-    panel_label(ax_d, "d")
-    ax_d.set_title("Completion–off-track trade-off", loc="left", fontweight="bold", fontsize=8.0)
+    ax_d.set_title("(d) Completion–off-track trade-off", loc="left", fontweight="bold", fontsize=8.0)
 
     for ax in (ax_a, ax_b, ax_c, ax_d):
         ax.tick_params(labelsize=6.25)
@@ -432,7 +428,13 @@ def plot_mechanism_attribution():
                             shrinkA=2, shrinkB=22, mutation_scale=8),
         )
 
-        ax.set_title(title, fontsize=7.05, fontweight="bold", pad=3.0)
+        ax.set_title(
+            f"({chr(ord('a') + i)}) {title}",
+            loc="left",
+            fontsize=6.85,
+            fontweight="bold",
+            pad=3.0,
+        )
         ax.text(
             0.02,
             0.035,
@@ -445,19 +447,6 @@ def plot_mechanism_attribution():
             color=NAVY,
             bbox=dict(boxstyle="round,pad=0.24", facecolor="white",
                       edgecolor=NAVY, linewidth=0.65, alpha=0.94),
-        )
-        ax.text(
-            0.02,
-            0.98,
-            chr(ord("a") + i),
-            transform=ax.transAxes,
-            ha="left",
-            va="top",
-            fontsize=8.2,
-            fontweight="bold",
-            color=NAVY,
-            bbox=dict(boxstyle="round,pad=0.13", facecolor="white",
-                      edgecolor=NAVY, linewidth=0.60, alpha=0.94),
         )
         ax.text(
             0.98, 0.98, f"step {step}", transform=ax.transAxes,
@@ -531,8 +520,7 @@ def plot_mechanism_attribution():
             edgecolor="#555555", linewidth=0.55, alpha=0.94,
         ),
     )
-    panel_label(ax_d, "d")
-    ax_d.set_title("Runtime graph repacking", loc="left", fontsize=7.6, fontweight="bold")
+    ax_d.set_title("(d) Runtime graph repacking", loc="left", fontsize=7.6, fontweight="bold")
 
     ax_e = fig.add_subplot(gs[1, 6:12])
     specs = [
@@ -559,8 +547,7 @@ def plot_mechanism_attribution():
     ax_e.set_yticks(yy, [x[0] for x in specs], fontsize=6.0)
     ax_e.set_xlim(-0.26, 0.44)
     ax_e.set_xlabel("Paired effect (positive favors full controller)")
-    panel_label(ax_e, "e")
-    ax_e.set_title("Supported component effects", loc="left", fontsize=7.6, fontweight="bold")
+    ax_e.set_title("(e) Supported component effects", loc="left", fontsize=7.6, fontweight="bold")
     ax_e.text(0.98, 0.02, "n=32 matched cases", transform=ax_e.transAxes,
               ha="right", va="bottom", fontsize=5.8, color=NEUTRAL)
 
@@ -583,20 +570,27 @@ def plot_supp_sequence():
         ("Side-by-side", base / "topdown_side_by_side_step0118.png", base / "dnq_first_person_side_by_side_step0118.png"),
         ("Pass complete", base / "topdown_overtake_complete_step0216.png", base / "dnq_first_person_overtake_complete_step0216.png"),
     ]
-    fig, axes = plt.subplots(2, 3, figsize=(7.2, 4.0), gridspec_kw={"hspace": 0.18, "wspace": 0.06})
+    fig, axes = plt.subplots(2, 3, figsize=(7.2, 4.15), gridspec_kw={"hspace": 0.27, "wspace": 0.06})
     for c, (title, top, fp) in enumerate(cols):
         for r, path in enumerate([top, fp]):
             axes[r, c].imshow(Image.open(path).convert("RGB"))
             axes[r, c].set_xticks([]); axes[r, c].set_yticks([])
             for spine in axes[r, c].spines.values(): spine.set_visible(False)
-        axes[0, c].set_title(title, fontsize=7.4, fontweight="bold")
+            letter = chr(ord("a") + 3 * r + c)
+            axes[r, c].set_title(
+                f"({letter}) {title}",
+                loc="left",
+                fontsize=7.0,
+                fontweight="bold",
+                pad=2.0,
+            )
     axes[0, 0].text(-0.04, 0.5, "Top-down", transform=axes[0, 0].transAxes,
                     rotation=90, va="center", ha="right", fontsize=7.0, fontweight="bold")
     axes[1, 0].text(-0.04, 0.5, "Ego view", transform=axes[1, 0].transAxes,
                     rotation=90, va="center", ha="right", fontsize=7.0, fontweight="bold")
     fig.suptitle("Selected same-track four-controller diagnostic (DNQ-DLC starts from the rear)",
                  y=0.99, fontsize=8.6, fontweight="bold", color=NAVY)
-    fig.subplots_adjust(left=0.08, right=0.99, top=0.91, bottom=0.02)
+    fig.subplots_adjust(left=0.08, right=0.99, top=0.90, bottom=0.02)
     return export(fig, FIG / "figure_s1_same_track_simulation_sequence")
 
 
