@@ -133,9 +133,18 @@ trajectories.
 
 ## Tests
 
+The suite runs in this layout, from the repository root or from `code/`:
+
 ```bash
-python -m pytest code/tests -q
+cd code && PYTHONPATH=$PWD python -m unittest discover -s tests -p 'test_*.py'
 ```
+
+It needs the simulator dependencies, so run it in the environment of
+`environment.yml` (146 tests, one skipped when an artifact of the development
+tree is absent). Continuous integration runs the checks that need no simulator:
+it compiles the sources, audits the static-site links, recomputes the release
+digest, and recomputes the five-draw means of the proposed controller from the
+frozen per-case table to compare them with the manuscript.
 
 ## Figures and clips
 
