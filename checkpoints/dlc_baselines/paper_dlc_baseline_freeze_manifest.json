@@ -1,0 +1,29 @@
+{
+  "status": "pass",
+  "mode": "freeze",
+  "experiment_dir": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched",
+  "frozen_dir": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines",
+  "stage": "final",
+  "candidate_count": 4,
+  "complete_candidate_count": 4,
+  "selected_candidate": {
+    "seed": 1,
+    "seed_dir": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_1",
+    "stage": "final",
+    "complete_model_set": true,
+    "present_count": 3,
+    "round_robin_exists": true,
+    "selection_score": -52.589766492794126,
+    "joint_transition_observer": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_1/models/joint_transition_observer.pt",
+    "joint_transition": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_1/models/joint_transition.pt",
+    "individual_transition": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_1/models/individual_transition.pt"
+  },
+  "copied_count": 3,
+  "paths": {
+    "candidate_checkpoints": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/tables/paper_dlc_candidate_checkpoints.csv",
+    "frozen_checkpoints": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/tables/paper_dlc_frozen_checkpoints.csv",
+    "registry_alignment": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/tables/paper_dlc_registry_alignment.csv"
+  },
+  "selection_rule": "Use --select-seed if specified; otherwise choose the complete candidate with the highest per-seed round-robin mean-score average for the requested stage. If no round-robin exists, choose a complete model set deterministically.",
+  "claim_boundary": "This script only freezes trained paper-DLC baseline checkpoints. It does not train them and does not make performance claims until online evaluation is run."
+}

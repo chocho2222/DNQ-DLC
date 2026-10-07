@@ -13,6 +13,7 @@ from gym.utils import colorize, seeding, EzPickle
 import pyglet
 from pyglet import gl
 from shapely.geometry import Point, Polygon
+from .contact_recorder import ContactRecorder
 
 # Easiest continuous control task to learn from pixels, a top-down racing environment.
 # Discrete control is reasonable in this environment as well, on/off discretization is
@@ -130,6 +131,9 @@ class FrictionDetector(contactListener):
         self.env = env
     def BeginContact(self, contact):
         self._contact(contact, True)
+        self.env.vehicle_contacts.record(contact)
+    def PostSolve(self, contact, impulse):
+        self.env.vehicle_contacts.record(contact, impulse)
     def EndContact(self, contact):
         self._contact(contact, False)
     def _contact(self, contact, begin):
@@ -180,13 +184,21 @@ class MultiCarRacing(gym.Env, EzPickle):
                  use_ego_color=False, observation_type='pixels',
                  start_order=None, line_spacing=LINE_SPACING,
                  lateral_spacing=LATERAL_SPACING, track_path=None,
-                 max_neighbors=DEFAULT_DYNAMIC_MAX_NEIGHBORS):
+                 max_neighbors=DEFAULT_DYNAMIC_MAX_NEIGHBORS,
+                 telemetry_version='legacy_v1', neighbor_order='relevance'):
         EzPickle.__init__(self)
         if observation_type not in ['pixels', 'telemetry', 'telemetry_dynamic']:
             raise ValueError("observation_type must be 'pixels', 'telemetry', or 'telemetry_dynamic'")
         self.seed()
         self.num_agents = num_agents
         self.observation_type = observation_type
+        if telemetry_version not in {'legacy_v1', 'corrected_v2'}:
+            raise ValueError('Unknown telemetry version')
+        if neighbor_order not in {'relevance', 'identity', 'nearest'}:
+            raise ValueError('Unknown neighbor order')
+        self.telemetry_version = telemetry_version
+        self.neighbor_order = neighbor_order
+        self.vehicle_contacts = ContactRecorder()
         self.contactListener_keepref = FrictionDetector(self)
         self.world = Box2D.b2World((0,0), contactListener=self.contactListener_keepref)
         self.viewer = [None] * num_agents
@@ -194,6 +206,7 @@ class MultiCarRacing(gym.Env, EzPickle):
         self.invisible_video_window = None
         self.road = None
         self.cars = [None] * num_agents
+        self.vehicle_colors = None
         self.car_order = None  # Determines starting positions of cars
         self.reward = np.zeros(num_agents)
         self.prev_reward = np.zeros(num_agents)
@@ -570,13 +583,28 @@ class MultiCarRacing(gym.Env, EzPickle):
             # Create car at location with given angle
             self.cars[car_id] = car_dynamics.Car(self.world, angle, new_x,
                                                  new_y)
-            self.cars[car_id].hull.color = CAR_COLORS[car_id % len(CAR_COLORS)]
+            self.cars[car_id].hull.color = (
+                self.vehicle_colors[car_id] if self.vehicle_colors is not None
+                else CAR_COLORS[car_id % len(CAR_COLORS)]
+            )
 
             # This will be used to identify the car that touches a particular tile.
             for wheel in self.cars[car_id].wheels:
                 wheel.car_id = car_id
 
+        self.vehicle_contacts.bind(self.cars)
         return self.step(None)[0]
+
+    def set_vehicle_colors(self, colors):
+        colors = np.asarray(colors, dtype=float)
+        if colors.shape != (self.num_agents, 3) or not np.isfinite(colors).all():
+            raise ValueError("Expected one finite RGB triple per vehicle")
+        if np.any(colors < 0.0) or np.any(colors > 1.0):
+            raise ValueError("Vehicle RGB channels must be in [0, 1]")
+        self.vehicle_colors = [tuple(row) for row in colors]
+        for car, color in zip(self.cars, self.vehicle_colors):
+            if car is not None:
+                car.hull.color = color
 
     def step(self, action):
         """ Run environment for one timestep. 
@@ -594,6 +622,7 @@ class MultiCarRacing(gym.Env, EzPickle):
                 car.gas(action[car_id][1])
                 car.brake(action[car_id][2])
 
+        self.vehicle_contacts.clear_step()
         for car in self.cars:
             car.step(1.0/FPS)
         self.world.Step(1.0/FPS, 6*30, 2*30)
@@ -683,7 +712,18 @@ class MultiCarRacing(gym.Env, EzPickle):
             else:
                 self.state = self._get_telemetry_state()
 
-        return self.state, step_reward, done, {}
+        return self.state, step_reward, done, {
+            'vehicle_contacts': self.vehicle_contacts.snapshot(self.world),
+            'telemetry_version': self.telemetry_version,
+            'neighbor_ids': self.last_dynamic_neighbor_ids,
+        }
+
+    def _vehicle_axes(self, heading):
+        if self.telemetry_version == 'corrected_v2':
+            return (np.array([-math.sin(heading), math.cos(heading)]),
+                    np.array([-math.cos(heading), -math.sin(heading)]))
+        return (np.array([math.cos(heading), math.sin(heading)]),
+                np.array([-math.sin(heading), math.cos(heading)]))
 
     def _wrap_to_pi(self, angle):
         return (angle + math.pi) % (2 * math.pi) - math.pi
@@ -705,8 +745,7 @@ class MultiCarRacing(gym.Env, EzPickle):
             pos = positions[car_id]
             vel = velocities[car_id]
             heading = float(car.hull.angle)
-            heading_vec = np.array([math.cos(heading), math.sin(heading)])
-            left_vec = np.array([-math.sin(heading), math.cos(heading)])
+            heading_vec, left_vec = self._vehicle_axes(heading)
 
             distance_to_track = np.linalg.norm(pos.reshape(1, 2) - track_xy, axis=1)
             track_index = int(np.argmin(distance_to_track))
@@ -719,6 +758,8 @@ class MultiCarRacing(gym.Env, EzPickle):
                 [-math.sin(desired_angle), math.cos(desired_angle)],
                 dtype=np.float32,
             )
+            if self.telemetry_version == 'corrected_v2':
+                normal = self._vehicle_axes(desired_angle)[1]
             heading_error = self._wrap_to_pi(desired_angle - heading)
             speed = float(np.linalg.norm(vel))
             tile_progress = 0.0
@@ -775,8 +816,7 @@ class MultiCarRacing(gym.Env, EzPickle):
         ego_vel = velocities[ego_id]
         other_vel = velocities[other_id]
         heading = float(ego.hull.angle)
-        heading_vec = np.array([math.cos(heading), math.sin(heading)])
-        left_vec = np.array([-math.sin(heading), math.cos(heading)])
+        heading_vec, left_vec = self._vehicle_axes(heading)
         rel_pos = other_pos - ego_pos
         rel_vel = other_vel - ego_vel
         rel_forward = float(np.dot(rel_pos, heading_vec) / PLAYFIELD)
@@ -810,8 +850,7 @@ class MultiCarRacing(gym.Env, EzPickle):
             pos = positions[car_id]
             vel = velocities[car_id]
             heading = float(car.hull.angle)
-            heading_vec = np.array([math.cos(heading), math.sin(heading)])
-            left_vec = np.array([-math.sin(heading), math.cos(heading)])
+            heading_vec, left_vec = self._vehicle_axes(heading)
 
             distance_to_track = np.linalg.norm(pos.reshape(1, 2) - track_xy, axis=1)
             track_index = int(np.argmin(distance_to_track))
@@ -821,6 +860,8 @@ class MultiCarRacing(gym.Env, EzPickle):
 
             center_delta = pos - np.array([center_x, center_y], dtype=np.float32)
             normal = np.array([-math.sin(desired_angle), math.cos(desired_angle)], dtype=np.float32)
+            if self.telemetry_version == 'corrected_v2':
+                normal = self._vehicle_axes(desired_angle)[1]
             heading_error = self._wrap_to_pi(desired_angle - heading)
             speed = float(np.linalg.norm(vel))
             tile_progress = self.tile_visited_count[car_id] / len(self.track) if len(self.track) > 0 else 0.0
@@ -868,6 +909,10 @@ class MultiCarRacing(gym.Env, EzPickle):
                 score = self._opponent_dynamic_score(car_id, other_id, positions, velocities)
                 candidates.append((score, other_id, opp))
             candidates.sort(key=lambda item: item[0], reverse=True)
+            if self.neighbor_order == 'identity':
+                candidates.sort(key=lambda item: item[1])
+            elif self.neighbor_order == 'nearest':
+                candidates.sort(key=lambda item: (float(item[2][4]), item[1]))
 
             for slot in range(self.max_neighbors):
                 if slot < len(candidates):
@@ -934,7 +979,9 @@ class MultiCarRacing(gym.Env, EzPickle):
 
         # Set colors for each viewer and draw cars
         for id, car in enumerate(self.cars):
-            if self.use_ego_color:  # Apply same ego car color coloring scheme
+            if self.vehicle_colors is not None:
+                car.hull.color = self.vehicle_colors[id]
+            elif self.use_ego_color:  # Legacy mode without algorithm assignments
                 car.hull.color = (0.0, 0.0, 0.8)  # Set all other car colors to blue
                 if id == car_id:  # Ego car
                     car.hull.color = (0.8, 0.0, 0.0)  # Set ego car color to red

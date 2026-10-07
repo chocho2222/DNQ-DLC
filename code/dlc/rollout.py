@@ -12,6 +12,8 @@ def make_env(
     lateral_spacing=None,
     track_path=None,
     max_neighbors=None,
+    telemetry_version='legacy_v1',
+    neighbor_order='relevance',
 ):
     np.random.seed(seed)
     env_kwargs = dict(
@@ -22,6 +24,8 @@ def make_env(
         h_ratio=0.25,
         use_ego_color=False,
         observation_type=observation_type,
+        telemetry_version=telemetry_version,
+        neighbor_order=neighbor_order,
     )
     if start_order is not None:
         env_kwargs["start_order"] = start_order

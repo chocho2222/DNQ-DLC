@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 
 from dlc.policies import TelemetryOvertakePolicy
+from dlc.observation_layout import require_checkpoint_version
 
 try:
     import torch
@@ -18,6 +19,32 @@ PLAYFIELD = 2000 / 6.0
 EGO_DIM = 17
 OPPONENT_DIM = 7
 MASKED_OPPONENT_DIM = 8
+# Slot layout that carries an explicit priority channel: the seven relation
+# features, the rank the admission rule assigned to that slot, and the mask.
+# Rank travels with the slot content, so a permutation-invariant pooling still
+# sees how the selection ordered the vehicles it admitted.
+PRIORITY_OPPONENT_DIM = 9
+PRIORITY_FEATURE_INDEX = 7
+
+# Admission weights for ``relevance_v2``. That rule is a soft prior over
+# interaction relevance rather than a membership test: it combines
+# time-to-collision, closing speed, corridor overlap and whether the vehicle is
+# ahead or pressuring from behind. The archived rule instead applied a hard
+# 80 m radius with an 18 m rear window and a 70 m forward window, which emptied
+# the graph while opponents were still on the road and let admission collapse
+# onto "nearest vehicle within radius".
+RELEVANCE_V2_TTC_WEIGHT = 3.0
+RELEVANCE_V2_TTC_REFERENCE = 3.0
+RELEVANCE_V2_CLOSING_WEIGHT = 1.5
+RELEVANCE_V2_CLOSING_REFERENCE = 10.0
+RELEVANCE_V2_OVERLAP_WEIGHT = 2.0
+RELEVANCE_V2_AHEAD_WEIGHT = 1.5
+RELEVANCE_V2_REAR_WEIGHT = 1.0
+RELEVANCE_V2_DISTANCE_WEIGHT = 0.8
+RELEVANCE_V2_STICKY_BONUS = 2.5
+RELEVANCE_V2_CORRIDOR_HALF_M = 9.0
+RELEVANCE_V2_AHEAD_WINDOW_M = 90.0
+RELEVANCE_V2_REAR_WINDOW_M = 40.0
 
 
 def mlp(in_dim, hidden_dim, out_dim, layers=2):
@@ -58,6 +85,8 @@ def _slot_dim_from_obs(obs_dim, ego_dim=EGO_DIM):
         return None
     if remainder % MASKED_OPPONENT_DIM == 0:
         return MASKED_OPPONENT_DIM
+    if remainder % PRIORITY_OPPONENT_DIM == 0:
+        return PRIORITY_OPPONENT_DIM
     if remainder % OPPONENT_DIM == 0:
         return OPPONENT_DIM
     return None
@@ -67,18 +96,38 @@ def _infer_source_layout(obs_dim):
     slot_dim = _slot_dim_from_obs(obs_dim)
     if slot_dim is None:
         raise ValueError(f"observation dim {obs_dim} is incompatible with either 7-dim or masked 8-dim slots")
-    use_mask = slot_dim == MASKED_OPPONENT_DIM
+    use_mask = slot_dim in (MASKED_OPPONENT_DIM, PRIORITY_OPPONENT_DIM)
     feat_dim = slot_dim - 1 if use_mask else slot_dim
     return slot_dim, feat_dim, use_mask
 
 
-def _rank_opponent_slots(obs_row, slot_dim=OPPONENT_DIM, use_slot_mask=False, selection_mode="legacy", radius=80.0):
-    """Score opponent slots by local interaction relevance.
+def _rank_opponent_slot_entries(obs_row, slot_dim=OPPONENT_DIM, use_slot_mask=False, selection_mode="legacy", radius=80.0, telemetry_version='legacy_v1', min_keep=None, sticky=None, commit=None):
+    """Rank opponent slots by local interaction relevance.
+
+    Returns ``(source_index, features)`` pairs, most relevant first. The source
+    index is the position of the slot inside the observation the environment
+    produced, which is what the frozen-identity ablation needs in order to keep
+    reasoning about the same vehicles across decision steps.
 
     Higher score means more likely to matter for imminent overtake planning.
+
+    ``min_keep`` backfills the ranking with the closest dropped opponents when
+    the relevance rule would admit fewer than that many. The relevance rule
+    otherwise reduces to a radius filter that leaves the graph empty while
+    opponents are still on the road, in which case the planner spends the step
+    with no interaction context at all.
+
+    ``commit`` names source indices the caller has decided to keep regardless of
+    their instantaneous score, and they are returned first. The manoeuvre
+    commitment uses it: a stateless rule drops the car the ego is mid-pass
+    against as soon as the closing rate changes sign, which is when its
+    interaction prediction matters most.
     """
     scores = []
+    dropped = []
     selection_mode = str(selection_mode or "legacy").lower()
+    if selection_mode == "interaction_backfill":
+        selection_mode = "interaction"
     slot_dim = int(slot_dim)
     feat_dim = slot_dim - 1 if use_slot_mask else slot_dim
     if feat_dim <= 0:
@@ -87,6 +136,7 @@ def _rank_opponent_slots(obs_row, slot_dim=OPPONENT_DIM, use_slot_mask=False, se
         slot = np.asarray(obs_row[start : start + slot_dim], dtype=np.float32)
         if slot.shape[0] < slot_dim:
             break
+        source_index = (start - EGO_DIM) // slot_dim
         if use_slot_mask:
             if float(slot[-1]) <= 0.0:
                 continue
@@ -101,6 +151,11 @@ def _rank_opponent_slots(obs_row, slot_dim=OPPONENT_DIM, use_slot_mask=False, se
         heading_sin = float(slot[5]) if feat_dim > 5 else 0.0
         heading_cos = float(slot[6]) if feat_dim > 6 else 0.0
         closing_speed = max(-rel_vx, 0.0) + max(-rel_vy, 0.0)
+        if telemetry_version == 'corrected_v2':
+            forward = np.array([-float(obs_row[5]), float(obs_row[6])])
+            forward /= max(float(np.linalg.norm(forward)), 1e-8)
+            longitudinal_velocity = float(np.dot([rel_vx, rel_vy], forward))
+            closing_speed = max(-longitudinal_velocity * (1 if rel_forward >= 0 else -1), 0.0)
         ttc = distance / max(closing_speed, 1e-3) if closing_speed > 1e-4 else 50.0
         heading_alignment = max(heading_cos, 0.0) - abs(heading_sin) * 0.25
         if selection_mode in {"fixed", "fixed_k", "identity", "stable"}:
@@ -130,6 +185,27 @@ def _rank_opponent_slots(obs_row, slot_dim=OPPONENT_DIM, use_slot_mask=False, se
                 )
         elif selection_mode in {"nearest", "distance"}:
             score = -distance
+        elif selection_mode == "relevance_v2":
+            forward_m = rel_forward * PLAYFIELD
+            left_m = rel_left * PLAYFIELD
+            distance_m = max(distance * PLAYFIELD, 1e-3)
+            closing_mps = max(closing_speed * 50.0, 0.0)
+            ttc = distance_m / closing_mps if closing_mps > 1e-3 else 30.0
+            overlap = max(0.0, 1.0 - abs(left_m) / RELEVANCE_V2_CORRIDOR_HALF_M)
+            ahead = 1.0 if 0.0 < forward_m < RELEVANCE_V2_AHEAD_WINDOW_M else 0.0
+            rear = 1.0 if -RELEVANCE_V2_REAR_WINDOW_M < forward_m <= 0.0 else 0.0
+            score = (
+                RELEVANCE_V2_TTC_WEIGHT / (1.0 + max(ttc, 0.0) / RELEVANCE_V2_TTC_REFERENCE)
+                + RELEVANCE_V2_CLOSING_WEIGHT
+                * min(closing_mps, RELEVANCE_V2_CLOSING_REFERENCE)
+                / RELEVANCE_V2_CLOSING_REFERENCE
+                + RELEVANCE_V2_OVERLAP_WEIGHT * overlap
+                + RELEVANCE_V2_AHEAD_WEIGHT * ahead
+                + RELEVANCE_V2_REAR_WEIGHT * rear * overlap
+                - RELEVANCE_V2_DISTANCE_WEIGHT * distance_m / 100.0
+            )
+            if sticky and int(source_index) in sticky:
+                score += RELEVANCE_V2_STICKY_BONUS
         elif selection_mode in {"front", "ahead"}:
             score = (
                 3.0 * float(rel_forward > 0.0)
@@ -147,9 +223,85 @@ def _rank_opponent_slots(obs_row, slot_dim=OPPONENT_DIM, use_slot_mask=False, se
                 + 0.25 * closing_speed
                 + 0.18 * heading_alignment
             )
-        scores.append((score, slot))
+        if score <= -1e5:
+            dropped.append((float(distance), int(source_index), slot))
+        scores.append((score, int(source_index), slot))
     scores.sort(key=lambda item: item[0], reverse=True)
-    return [slot for score, slot in scores if score > -1e5]
+    kept = [(index, slot) for score, index, slot in scores if score > -1e5]
+    kept = _apply_commit_order(kept, commit)
+    if min_keep is not None:
+        min_keep = max(int(min_keep), 0)
+        if len(kept) < min_keep:
+            dropped.sort(key=lambda item: item[0])
+            for _, index, slot in dropped:
+                if len(kept) >= min_keep:
+                    break
+                kept.append((index, slot))
+    return kept
+
+
+def _apply_commit_order(kept, commit):
+    """Move committed source indices to the front of a ranking, scores unchanged.
+
+    Committed vehicles are reordered, never added: an index the slot mask hides
+    is not a vehicle the model can be given, and an index the radius filter
+    rejected is not the car the ego is driving against.
+    """
+    if not commit:
+        return kept
+    wanted = {int(index) for index in commit}
+    if not wanted:
+        return kept
+    committed = [item for item in kept if int(item[0]) in wanted]
+    if not committed:
+        return kept
+    rest = [item for item in kept if int(item[0]) not in wanted]
+    return committed + rest
+
+
+def _rank_opponent_slots(obs_row, slot_dim=OPPONENT_DIM, use_slot_mask=False, selection_mode="legacy", radius=80.0, telemetry_version='legacy_v1', min_keep=None, sticky=None, commit=None):
+    """Feature rows of the opponent slots, most relevant first."""
+    return [
+        slot
+        for _, slot in _rank_opponent_slot_entries(
+            obs_row,
+            slot_dim=slot_dim,
+            use_slot_mask=use_slot_mask,
+            selection_mode=selection_mode,
+            radius=radius,
+            telemetry_version=telemetry_version,
+            min_keep=min_keep,
+            sticky=sticky,
+            commit=commit,
+        )
+    ]
+
+
+def _frozen_slot_features(obs_row, order, slot_dim, feat_dim, use_slot_mask):
+    """Features of the source slots named by ``order``, in that order.
+
+    A source slot that the environment currently masks out becomes ``None`` so
+    the caller pads it, instead of letting a later vehicle slide into its
+    position. That keeps the frozen set an honest "same vehicles as at the
+    first decision step" ablation.
+    """
+    slots = (
+        np.asarray(obs_row, dtype=np.float32)[EGO_DIM:].reshape(-1, slot_dim)
+        if slot_dim
+        else np.zeros((0, 0), dtype=np.float32)
+    )
+    features = []
+    for index in order:
+        index = int(index)
+        if index < 0 or index >= len(slots):
+            features.append(None)
+            continue
+        slot = np.asarray(slots[index], dtype=np.float32)
+        if use_slot_mask and float(slot[slot_dim - 1]) <= 0.0:
+            features.append(None)
+            continue
+        features.append(slot[:feat_dim])
+    return features
 
 
 def pack_dynamic_neighbor_obs(
@@ -159,12 +311,30 @@ def pack_dynamic_neighbor_obs(
     max_neighbors=None,
     selection_mode="legacy",
     radius=80.0,
+    telemetry_version='legacy_v1',
+    slot_order=None,
+    min_neighbors=None,
+    sticky_order=None,
+    reverse_ranked=False,
+    commit_order=None,
 ):
     """Reorder and repack opponent slots at runtime.
 
     The underlying model still sees a fixed observation dimension, but the
     opponent slots are dynamically selected by relevance at every decision step.
     Missing slots are filled with the opponent mean from the bundle when available.
+
+    ``slot_order`` overrides the ranking with an explicit per-agent list of
+    source slot indices, which the frozen-identity ablation uses to reuse the
+    vehicles it selected at the first decision step. ``reverse_ranked`` keeps the
+    admitted set identical and only reverses the order it is written into the
+    slots, which measures how much causal power the *position* of an admitted
+    vehicle has independently of *which* vehicles were admitted.
+
+    ``commit_order`` is a per-agent list of source slot indices that stay
+    admitted this step even if their instantaneous relevance score would drop
+    them. The runtime uses it to hold the current manoeuvre partner in the
+    graph; it changes which vehicles are admitted, not where they are written.
     """
     obs = np.asarray(obs, dtype=np.float32)
     if obs.ndim != 2:
@@ -193,32 +363,93 @@ def pack_dynamic_neighbor_obs(
     packed = np.zeros((obs.shape[0], target_obs_dim), dtype=np.float32)
     for agent_id in range(obs.shape[0]):
         packed[agent_id, :ego_dim] = obs[agent_id, :ego_dim]
-        ranked = _rank_opponent_slots(
-            obs[agent_id],
-            slot_dim=source_slot_dim,
-            use_slot_mask=source_use_mask,
-            selection_mode=selection_mode,
-            radius=radius,
-        )[:slot_count]
+        order = None
+        if slot_order is not None and agent_id < len(slot_order):
+            order = slot_order[agent_id]
+        sticky = None
+        if sticky_order is not None and agent_id < len(sticky_order):
+            sticky = sticky_order[agent_id]
+        if order is None:
+            commit = None
+            if commit_order is not None and agent_id < len(commit_order):
+                commit = commit_order[agent_id]
+            ranked = _rank_opponent_slots(
+                obs[agent_id],
+                slot_dim=source_slot_dim,
+                use_slot_mask=source_use_mask,
+                selection_mode=selection_mode,
+                radius=radius,
+                telemetry_version=telemetry_version,
+                min_keep=None if slot_order is not None else min_neighbors,
+                sticky=sticky,
+                commit=commit,
+            )[:slot_count]
+        else:
+            ranked = _frozen_slot_features(
+                obs[agent_id], list(order)[:slot_count], source_slot_dim, source_feat_dim, source_use_mask
+            )
+        if reverse_ranked:
+            ranked = list(ranked)[::-1]
         for slot_id in range(slot_count):
             dst = ego_dim + slot_id * target_slot_dim
-            if slot_id < len(ranked):
+            # A target slot with one feature more than the source reserves its last
+            # feature for the priority the ranking gave this position.
+            priority = target_feat_dim == source_feat_dim + 1
+            if slot_id < len(ranked) and ranked[slot_id] is not None:
                 slot = np.asarray(ranked[slot_id], dtype=np.float32)
-                if not target_use_mask and slot.shape[0] == target_feat_dim:
-                    packed[agent_id, dst : dst + target_slot_dim] = slot
-                elif target_use_mask and slot.shape[0] == target_feat_dim:
-                    packed[agent_id, dst : dst + slot.shape[0]] = slot
-                    packed[agent_id, dst + slot.shape[0]] = 1.0
-                else:
-                    feat_len = min(slot.shape[0], target_feat_dim)
-                    packed[agent_id, dst : dst + feat_len] = slot[:feat_len]
-                    if target_use_mask:
-                        packed[agent_id, dst + target_feat_dim] = 1.0
+                feat_len = min(slot.shape[0], target_feat_dim)
+                packed[agent_id, dst : dst + feat_len] = slot[:feat_len]
+                if target_use_mask:
+                    if priority and feat_len < target_feat_dim:
+                        packed[agent_id, dst + PRIORITY_FEATURE_INDEX] = _slot_priority(slot_id, slot_count)
+                    packed[agent_id, dst + target_feat_dim] = 1.0
             else:
                 packed[agent_id, dst : dst + target_feat_dim] = fill_vec
                 if target_use_mask:
                     packed[agent_id, dst + target_feat_dim] = 0.0
     return packed
+
+
+def _slot_priority(slot_id, slot_count):
+    """Priority the admission rule gives a packed position, 1.0 for the top rank."""
+    if slot_count <= 1:
+        return 1.0
+    return float(max(0.0, 1.0 - float(slot_id) / float(slot_count - 1)))
+
+
+def selected_neighbor_ids(obs_row, neighbor_ids, k, selection_mode="interaction",
+                          telemetry_version="legacy_v1", radius=80.0):
+    """Identities of the opponent slots the packer keeps, in ranked order.
+
+    The packed observation stores relation features without vehicle identity, so
+    the identity is recovered by matching the ranked features against the
+    environment's exposed slots. This is the auditable record of which vehicles
+    the dynamic relevance neighbourhood actually admitted.
+    """
+    obs_row = np.asarray(obs_row, dtype=np.float32)
+    slot_dim, feat_dim, use_mask = _infer_source_layout(obs_row.shape[-1])
+    slots = obs_row[EGO_DIM:].reshape(-1, slot_dim) if slot_dim else np.zeros((0, 0), dtype=np.float32)
+    ranked = _rank_opponent_slots(
+        obs_row,
+        slot_dim=slot_dim,
+        use_slot_mask=use_mask,
+        selection_mode=selection_mode,
+        radius=radius,
+        telemetry_version=telemetry_version,
+    )
+    selected, used = [], set()
+    for features in ranked[: int(k)]:
+        for index, slot in enumerate(slots):
+            if index in used or index >= len(neighbor_ids):
+                continue
+            if use_mask and slot[feat_dim] <= 0.5:
+                continue
+            if np.array_equal(np.asarray(slot[:feat_dim], dtype=np.float32),
+                              np.asarray(features[:feat_dim], dtype=np.float32)):
+                used.add(index)
+                selected.append(int(neighbor_ids[index]))
+                break
+    return selected
 
 
 def randomize_neighbor_slots(obs, keep_prob=1.0, max_neighbors=None, seed=None):
@@ -383,6 +614,7 @@ class GraphActorPolicy:
         pass
 
     def act(self, env, obs):
+        require_checkpoint_version(env, self.bundle.meta)
         del env
         if self.neighbor_mode == "dynamic":
             target_obs_dim = obs.shape[1] if self.max_neighbors is None or self.max_neighbors <= 0 else self.expected_obs_dim
@@ -392,6 +624,7 @@ class GraphActorPolicy:
                 target_obs_dim=target_obs_dim,
                 max_neighbors=self.max_neighbors,
                 selection_mode=self.neighbor_selection_mode,
+                telemetry_version=self.bundle.meta.get('telemetry_version', 'legacy_v1'),
             )
         normalized = self.bundle.normalize_obs(obs)
         obs_tensor = torch.as_tensor(normalized, dtype=torch.float32, device=self.device)

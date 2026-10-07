@@ -266,6 +266,120 @@ def train_actor_value_step(
     return float(actor_loss.detach().cpu()), float(value_loss.detach().cpu())
 
 
+def train_target_actor_value_step(
+    world_model,
+    actor,
+    value,
+    actor_optimizer,
+    value_optimizer,
+    batch,
+    target_agent,
+    horizon=15,
+    discount=0.99,
+    lambda_=0.95,
+    behavior_clone_weight=0.0,
+    safety_weight=0.0,
+    reward_clip=None,
+    observation_clip=None,
+    return_bound=None,
+    normalize_returns=False,
+    actor_grad_clip=100.0,
+):
+    """Imagination update for a single controlled row.
+
+    The original DLC loop makes every vehicle a learner because every vehicle is
+    driven by the same agent. In this benchmark only the target car is
+    controlled, so the actor is asked about that row alone while the remaining
+    rows keep the actions recorded with the batch. Those recorded actions are
+    the background-policy actions the opponents actually execute in closed loop,
+    so the imagined scene does not drift into a traffic pattern that never
+    occurs, and the actor loss is not diluted by rows it never scores.
+    """
+    world_model.eval()
+    obs, recorded_action, _, _ = batch
+
+    def as_bounds(bounds):
+        if bounds is None:
+            return None
+        return tuple(torch.as_tensor(np.asarray(bound), dtype=obs.dtype, device=obs.device)
+                     for bound in bounds)
+
+    reward_clip = as_bounds(reward_clip)
+    observation_clip = as_bounds(observation_clip)
+    target = int(target_agent)
+    rewards, observations, safety_losses = [], [], []
+    for _ in range(horizon):
+        action = recorded_action.clone()
+        action[:, target] = actor(obs[:, target])
+        obs, reward = world_model(obs, action, ego_agent=target)
+        if observation_clip is not None:
+            # The same drift that inflates the imagined reward also walks the
+            # predicted telemetry outside anything the transition model was fit
+            # on. Bounding each predicted channel to its training range keeps the
+            # value head, and therefore the returns it bootstraps, finite.
+            obs = torch.clamp(obs, observation_clip[0], observation_clip[1])
+        observations.append(obs)
+        rewards.append(reward[:, target])
+        if safety_weight > 0.0:
+            lateral_error = obs[:, target, 12].abs()
+            on_grass = obs[:, target, 15].clamp(min=0.0)
+            backward = obs[:, target, 16].clamp(min=0.0)
+            safety_losses.append(
+                lateral_error.square().mean() + on_grass.mean() + backward.mean()
+            )
+
+    rewards = torch.stack(rewards, dim=1)
+    if reward_clip is not None:
+        # A one-step transition model used recursively drifts off the states it
+        # was fit on, and its reward head then emits values that no episode
+        # contains. Bounding the imagined reward to the range observed in the
+        # training data keeps the actor objective finite; the same bound is
+        # applied to every variant.
+        rewards = torch.clamp(rewards, reward_clip[0], reward_clip[1])
+    observation_rows = torch.stack(observations, dim=1)[:, :, target, :]
+    flat_rows = observation_rows.reshape(-1, observation_rows.shape[-1])
+    values_for_return = value(flat_rows).view(rewards.shape)
+    bootstrap = value(obs[:, target]).detach()
+    returns = lambda_returns(
+        rewards, values_for_return.detach(), bootstrap, discount=discount, lambda_=lambda_
+    )
+
+    if return_bound is not None:
+        # An unrolled one-step model plus a bootstrapped value head can drive the
+        # TD(lambda) targets far outside anything the episodes contain; the actor
+        # then follows that artefact instead of the expert term. Bounding the
+        # target to the discounted horizon sum of the clipped reward range keeps
+        # the value regression inside a scale the data supports.
+        returns = torch.clamp(returns, -float(return_bound), float(return_bound))
+    value_targets = returns.detach()
+    actor_returns = returns
+    if normalize_returns:
+        # Standard advantage normalisation. Without it a return scale of a few
+        # thousand makes the expert term (order 1e-3) irrelevant.
+        actor_returns = (returns - returns.mean()) / (returns.std() + 1e-6)
+
+    actor_loss = -actor_returns.mean()
+    if behavior_clone_weight > 0.0:
+        actor_loss = actor_loss + behavior_clone_weight * F.mse_loss(
+            actor(batch[0][:, target]), recorded_action[:, target]
+        )
+    if safety_losses:
+        actor_loss = actor_loss + safety_weight * torch.stack(safety_losses).mean()
+    actor_optimizer.zero_grad()
+    actor_loss.backward()
+    nn.utils.clip_grad_norm_(actor.parameters(), float(actor_grad_clip))
+    actor_optimizer.step()
+
+    values = value(flat_rows.detach()).view(rewards.shape)
+    value_loss = F.mse_loss(values, value_targets)
+    value_optimizer.zero_grad()
+    value_loss.backward()
+    nn.utils.clip_grad_norm_(value.parameters(), 100.0)
+    value_optimizer.step()
+    world_model.train()
+    return float(actor_loss.detach().cpu()), float(value_loss.detach().cpu())
+
+
 def write_json(path, payload):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)

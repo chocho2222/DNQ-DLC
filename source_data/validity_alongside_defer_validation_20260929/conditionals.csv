@@ -1,0 +1,4 @@
+experiment_id,algorithm,n,n_E_pass,P_T_v3_given_E_pass,P_S_v3_given_E_pass,P_E_valid_given_E_pass,P_E_full_given_E_pass
+base13_M6_dense,ours_dnq_dlc_seed13,6,3,1.0,1.0,0.6666666666666666,0.6666666666666666
+fix13_M6_dense,ours_dnq_dlc_seed13,6,3,1.0,1.0,1.0,1.0
+fix47_M6_dense,ours_dnq_dlc_seed47,6,2,1.0,1.0,1.0,1.0

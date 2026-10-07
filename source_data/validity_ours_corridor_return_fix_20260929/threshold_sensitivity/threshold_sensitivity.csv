@@ -1,0 +1,76 @@
+variant,description,algorithm,cases,censored,E_pass,E_full,grass_fraction,in_corridor_man
+baseline,baseline,ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+baseline,baseline,ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+baseline,baseline,ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+baseline,baseline,ours_dnq_dlc_seed71,48,0,22,19,0.0896,nan
+baseline,baseline,ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+pass_margin_3.0,pass_margin 3.0 (looser),ours_dnq_dlc_seed13,48,0,22,22,0.0649,nan
+pass_margin_3.0,pass_margin 3.0 (looser),ours_dnq_dlc_seed21,48,0,16,14,0.1074,0.857
+pass_margin_3.0,pass_margin 3.0 (looser),ours_dnq_dlc_seed47,48,0,26,21,0.066,0.9242
+pass_margin_3.0,pass_margin 3.0 (looser),ours_dnq_dlc_seed71,48,0,19,17,0.0877,0.9135
+pass_margin_3.0,pass_margin 3.0 (looser),ours_dnq_dlc_seed99,48,0,28,25,0.074,0.9234
+pass_margin_5.0,pass_margin 5.0 (stricter),ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),ours_dnq_dlc_seed71,48,0,22,19,0.0896,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+hold_40,hold 40 (looser),ours_dnq_dlc_seed13,48,0,20,19,0.0479,nan
+hold_40,hold 40 (looser),ours_dnq_dlc_seed21,48,0,15,14,0.0664,nan
+hold_40,hold 40 (looser),ours_dnq_dlc_seed47,48,0,23,23,0.0652,nan
+hold_40,hold 40 (looser),ours_dnq_dlc_seed71,48,0,22,20,0.0877,nan
+hold_40,hold 40 (looser),ours_dnq_dlc_seed99,48,0,26,26,0.0548,nan
+hold_60,hold 60 (stricter),ours_dnq_dlc_seed13,48,0,20,19,0.0509,nan
+hold_60,hold 60 (stricter),ours_dnq_dlc_seed21,48,0,15,14,0.0692,nan
+hold_60,hold 60 (stricter),ours_dnq_dlc_seed47,48,0,22,22,0.0672,nan
+hold_60,hold 60 (stricter),ours_dnq_dlc_seed71,48,0,22,19,0.0916,nan
+hold_60,hold 60 (stricter),ours_dnq_dlc_seed99,48,0,26,26,0.0561,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),ours_dnq_dlc_seed71,48,0,22,19,0.0896,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),ours_dnq_dlc_seed71,48,0,22,19,0.0896,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),ours_dnq_dlc_seed13,48,0,20,18,0.0492,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),ours_dnq_dlc_seed71,48,0,22,19,0.0896,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),ours_dnq_dlc_seed71,48,0,22,19,0.0896,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),ours_dnq_dlc_seed71,48,0,22,19,0.0896,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),ours_dnq_dlc_seed71,48,0,22,19,0.0896,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),ours_dnq_dlc_seed13,48,0,20,20,0.0492,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),ours_dnq_dlc_seed21,48,0,15,14,0.0677,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),ours_dnq_dlc_seed47,48,0,23,23,0.0656,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),ours_dnq_dlc_seed71,48,0,22,20,0.0896,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),ours_dnq_dlc_seed21,48,0,15,13,0.0677,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),ours_dnq_dlc_seed47,48,0,23,19,0.0656,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),ours_dnq_dlc_seed71,48,0,22,16,0.0896,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),ours_dnq_dlc_seed99,48,0,26,26,0.0554,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),ours_dnq_dlc_seed13,48,0,20,19,0.0492,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),ours_dnq_dlc_seed21,48,0,15,14,0.0762,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),ours_dnq_dlc_seed47,48,0,24,23,0.0634,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),ours_dnq_dlc_seed71,48,0,23,20,0.0846,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),ours_dnq_dlc_seed99,48,0,26,26,0.0518,nan
+approach_distance_25.0,approach_distance 25.0 (looser),ours_dnq_dlc_seed13,48,0,19,18,0.0534,nan
+approach_distance_25.0,approach_distance 25.0 (looser),ours_dnq_dlc_seed21,48,0,14,13,0.069,nan
+approach_distance_25.0,approach_distance 25.0 (looser),ours_dnq_dlc_seed47,48,0,23,23,0.0708,nan
+approach_distance_25.0,approach_distance 25.0 (looser),ours_dnq_dlc_seed71,48,0,22,19,0.0982,nan
+approach_distance_25.0,approach_distance 25.0 (looser),ours_dnq_dlc_seed99,48,0,25,25,0.0676,nan

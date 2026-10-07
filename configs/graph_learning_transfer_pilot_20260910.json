@@ -1,0 +1,20 @@
+{
+  "status": "exploratory transfer check, not formal ablation",
+  "seeds": [910201],
+  "vehicle_counts": [4, 6],
+  "methods": ["joint_clearance_pilot", "graph_actor_pilot", "graph_dlc_pilot"],
+  "episodes": 6,
+  "horizon": 2200,
+  "world_model_horizon": 4,
+  "candidate_budget": 18,
+  "checkpoint": "graph_model_pilot_cached/graph_risk_dlc_world.graphworld.pt",
+  "checkpoint_rule": "fixed final update 600; no test-based choice",
+  "question": "Does the pilot teacher's behavior survive ego-proposal learning and existing Graph-DLC candidate ranking?",
+  "limits": [
+    "Single independent seed shared across densities; descriptive only",
+    "Map-based teacher has more inputs than the K=3 learned proposal",
+    "Graph-DLC uses existing candidate/risk logic; joint-clearance candidate screening has not been integrated",
+    "Later contact must be reported even after a contact-free retained pass",
+    "Do not label these controls as the final DNQ-DLC system"
+  ]
+}

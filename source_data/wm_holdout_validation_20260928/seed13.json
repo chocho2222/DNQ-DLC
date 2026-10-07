@@ -1,0 +1,609 @@
+{
+  "model": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/wm_k15_sb_all_v4matt/graph_risk_dlc_world.graphworld.pt",
+  "model_meta": {
+    "telemetry_version": "corrected_v2",
+    "neighbor_order": "identity",
+    "neighbor_selection": "interaction",
+    "data_split": "train",
+    "expert_source": "joint_clearance_pilot",
+    "background_profile": "lane13",
+    "start_layout": "single_file",
+    "proposal_target_only": false,
+    "speed_balance_alpha": 0.5,
+    "speed_balance_scope": "all",
+    "name": "graph_risk_dlc_world",
+    "obs_dim": 41,
+    "action_dim": 3,
+    "quality_dim": 4,
+    "quality_aux_weight": 0.0,
+    "quality_targets": [
+      "on_track_logit",
+      "grass_logit",
+      "lane_error_scaled",
+      "forward_clearance_scaled"
+    ],
+    "num_agents": 6,
+    "min_agents_train": 4,
+    "max_agents_train": 6,
+    "target_agent": 5,
+    "target_agent_mode": "last",
+    "hidden_dim": 192,
+    "proposal_hidden_dim": 128,
+    "pooling_mode": "attention",
+    "masked_pooling": "attention",
+    "planner_horizon": 4,
+    "planner_candidates": 18,
+    "risk_weight": 1.6,
+    "uncertainty_weight": 0.35,
+    "progress_weight": 1.2,
+    "imitation_weight": 0.06,
+    "overtake_weight": 2.4,
+    "lane_quality_weight": 0.42,
+    "grass_penalty_weight": 2.0,
+    "close_gap_penalty_weight": 0.65,
+    "planner_target_speed": 22.0,
+    "overtake_aware_planner": true,
+    "use_slot_mask": true,
+    "predict_residual": true,
+    "slot_feature_dim": 7,
+    "relation_dim": 8,
+    "opponent_dim": 8,
+    "ego_dim": 17,
+    "observation_type": "telemetry_dynamic",
+    "max_neighbors": 3,
+    "neighbor_keep_prob": 0.9,
+    "planner_profile": "risk_aware",
+    "background_policies": "telemetry_lane13",
+    "episodes": 160,
+    "train_steps": 40000,
+    "device": "cuda:2",
+    "collection_workers": 1,
+    "source": "graph_risk_dlc_world_model",
+    "ego_mean": [
+      0.2396843135356903,
+      0.07411979883909225,
+      -0.09006800502538681,
+      0.04596779868006706,
+      0.2893281877040863,
+      0.3093389868736267,
+      0.16360294818878174,
+      0.018398433923721313,
+      0.3752022981643677,
+      0.3187859356403351,
+      -0.012247996404767036,
+      -0.0071352459490299225,
+      0.08667353540658951,
+      0.011702719144523144,
+      0.9975447654724121,
+      0.0001370320824207738,
+      2.729500920395367e-05
+    ],
+    "ego_std": [
+      0.32979753613471985,
+      0.20348824560642242,
+      0.2099585384130478,
+      0.18103112280368805,
+      0.05615208297967911,
+      0.7054867148399353,
+      0.615463137626648,
+      0.07498359680175781,
+      0.2877825200557709,
+      0.18789488077163696,
+      0.21590590476989746,
+      0.2354491800069809,
+      0.2669060230255127,
+      0.08463393151760101,
+      0.016780950129032135,
+      0.01170453429222107,
+      0.005224327091127634
+    ],
+    "opponent_mean": [
+      0.0020670860540121794,
+      0.02520710416138172,
+      0.0007732848171144724,
+      -0.001665464835241437,
+      0.14140735566616058,
+      0.005412450060248375,
+      0.6247365474700928
+    ],
+    "opponent_std": [
+      0.13389037549495697,
+      0.0636034682393074,
+      0.180733785033226,
+      0.18540287017822266,
+      0.050886012613773346,
+      0.5642721056938171,
+      0.5382713079452515
+    ]
+  },
+  "protocol": {
+    "model": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/wm_k15_sb_all_v4matt/graph_risk_dlc_world.graphworld.pt",
+    "output_dir": "/tmp/wm_holdout/seed13",
+    "episodes": 8,
+    "max_steps": 600,
+    "seed": 7300,
+    "gap_tiles": 18,
+    "lateral_spacing": 0.0,
+    "max_neighbors": 3,
+    "risk_lateral": 0.45,
+    "collection_workers": 1,
+    "batch_size": 256,
+    "horizons": "1,3,5,10",
+    "rollout_stride": 10,
+    "max_rollout_windows": 200,
+    "device": "cuda:0"
+  },
+  "strata": {
+    "id_procedural_n4_6": {
+      "track": "procedural",
+      "min_agents": 4,
+      "max_agents": 6,
+      "seed_start": 7300,
+      "episode_count": 8,
+      "transition_count": 4800,
+      "one_step": {
+        "agent_transition_count": 21600,
+        "state_rmse_all": 0.00947482418268919,
+        "state_mae_all": 0.0020966718439012766,
+        "state_rmse_by_feature": [
+          0.00010573319741524756,
+          0.000109310400148388,
+          0.0036041270941495895,
+          0.003421567380428314,
+          0.003134693717584014,
+          0.002928605768829584,
+          0.0034044082276523113,
+          0.007251393515616655,
+          0.022065000608563423,
+          0.0004064336244482547,
+          0.031132271513342857,
+          0.03798557445406914,
+          0.0022405816707760096,
+          0.012986032292246819,
+          0.0028098267503082752,
+          0.00016102008521556854,
+          0.0002580020227469504,
+          0.0006325609283521771,
+          0.000907070585526526,
+          0.008210926316678524,
+          0.010015010833740234,
+          0.0002789158024825156,
+          0.006251429207623005,
+          0.007322385907173157,
+          0.0,
+          0.0005614502588286996,
+          0.0008021197281777859,
+          0.007872055284678936,
+          0.008097335696220398,
+          0.00028593052411451936,
+          0.0052740019746124744,
+          0.006091443356126547,
+          0.0,
+          0.0003342946001794189,
+          0.0003192277508787811,
+          0.003803288098424673,
+          0.0038369656540453434,
+          0.0001855482259998098,
+          0.001800496014766395,
+          0.00215368764474988,
+          0.0
+        ],
+        "target_state_rmse": 0.011780166067183018,
+        "reward_mae": 0.09275203943252563,
+        "risk_prevalence": 0.19069445133209229,
+        "risk_auroc": 0.9999990000588715,
+        "risk_auprc": 0.9999957587786741,
+        "risk_brier": 0.0003458479477558285,
+        "risk_ece_10bin": 0.00037634921076215165,
+        "risk_calibration_bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "n": 17464,
+            "confidence": 4.914566984859418e-05,
+            "risk_frequency": 0.0
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.2,
+            "n": 5,
+            "confidence": 0.15091483443975448,
+            "risk_frequency": 0.2
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.3,
+            "n": 4,
+            "confidence": 0.2499425783753395,
+            "risk_frequency": 0.0
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "n": 7,
+            "confidence": 0.3521235202039991,
+            "risk_frequency": 0.5714285714285714
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.5,
+            "n": 2,
+            "confidence": 0.44915176928043365,
+            "risk_frequency": 1.0
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.6,
+            "n": 2,
+            "confidence": 0.5501520931720734,
+            "risk_frequency": 0.5
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.7,
+            "n": 3,
+            "confidence": 0.662485142548879,
+            "risk_frequency": 0.3333333333333333
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.8,
+            "n": 4,
+            "confidence": 0.7388462126255035,
+            "risk_frequency": 0.75
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.9,
+            "n": 6,
+            "confidence": 0.8439895908037821,
+            "risk_frequency": 0.6666666666666666
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "n": 4103,
+            "confidence": 0.999709353471947,
+            "risk_frequency": 1.0
+          }
+        ]
+      },
+      "multi_step": {
+        "1": {
+          "windows": 200,
+          "state_rmse_all": 0.01050298221806317,
+          "target_state_rmse": 0.014983869519635672
+        },
+        "3": {
+          "windows": 200,
+          "state_rmse_all": 0.06043866787634153,
+          "target_state_rmse": 0.03967241208031929
+        },
+        "5": {
+          "windows": 200,
+          "state_rmse_all": 0.06559529565398008,
+          "target_state_rmse": 0.0511714401656419
+        },
+        "10": {
+          "windows": 200,
+          "state_rmse_all": 0.09951849514203118,
+          "target_state_rmse": 0.08773926878349687
+        }
+      }
+    },
+    "ood_hairpin_n8": {
+      "track": "tracks/hairpin_scaled.npz",
+      "min_agents": 8,
+      "max_agents": 8,
+      "seed_start": 7400,
+      "episode_count": 8,
+      "transition_count": 4800,
+      "one_step": {
+        "agent_transition_count": 38400,
+        "state_rmse_all": 0.048767413944005966,
+        "state_mae_all": 0.007694039028137922,
+        "state_rmse_by_feature": [
+          0.00033868695027194917,
+          0.000463003758341074,
+          0.009027991443872452,
+          0.00959780253469944,
+          0.006267313379794359,
+          0.011675762943923473,
+          0.00904197059571743,
+          0.014745214954018593,
+          0.040493037551641464,
+          0.0015319966478273273,
+          0.1397019624710083,
+          0.25156474113464355,
+          0.008340279571712017,
+          0.06528817117214203,
+          0.060127243399620056,
+          0.03532533347606659,
+          0.04466068372130394,
+          0.0013110957806929946,
+          0.0009808324975892901,
+          0.014028475619852543,
+          0.011069515720009804,
+          0.0008630548254586756,
+          0.009758858941495419,
+          0.009405207820236683,
+          0.0,
+          0.0010555970948189497,
+          0.0013817179715260863,
+          0.01286514662206173,
+          0.012142948806285858,
+          0.0007870822446420789,
+          0.007850618101656437,
+          0.010760239325463772,
+          0.0,
+          0.0011281524784862995,
+          0.0005425087874755263,
+          0.010141085833311081,
+          0.0080574881285429,
+          0.0005343022639863193,
+          0.004972697701305151,
+          0.0050191935151815414,
+          0.0
+        ],
+        "target_state_rmse": 0.06924489140510559,
+        "reward_mae": 0.6626134514808655,
+        "risk_prevalence": 0.23937499523162842,
+        "risk_auroc": 0.9944991569127907,
+        "risk_auprc": 0.9874188141794966,
+        "risk_brier": 0.016072845086455345,
+        "risk_ece_10bin": 0.012415416103772146,
+        "risk_calibration_bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "n": 28712,
+            "confidence": 0.0007576425565476514,
+            "risk_frequency": 0.007244357759821678
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.2,
+            "n": 120,
+            "confidence": 0.14075137010465066,
+            "risk_frequency": 0.2
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.3,
+            "n": 56,
+            "confidence": 0.2737488416688783,
+            "risk_frequency": 0.2857142857142857
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "n": 128,
+            "confidence": 0.3422747692093253,
+            "risk_frequency": 0.3125
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.5,
+            "n": 72,
+            "confidence": 0.44256770776377785,
+            "risk_frequency": 0.3333333333333333
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.6,
+            "n": 120,
+            "confidence": 0.5630936597784361,
+            "risk_frequency": 0.4666666666666667
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.7,
+            "n": 80,
+            "confidence": 0.6512093096971512,
+            "risk_frequency": 0.5
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.8,
+            "n": 128,
+            "confidence": 0.7514901706017554,
+            "risk_frequency": 0.625
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.9,
+            "n": 208,
+            "confidence": 0.8538744312066299,
+            "risk_frequency": 0.6923076923076923
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "n": 8776,
+            "confidence": 0.9979016474611996,
+            "risk_frequency": 0.97538742023701
+          }
+        ]
+      },
+      "multi_step": {
+        "1": {
+          "windows": 200,
+          "state_rmse_all": 0.05040709162032025,
+          "target_state_rmse": 0.07000223818486398
+        },
+        "3": {
+          "windows": 200,
+          "state_rmse_all": 0.12661535684900815,
+          "target_state_rmse": 0.12133618080424707
+        },
+        "5": {
+          "windows": 200,
+          "state_rmse_all": 0.18140162856315295,
+          "target_state_rmse": 0.16365499624632834
+        },
+        "10": {
+          "windows": 200,
+          "state_rmse_all": 0.4097655140580699,
+          "target_state_rmse": 0.2127283865689634
+        }
+      }
+    },
+    "ood_s_curve_n8": {
+      "track": "tracks/s_curve_scaled.npz",
+      "min_agents": 8,
+      "max_agents": 8,
+      "seed_start": 7500,
+      "episode_count": 8,
+      "transition_count": 4800,
+      "one_step": {
+        "agent_transition_count": 38400,
+        "state_rmse_all": 0.03700714558362961,
+        "state_mae_all": 0.005173047538846731,
+        "state_rmse_by_feature": [
+          0.0002865692658815533,
+          0.00023756561859045178,
+          0.006809546146541834,
+          0.007276523858308792,
+          0.005157291889190674,
+          0.006369857583194971,
+          0.00478775892406702,
+          0.011461381800472736,
+          0.025744590908288956,
+          0.0015002688160166144,
+          0.1071644127368927,
+          0.19732433557510376,
+          0.005036369897425175,
+          0.04139207303524017,
+          0.027637656778097153,
+          0.03814157098531723,
+          0.0017872181488201022,
+          0.0008986570755951107,
+          0.0010342698078602552,
+          0.010901366360485554,
+          0.01024666428565979,
+          0.0004510522703640163,
+          0.007193062454462051,
+          0.007225073873996735,
+          0.0,
+          0.0006985663785599172,
+          0.0007770278607495129,
+          0.010927657596766949,
+          0.00987339485436678,
+          0.0004006437084171921,
+          0.006513196974992752,
+          0.007089664228260517,
+          0.0,
+          0.000704416015651077,
+          0.0005025917198508978,
+          0.00898378249257803,
+          0.005961359012871981,
+          0.0003666174889076501,
+          0.002808797173202038,
+          0.003643077565357089,
+          0.0
+        ],
+        "target_state_rmse": 0.016838714480400085,
+        "reward_mae": 0.5664596557617188,
+        "risk_prevalence": 0.2227083295583725,
+        "risk_auroc": 0.9975233418387495,
+        "risk_auprc": 0.9915189266038447,
+        "risk_brier": 0.017567312344908714,
+        "risk_ece_10bin": 0.011016708780895642,
+        "risk_calibration_bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "n": 29048,
+            "confidence": 0.001873193084997822,
+            "risk_frequency": 0.005783530707793996
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.2,
+            "n": 488,
+            "confidence": 0.1361594925039127,
+            "risk_frequency": 0.2459016393442623
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.3,
+            "n": 168,
+            "confidence": 0.24065691259290492,
+            "risk_frequency": 0.38095238095238093
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "n": 168,
+            "confidence": 0.33858187762754305,
+            "risk_frequency": 0.47619047619047616
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.5,
+            "n": 168,
+            "confidence": 0.43950737249993144,
+            "risk_frequency": 0.5238095238095238
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.6,
+            "n": 216,
+            "confidence": 0.5469780580865012,
+            "risk_frequency": 0.7407407407407407
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.7,
+            "n": 168,
+            "confidence": 0.6453794776683762,
+            "risk_frequency": 0.9047619047619048
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.8,
+            "n": 264,
+            "confidence": 0.7525000192902305,
+            "risk_frequency": 0.696969696969697
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.9,
+            "n": 344,
+            "confidence": 0.8542057989641677,
+            "risk_frequency": 0.8372093023255814
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "n": 7368,
+            "confidence": 0.9958080253063273,
+            "risk_frequency": 0.9837133550488599
+          }
+        ]
+      },
+      "multi_step": {
+        "1": {
+          "windows": 200,
+          "state_rmse_all": 0.036311482693101804,
+          "target_state_rmse": 0.0091162006098102
+        },
+        "3": {
+          "windows": 200,
+          "state_rmse_all": 0.07554102087284843,
+          "target_state_rmse": 0.08174322594262595
+        },
+        "5": {
+          "windows": 200,
+          "state_rmse_all": 0.09611580280162513,
+          "target_state_rmse": 0.071637008723266
+        },
+        "10": {
+          "windows": 200,
+          "state_rmse_all": 0.14275775406132793,
+          "target_state_rmse": 0.1312803380784857
+        }
+      }
+    }
+  }
+}

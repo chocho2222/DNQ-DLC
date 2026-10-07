@@ -1,5 +1,11 @@
 # DNQ-DLC Open-Science Status
 
+> **Superseded portal.** This site documents the first, 200-case evaluation of
+> the controller. The manuscript now reports a 48-case evaluation over twelve
+> tracks and four fleet sizes with draw-averaged endpoints; see `paper/` and
+> `release_manifest.json`. The simulation clips below are retained as
+> illustration, and the numbers quoted by this site should not be cited.
+
 Checked: 2026-07-20
 
 ## Ready locally

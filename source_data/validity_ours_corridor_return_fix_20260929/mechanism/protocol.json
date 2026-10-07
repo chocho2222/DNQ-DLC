@@ -1,0 +1,17 @@
+{
+  "root": "/tmp/ours_ctfix_stage",
+  "case_plan": "outputs/tits_dynamic_graph_expanded/validity_ours_corridor_return_fix_20260929/case_plan.csv",
+  "algorithms": [
+    "ours_dnq_dlc_seed13",
+    "ours_dnq_dlc_seed21",
+    "ours_dnq_dlc_seed47",
+    "ours_dnq_dlc_seed71",
+    "ours_dnq_dlc_seed99"
+  ],
+  "warmup_steps": 300,
+  "hold_steps": 50,
+  "playfield_scale": 333.3333333333333,
+  "wm_error_definition": "imagined_rollout channel [x, y, speed] rescaled by PLAYFIELD and 50 m/s, differenced against the realised trace at the same offset",
+  "image": "learned world model, 4-step horizon, dump_rollouts enabled in the main comparison config",
+  "note": "internal signals measured inside the main runs; no component is removed or retrained here"
+}

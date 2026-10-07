@@ -1,0 +1,5 @@
+experiment_id,algorithm,n,n_E_pass,P_T_v3_given_E_pass,P_S_v3_given_E_pass,P_E_valid_given_E_pass,P_E_full_given_E_pass
+M10_scale,ours_dnq_dlc_noshield,12,2,1.0,1.0,0.5,0.5
+M4_sparse,ours_dnq_dlc_noshield,12,4,1.0,1.0,0.75,0.75
+M6_dense,ours_dnq_dlc_noshield,12,8,0.875,1.0,0.75,0.625
+M8_scale,ours_dnq_dlc_noshield,12,7,0.7142857142857143,1.0,0.7142857142857143,0.7142857142857143

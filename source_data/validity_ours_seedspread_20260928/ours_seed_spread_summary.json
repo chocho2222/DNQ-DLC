@@ -1,0 +1,66 @@
+{
+  "per_arm": [
+    {
+      "arm": "ours_dnq_dlc_seed13",
+      "cases": 48,
+      "P": 46,
+      "E_full": 21,
+      "E_race": 14,
+      "grass": 0.17896780303030302,
+      "mean_abs_lat": 0.7876250643915049,
+      "speed": 16.570046822678457,
+      "t_pass": 245.87525879917183,
+      "rank_gain": 4.958333333333333
+    },
+    {
+      "arm": "ours_dnq_dlc_seed21",
+      "cases": 48,
+      "P": 46,
+      "E_full": 13,
+      "E_race": 5,
+      "grass": 0.24575757575757576,
+      "mean_abs_lat": 1.2644543533626635,
+      "speed": 14.345221496540741,
+      "t_pass": 348.8696169772257,
+      "rank_gain": 4.083333333333333
+    },
+    {
+      "arm": "ours_dnq_dlc_seed47",
+      "cases": 48,
+      "P": 46,
+      "E_full": 11,
+      "E_race": 7,
+      "grass": 0.3068371212121212,
+      "mean_abs_lat": 1.5138973200401262,
+      "speed": 13.744803748915153,
+      "t_pass": 308.40877329192546,
+      "rank_gain": 3.6666666666666665
+    },
+    {
+      "arm": "ours_dnq_dlc_seed71",
+      "cases": 48,
+      "P": 47,
+      "E_full": 12,
+      "E_race": 9,
+      "grass": 0.23395833333333335,
+      "mean_abs_lat": 0.9399816496104761,
+      "speed": 14.894343690676392,
+      "t_pass": 253.63566362715298,
+      "rank_gain": 4.291666666666667
+    },
+    {
+      "arm": "ours_dnq_dlc_seed99",
+      "cases": 48,
+      "P": 47,
+      "E_full": 12,
+      "E_race": 6,
+      "grass": 0.25676136363636365,
+      "mean_abs_lat": 0.9794122193361022,
+      "speed": 15.397143038229219,
+      "t_pass": 225.79898682877405,
+      "rank_gain": 4.1875
+    }
+  ],
+  "paired": {},
+  "case_level": "outputs/tits_dynamic_graph_expanded/validity_ours_seedspread_20260928/case_level.csv"
+}

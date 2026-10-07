@@ -1,0 +1,10 @@
+{
+  "root": "/tmp/ours_ens",
+  "case_plan": "/tmp/ours_ens/case_plan_ens.csv",
+  "hold": 50,
+  "event_definition": "same detector as the endpoint audit: approach in [-20, -4] m, lead crosses +4 m",
+  "alongside_definition": "|along-track lead| < 4.0 m",
+  "lateral_source": "environment telemetry lateral_error for the target",
+  "note": "descriptive vehicle-state analysis; no component is ablated here",
+  "composed": "ours_dnq_dlc rows from the fused run root; the other rows are kept from outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/vehicle_states_final_20260922"
+}

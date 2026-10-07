@@ -1,0 +1,14 @@
+{
+  "case_level": "outputs/tits_dynamic_graph_expanded/validity_selector_isolation_fix_20260929/case_level.csv",
+  "reference": "ours_dnq_dlc_int3",
+  "variants": [
+    "ours_dnq_dlc_fixed3",
+    "ours_dnq_dlc_int3",
+    "ours_dnq_dlc_nearest3"
+  ],
+  "n_cases": 144,
+  "tables": {
+    "rates": "outputs/tits_dynamic_graph_expanded/validity_selector_isolation_fix_20260929/summary/selector_rate_by_variant.csv",
+    "paired": "outputs/tits_dynamic_graph_expanded/validity_selector_isolation_fix_20260929/summary/selector_paired_vs_reference.csv"
+  }
+}

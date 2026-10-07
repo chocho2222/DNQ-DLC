@@ -1,0 +1,33 @@
+{
+  "status": "new pilot Graph-DLC fit; not a submission checkpoint",
+  "dataset": "outputs/joint_clearance_development_20260910/pilot_training_data",
+  "seed": 9301001,
+  "episodes": 8,
+  "transitions": 17600,
+  "steps_per_episode": 2200,
+  "optimizer_updates": 600,
+  "batch_size": 128,
+  "transition_hidden_dim": 192,
+  "proposal_hidden_dim": 128,
+  "proposal_target_only": true,
+  "quality_aux_weight": 0.0,
+  "risk_lateral_threshold": 0.45,
+  "checkpoint_selection": "fixed final update, no validation-based checkpoint choice",
+  "training_data_gate_review": {
+    "contact_free_retained_completions": 8,
+    "episodes_with_later_contact_and_grass": 1,
+    "disposition": "retain all 8 episodes and all later failure transitions; teacher is imperfect"
+  },
+  "differences_from_archived_fit": [
+    "corrected physical coordinates and same-ID one-step prediction targets",
+    "independent newly collected pilot data with deterministic joint-clearance teacher",
+    "ego-only proposal supervision; background transitions still train the world model",
+    "fixed pilot training budget, not training-budget-matched baseline evidence"
+  ],
+  "evidence_limits": [
+    "The teacher uses all agents and map geometry; K=3 student does not receive all teacher inputs",
+    "Risk remains a boundary/reverse/lateral proxy, not contact probability",
+    "No statistical performance conclusion follows from training loss",
+    "Teacher performance is not student or DNQ-DLC performance"
+  ]
+}

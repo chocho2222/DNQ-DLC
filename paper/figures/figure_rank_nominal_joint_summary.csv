@@ -1,0 +1,8 @@
+method,n,median_rank_gain,median_nominal_rate
+DLC-JTO,30,0.0,0.0
+SAC,20,0.0,0.0
+TD3,5,0.05,0.6
+PPO,30,0.0,0.6000000000000001
+Rule Expert,30,3.0,1.0
+Safety Rule,30,3.141025641025641,1.0
+DRQ-DLC,30,1.4625,1.0

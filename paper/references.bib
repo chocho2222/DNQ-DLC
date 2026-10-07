@@ -1,3 +1,9 @@
+@IEEEtranBSTCTL{BSTcontrol,
+  CTLuse_forced_etal = "yes",
+  CTLmax_names_forced_etal = "6",
+  CTLnames_show_etal = "3"
+}
+
 @article{caesar2021nuplan,
   title = {{nuPlan}: A Closed-Loop {ML}-Based Planning Benchmark for Autonomous Vehicles},
   author = {Caesar, Holger and Kabzan, Juraj and Tan, Kok Seang and Fong, Whye Kit and Wolff, Eric and Lang, Alex H. and Fletcher, Luke and Beijbom, Oscar and Omari, Sammy},
@@ -312,17 +318,6 @@
   year = {2021}
 }
 
-@article{betz2022survey,
-  author  = {J. Betz and A. Wischnewski and A. Heilmeier and F. Nobis
-             and T. Stahl and L. Hermansdorfer and B. Lohmann and
-             M. Lienkamp},
-  title   = {Autonomous Vehicles on the Edge: A Survey on Autonomous
-             Vehicle Racing},
-  journal = {IEEE Open Journal of Intelligent Transportation Systems},
-  volume  = {3},
-  pages   = {458--488},
-  year    = {2022}
-}
 
 @misc{hoffmann2026a2rl,
   author = {Simon Hoffmann and Simon Sagmeister and Tobias Betz and
@@ -339,32 +334,7 @@
   year   = {2026}
 }
 
-@misc{raji2022multi,
-  author = {A. Raji and A. Liniger and A. Giove and A. Toschi and
-            N. Musiu and D. Morra and M. Verucchi and D. Caporale and
-            M. Bertogna},
-  title  = {Motion Planning and Control for Multi-Vehicle Autonomous
-            Racing at High Speeds},
-  note   = {arXiv preprint arXiv:2207.11136},
-  year   = {2022}
-}
 
-@article{wurman2022gt,
-  author  = {P. R. Wurman and S. Barrett and K. Kawamoto and
-             J. MacGlashan and K. Subramanian and T. J. Walsh and
-             R. Capobianco and A. Devlic and F. Eckert and F. Fuchs and
-             L. H. Gilpin and P. Khandelwal and V. Kompella and
-             H. C. Lin and P. MacAlpine and D. Oller and T. Seno and
-             C. Sherstan and M. D. Thomure and H. Aghabozorgi and
-             L. Barrett and R. Douglas and N. Whitehead and A. Dutech
-             and J. Smith and S. Okabe and M. Sridharan and P. Stone},
-  title   = {Outracing Champion Gran Turismo Drivers with Deep
-             Reinforcement Learning},
-  journal = {Nature},
-  volume  = {602},
-  pages   = {223--228},
-  year    = {2022}
-}
 
 @misc{steiner2025f1tenth_overtaking,
   author = {Emily Steiner and Daniel van der Spuy and Futian Zhou and
@@ -375,12 +345,6 @@
   year   = {2025}
 }
 
-@misc{hafner2023worldmodels,
-  author = {D. Hafner and J. Pasukonis and J. Ba and T. Lillicrap},
-  title  = {Mastering Diverse Domains through World Models},
-  note   = {arXiv preprint arXiv:2301.04104},
-  year   = {2023}
-}
 
 @misc{tu2025dwm_survey,
   author = {Sifan Tu and Xin Zhou and Dingkang Liang and Xingyu Jiang
@@ -408,7 +372,8 @@
   title     = {WorldRFT: Latent World Model Planning with Reinforcement
                Fine-Tuning for Autonomous Driving},
   booktitle = {AAAI Conference on Artificial Intelligence},
-  year      = {2026}
+  year      = {2026},
+  doi       = {10.1609/aaai.v40i14.38149}
 }
 
 @misc{wang2026vlaworld,
@@ -420,24 +385,151 @@
   year   = {2026}
 }
 
-@misc{shi2025motionforecasting,
-  author = {Jianxin Shi and Jinhao Chen and Yuandong Wang and Li Sun and
-            Chunyang Liu and Wei Xiong and Tianyu Wo},
-  title  = {Motion Forecasting for Autonomous Vehicles: A Survey},
-  note   = {arXiv preprint arXiv:2502.08664},
-  year   = {2025}
+@article{shi2025motionforecasting,
+  author  = {Jianxin Shi and Jinhao Chen and Yuandong Wang and Li Sun and
+             Chunyang Liu and Wei Xiong and Tianyu Wo},
+  title   = {Motion Forecasting for Autonomous Vehicles: A Survey},
+  journal = {International Journal of Machine Learning and Cybernetics},
+  year    = {2026},
+  doi     = {10.1007/s13042-025-02859-8}
 }
 
-@inproceedings{ettinger2021waymo,
-  author    = {S. Ettinger and S. Cheng and B. Caine and C. Liu and
-               H. Zhao and S. Pradhan and Y. Chai and B. Sapp and
-               C. R. Qi and Y. Zhou and Z. Yang and A. Chouard and
-               P. Sun and J. Ngiam and V. Vasudevan and A. McCauley and
-               J. Shlens and D. Anguelov},
-  title     = {Large Scale Interactive Motion Forecasting for Autonomous
-               Driving: The Waymo Open Motion Dataset},
-  booktitle = {Proceedings of the IEEE/CVF International Conference on
-               Computer Vision},
-  pages     = {9710--9719},
-  year      = {2021}
+@article{cheng2024chassis_trajectory,
+  author  = {Cheng, Shuo and Peng, H. N. and Dong, X. X. and Liu, Z. J. and Li, Liang},
+  title   = {Chassis Global Dynamics-Oriented Trajectory Planning for Automated Vehicles},
+  journal = {IEEE Transactions on Systems, Man, and Cybernetics: Systems},
+  year    = {2024},
+  volume  = {54},
+  number  = {2},
+  pages   = {950--959},
+  doi     = {10.1109/TSMC.2023.3321881}
+}
+
+@article{cheng2025hybrid_dynamic,
+  author  = {Cheng, Shuo and Hu, B. B. and Wei, H. L. and Li, Liang and Lv, C.},
+  title   = {Deep Learning-Based Hybrid Dynamic Modeling and Improved Handling Stability Assessment for Autonomous Vehicles at Driving Limits},
+  journal = {IEEE Transactions on Vehicular Technology},
+  year    = {2025},
+  volume  = {74},
+  number  = {4},
+  pages   = {5582--5593},
+  doi     = {10.1109/TVT.2024.3515209}
+}
+
+@article{cheng2023cnn_lanechange,
+  author  = {Cheng, Shuo and Wang, Z. and Yang, B. and Li, Liang and Nakano, K.},
+  title   = {Convolutional Neural Network-Based Lane-Change Strategy via Motion Image Representation for Automated and Connected Vehicles},
+  journal = {IEEE Transactions on Neural Networks and Learning Systems},
+  year    = {2023},
+  doi     = {10.1109/TNNLS.2023.3265662}
+}
+
+@article{wu2022fuzzyovertaking,
+  author  = {Wu, Q. and Cheng, Shuo and Li, Liang and Yang, F. and Meng, L. J. and Fan, Z. X. and Liang, H. W.},
+  title   = {A Fuzzy-Inference-Based Reinforcement Learning Method of Overtaking Decision Making for Automated Vehicles},
+  journal = {Proceedings of the Institution of Mechanical Engineers, Part D: Journal of Automobile Engineering},
+  year    = {2022},
+  volume  = {236},
+  number  = {1},
+  pages   = {75--83}
+}
+
+@inproceedings{lakshminarayanan2017simple,
+  title = {Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles},
+  author = {Lakshminarayanan, Balaji and Pritzel, Alexander and Blundell, Charles},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume = {30},
+  year = {2017}
+}
+
+@inproceedings{chua2018pets,
+  title = {Deep Reinforcement Learning in a Handful of Trials using Probabilistic Dynamics Models},
+  author = {Chua, Kurtland and Calandra, Roberto and McAllister, Rowan and Levine, Sergey},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume = {31},
+  year = {2018}
+}
+
+@article{hu2023dynamicgraph,
+  author  = {X. Hu and Y. Liu and B. Tang and J. Yan and L. Chen},
+  title   = {Learning Dynamic Graph for Overtaking Strategy in Autonomous
+             Driving},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {24},
+  number  = {11},
+  pages   = {11921--11933},
+  year    = {2023},
+  doi     = {10.1109/TITS.2023.3287223}
+}
+
+@article{li2025refgov,
+  author  = {H. Li and F. Assadian and R. Langari},
+  title   = {A Reference Governor-Based Autonomous Driving Control Strategy
+             for Guaranteed Safe Overtaking},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {26},
+  number  = {12},
+  pages   = {22457--22469},
+  year    = {2025},
+  doi     = {10.1109/TITS.2025.3596528}
+}
+
+@article{cai2024gametheoretic,
+  author  = {L. Cai and H. Guan and Q. H. Xu and X. Jia and J. Zhan},
+  title   = {Game-Theoretic Decision-Making Method and Motion Planning for
+             Autonomous Vehicles in Overtaking},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {25},
+  number  = {8},
+  pages   = {9693--9709},
+  year    = {2024},
+  doi     = {10.1109/TITS.2024.3378162}
+}
+
+@article{lodhi2025option,
+  author  = {S. S. Lodhi and N. Kumar and P. K. Pandey},
+  title   = {Dynamic Option Policy Enabled Hierarchical Deep Reinforcement
+             Learning Model for Autonomous Overtaking Maneuver},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {26},
+  number  = {4},
+  pages   = {5018--5029},
+  year    = {2025},
+  doi     = {10.1109/TITS.2025.3536020}
+}
+
+@article{kalaria2024delay,
+  author  = {D. Kalaria and Q. Lin and J. M. Dolan},
+  title   = {Delay-Aware Robust Control for Safe Autonomous Driving and
+             Racing},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {25},
+  number  = {7},
+  pages   = {7140--7150},
+  year    = {2024},
+  doi     = {10.1109/TITS.2023.3339708}
+}
+
+@article{yang2025gnnmpc,
+  author  = {K. Yang and S. Li and M. Wang and X. Tang},
+  title   = {Interactive Decision-Making Integrating Graph Neural Networks and
+             Model Predictive Control for Autonomous Driving},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {26},
+  number  = {5},
+  pages   = {6991--7005},
+  year    = {2025},
+  doi     = {10.1109/TITS.2025.3532936}
+}
+
+@article{hu2025riskaware,
+  author  = {C. Hu and D. Liu and Z. Wang and D. Li and J. Wang and X. Tang},
+  title   = {Risk-Aware Reinforcement Learning for Non-Conservative Motion
+             Planning in Uncertain Autonomous Driving Environments},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {26},
+  number  = {11},
+  pages   = {18880--18893},
+  year    = {2025},
+  doi     = {10.1109/TITS.2025.3599260}
 }

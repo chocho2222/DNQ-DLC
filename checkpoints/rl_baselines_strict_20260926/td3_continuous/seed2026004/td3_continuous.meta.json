@@ -1,0 +1,22 @@
+{
+  "name": "td3_continuous",
+  "algorithm": "td3",
+  "seed": 2026004,
+  "device": "cuda:1",
+  "num_agents": 4,
+  "target_agent": 3,
+  "total_timesteps": 500000,
+  "max_steps": 2200,
+  "observation_type": "telemetry_dynamic",
+  "telemetry_version": "corrected_v2",
+  "neighbor_order": "identity",
+  "line_spacing": 15,
+  "lateral_spacing": 3.6,
+  "max_neighbors": 3,
+  "observation_packing": "runtime_interaction_packing_to_3_slots",
+  "traffic_profile": "slow_traffic",
+  "track_path": "procedural",
+  "elapsed_sec": 5727.476503372192,
+  "boundary": "Stable-Baselines3 continuous-control baseline trained in the same simulator with target-only control and rule-controlled background traffic.",
+  "episode_randomization": "Each reset increments the simulator seed and randomizes background start order, line spacing in {4,5,6}, and lateral spacing jitter while keeping the target last."
+}

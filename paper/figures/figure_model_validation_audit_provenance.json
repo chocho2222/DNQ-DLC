@@ -1,0 +1,15 @@
+{
+  "sources": [
+    {
+      "name": "heldout_world_model_validation.json",
+      "sha256": "bee333a501273d384558b2112e4f80eb569fcb83b83dbbcf544ce79eb792df72"
+    },
+    {
+      "name": "heldout_quality_proposal_validation.json",
+      "sha256": "9a5eb64ca6c9acd8f70d5d5f0a8fd5c96ef35acad89d6d3c87d7cdd68d5ec384"
+    }
+  ],
+  "contract": "Three quantitative panels distinguish prediction, telemetry-label discrimination, and conditional imitation. No closed-loop benefit or independent training-replicate inference is claimed.",
+  "statistics": "Archived aggregate point estimates; no intervals can be reconstructed from these summary files.",
+  "style": "Stratum colors are consistent across panels; filled/hatched bars distinguish estimators, not controller identity."
+}

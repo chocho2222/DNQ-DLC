@@ -1,0 +1,54 @@
+{
+  "study": "world_model_utility_matched_pilot_20260912",
+  "scope": "exploratory matched pilot; not confirmatory endpoint evidence",
+  "protocol": {
+    "same_checkpoint": true,
+    "same_candidate_pool": true,
+    "same_neighbor_selector": true,
+    "same_case_seed": true,
+    "modes_compared": ["full", "no_world_model"]
+  },
+  "algorithms": [
+    {
+      "name": "graph_dlc_full_rollout",
+      "label_cn": "Graph-DLC imagined rollout",
+      "kind": "world_model_utility_pilot",
+      "policy": "outputs/physical_quality_development_20260910/model_3000_updates/graph_risk_dlc_world.graphworld.pt",
+      "world_model_mode": "full",
+      "decision_utility_compare_mode": "no_world_model",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "neighbor_order": "relevance",
+      "max_neighbors": 3,
+      "planner_horizon": 4,
+      "planner_candidates": 18,
+      "overtake_aware_planner": true,
+      "hard_safety_shield": true,
+      "use_rule_anchor": true,
+      "use_handcrafted_candidates": true,
+      "use_geometry_recovery": true,
+      "recovery_enabled": true,
+      "quality_planner_mode": "proposal_only"
+    },
+    {
+      "name": "graph_dlc_no_world_model",
+      "label_cn": "Matched no-world-model",
+      "kind": "world_model_utility_pilot",
+      "policy": "outputs/physical_quality_development_20260910/model_3000_updates/graph_risk_dlc_world.graphworld.pt",
+      "world_model_mode": "no_world_model",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "neighbor_order": "relevance",
+      "max_neighbors": 3,
+      "planner_horizon": 4,
+      "planner_candidates": 18,
+      "overtake_aware_planner": true,
+      "hard_safety_shield": true,
+      "use_rule_anchor": true,
+      "use_handcrafted_candidates": true,
+      "use_geometry_recovery": true,
+      "recovery_enabled": true,
+      "quality_planner_mode": "proposal_only"
+    }
+  ]
+}

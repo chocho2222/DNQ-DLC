@@ -1,0 +1,25 @@
+{
+  "per_arm": [
+    {
+      "arm": "ours_dnq_dlc_ensemble",
+      "cases": 48,
+      "P": 45,
+      "E_full": 15,
+      "E_race": 8,
+      "grass": 0.24170454545454545,
+      "mean_abs_lat": 1.111289843017096,
+      "speed": 15.637621636529788,
+      "t_pass": 254.67386243386244,
+      "rank_gain": 4.479166666666667
+    }
+  ],
+  "paired": {
+    "ours_dnq_dlc_ensemble": {
+      "wins": 9,
+      "losses": 6,
+      "ties": 33,
+      "p": 0.60723876953125
+    }
+  },
+  "case_level": "outputs/tits_dynamic_graph_expanded/validity_ours_ensemble_20260928/case_level.csv"
+}

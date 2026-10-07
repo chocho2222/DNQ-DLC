@@ -1,0 +1,9 @@
+{
+  "root": "/tmp/ours_ctfix_stage",
+  "case_plan": "outputs/tits_dynamic_graph_expanded/validity_ours_corridor_return_fix_20260929/case_plan.csv",
+  "hold": 50,
+  "event_definition": "same detector as the endpoint audit: approach in [-20, -4] m, lead crosses +4 m",
+  "alongside_definition": "|along-track lead| < 4.0 m",
+  "lateral_source": "environment telemetry lateral_error for the target",
+  "note": "descriptive vehicle-state analysis; no component is ablated here"
+}

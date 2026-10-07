@@ -1,0 +1,37 @@
+method,condition,condition_label,endpoint,endpoint_label,rate,low,high,count,n
+dnq,clean,Clean,physical_pass,Physical pass,0.84375,0.682458504024696,0.9313557971749428,27,32
+dnq,clean,Clean,sustained_lead,Sustained lead,0.4375,0.2816533111504036,0.6067440886314801,14,32
+dnq,delay_short,"Short
+delay",physical_pass,Physical pass,0.8125,0.6469084479862404,0.9111045531043404,26,32
+dnq,delay_short,"Short
+delay",sustained_lead,Sustained lead,0.4375,0.2816533111504036,0.6067440886314801,14,32
+dnq,delay_long,"Long
+delay",physical_pass,Physical pass,0.71875,0.5462549057408342,0.8443541950225723,23,32
+dnq,delay_long,"Long
+delay",sustained_lead,Sustained lead,0.40625,0.2551963484266544,0.5773997512461713,13,32
+dnq,noise_low,"Low
+noise",physical_pass,Physical pass,0.75,0.5789344100575552,0.8674759908149096,24,32
+dnq,noise_low,"Low
+noise",sustained_lead,Sustained lead,0.34375,0.2041043792443317,0.5168891202103778,11,32
+dnq,noise_high,"High
+noise",physical_pass,Physical pass,0.78125,0.6124500635075647,0.8897616374739581,25,32
+dnq,noise_high,"High
+noise",sustained_lead,Sustained lead,0.375,0.2293388730945421,0.5474559264692255,12,32
+rule,clean,Clean,physical_pass,Physical pass,0.90625,0.7578184527161212,0.9675984487016336,29,32
+rule,clean,Clean,sustained_lead,Sustained lead,0.8125,0.6469084479862404,0.9111045531043404,26,32
+rule,delay_short,"Short
+delay",physical_pass,Physical pass,0.84375,0.682458504024696,0.9313557971749428,27,32
+rule,delay_short,"Short
+delay",sustained_lead,Sustained lead,0.625,0.4525440735307745,0.7706611269054578,20,32
+rule,delay_long,"Long
+delay",physical_pass,Physical pass,0.78125,0.6124500635075647,0.8897616374739581,25,32
+rule,delay_long,"Long
+delay",sustained_lead,Sustained lead,0.5,0.3363088286932748,0.6636911713067252,16,32
+rule,noise_low,"Low
+noise",physical_pass,Physical pass,0.875,0.7193169451834978,0.9502986561251991,28,32
+rule,noise_low,"Low
+noise",sustained_lead,Sustained lead,0.75,0.5789344100575552,0.8674759908149096,24,32
+rule,noise_high,"High
+noise",physical_pass,Physical pass,0.875,0.7193169451834978,0.9502986561251991,28,32
+rule,noise_high,"High
+noise",sustained_lead,Sustained lead,0.6875,0.5143332169904459,0.8204745836639026,22,32

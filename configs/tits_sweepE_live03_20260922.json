@@ -1,0 +1,119 @@
+{
+  "study": "tits_sweepE_live03_20260922",
+  "note": "Corridor weight sweep, second step on the liveness lever: the ten-vehicle probe at planner_liveness_weight 0.6 improved containment, planner authority and rank gain together, so this arm halves it again.",
+  "dynamic_graph": {
+    "observation_type": "telemetry_dynamic",
+    "max_neighbors": null,
+    "neighbor_selection_mode": "dynamic_interaction",
+    "slot_feature_dim": 7,
+    "use_slot_mask": true
+  },
+  "algorithms": [
+    {
+      "name": "ours_dnq_dlc",
+      "label_cn": "DNQ-DLC (ours)",
+      "policy": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/wm_k15_sb_all_v4matt/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": 3,
+      "planner_horizon": 4,
+      "planner_candidates": 12,
+      "planner_risk_weight": 1.65,
+      "planner_uncertainty_weight": 0.4,
+      "overtake_aware_planner": true,
+      "hard_safety_shield": true,
+      "use_rule_anchor": true,
+      "use_handcrafted_candidates": true,
+      "use_geometry_recovery": true,
+      "recovery_enabled": true,
+      "geometry_generalization": true,
+      "geometry_curvature_lookahead": 10,
+      "geometry_curvature_speed_weight": 20.0,
+      "geometry_lateral_speed_weight": 5.0,
+      "geometry_heading_speed_weight": 5.5,
+      "geometry_min_speed": 9.5,
+      "geometry_anchor_blend": 0.38,
+      "geometry_barrier_weight": 0.75,
+      "kind": "runtime_dynamic_neighborhood_graph_dlc_world_safe",
+      "quality_proposal_path": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/quality_actor_k15/graph_bc.graph.pt",
+      "quality_planner_mode": "blend",
+      "quality_rollout_blend": 0.35,
+      "quality_overtake_weight": 0.6,
+      "quality_lane_weight": 0.6,
+      "quality_grass_weight": 1.0,
+      "quality_close_gap_weight": 0.2,
+      "shield_mode": "filter",
+      "guard_penalty_weight": 5.0,
+      "dump_rollouts": true,
+      "planner_liveness_weight": 0.3,
+      "planner_liveness_speed": 17.0,
+      "maneuver_hold_steps": 1,
+      "corridor_feasibility": true,
+      "corridor_selection": "lexicographic",
+      "clearance_feasibility": true,
+      "shield_escalation_steps": 25
+    },
+    {
+      "name": "dlc_individual_transition",
+      "label_cn": "DLC-IT",
+      "policy": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/individual_transition.pt",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "paper_dlc_world_model_baseline",
+      "paper_dlc_model_type": "individual_transition",
+      "overtake_aware_planner": false
+    },
+    {
+      "name": "dlc_joint_transition",
+      "label_cn": "DLC-JT",
+      "policy": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/joint_transition.pt",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "paper_dlc_world_model_baseline",
+      "paper_dlc_model_type": "joint_transition",
+      "overtake_aware_planner": false
+    },
+    {
+      "name": "dlc_joint_transition_observer",
+      "label_cn": "DLC-JTO",
+      "policy": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/joint_transition_observer.pt",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "paper_dlc_world_model_baseline",
+      "paper_dlc_model_type": "joint_transition_observer",
+      "overtake_aware_planner": false
+    },
+    {
+      "name": "ppo_continuous",
+      "label_cn": "PPO",
+      "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines/ppo_continuous/ppo_continuous.sb3.zip",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "rl_baseline"
+    },
+    {
+      "name": "sac_continuous",
+      "label_cn": "SAC",
+      "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines/sac_continuous/sac_continuous.sb3.zip",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "rl_baseline"
+    },
+    {
+      "name": "td3_continuous",
+      "label_cn": "RL-TD3",
+      "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines/td3_continuous/td3_continuous.sb3.zip",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "rl_baseline"
+    },
+    {
+      "name": "rule_expert_gate",
+      "label_cn": "Rule expert",
+      "policy": "telemetry_expert_gate",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "rule_baseline"
+    }
+  ]
+}

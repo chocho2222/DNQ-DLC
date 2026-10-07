@@ -1,12 +1,13 @@
-# Paper package
+# Manuscript package
 
-This directory contains the current IEEE T-ITS manuscript package:
+Sources of the submitted IEEE T-ITS manuscript:
 
-- `main.tex` and `supplementary.tex`
-- `references.bib`
-- compiled manuscript and supplementary PDFs
-- the four figures required by the current LaTeX sources
-- the reviewed Nature-family references added to the Introduction
+- `main.tex` and `references.bib`;
+- the compiled manuscript PDF;
+- `figures/`, holding the six figures the manuscript includes, the provenance
+  records for the raster and contact-sheet figures, and the per-figure source
+  tables.
 
-Author names, affiliations, funding information, and the archival DOI remain
-to be completed before submission or public release.
+The package is the main text only; there is no supplementary material. Author
+names, affiliations, funding and the archival DOI are inserted before
+submission.

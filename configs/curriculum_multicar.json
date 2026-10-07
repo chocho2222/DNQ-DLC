@@ -1,0 +1,57 @@
+{
+  "name": "curriculum_multicar_overtake",
+  "description": "Non-VLM innovation plan: full-lap curriculum, multi-car baselines, graph/set policy, and safety shield.",
+  "stages": [
+    {
+      "name": "single_car_full_lap",
+      "num_agents": 1,
+      "behavior_policy": "telemetry_lane",
+      "episodes": 80,
+      "max_steps": 2600,
+      "success": {
+        "target_completed_lap": true,
+        "max_target_grass_rate": 0.05
+      }
+    },
+    {
+      "name": "two_car_overtake",
+      "num_agents": 2,
+      "behavior_policy": "telemetry_overtake",
+      "episodes": 160,
+      "max_steps": 2800,
+      "start_order": [0, 4],
+      "success": {
+        "target_completed_lap": true,
+        "target_final_rank_by_tiles": 1,
+        "max_target_grass_rate": 0.05
+      }
+    },
+    {
+      "name": "four_car_mixed_baselines",
+      "num_agents": 4,
+      "baseline_policies": "telemetry_cruise,telemetry_yield,telemetry_lane",
+      "episodes": 260,
+      "max_steps": 3200,
+      "single_file_start": true,
+      "gap_tiles": 22,
+      "success": {
+        "target_completed_lap": true,
+        "target_final_rank_by_tiles": 1,
+        "max_target_grass_rate": 0.05,
+        "min_mean_tile_progress": 0.75
+      }
+    },
+    {
+      "name": "unseen_track_generalization",
+      "num_agents": 4,
+      "baseline_policies": "telemetry_cruise,telemetry_yield,telemetry_lane,telemetry_overtake",
+      "eval_seeds": [3, 7, 11, 17, 23],
+      "max_steps": 3400,
+      "success": {
+        "success_rate": 0.8,
+        "max_target_grass_rate": 0.08,
+        "min_mean_tile_progress": 0.70
+      }
+    }
+  ]
+}

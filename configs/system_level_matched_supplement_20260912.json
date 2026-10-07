@@ -1,0 +1,71 @@
+{
+  "study": "system_level_matched_supplement_20260912",
+  "python": "/home/itrc/.conda/envs/vlm_planner/bin/python",
+  "protocol": "Matched supplementary evaluation; all methods share cases, map, dynamics, horizon and seeds. Existing results are preserved separately.",
+  "dynamic_graph": {
+    "max_neighbors": 3,
+    "neighbor_selection_mode": "interaction"
+  },
+  "algorithms": [
+    {
+      "name": "dnq_dlc_full",
+      "label_cn": "DNQ-DLC",
+      "kind": "unchanged_full_controller",
+      "policy": "outputs/physical_quality_development_20260910/model_3000_updates/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": 3,
+      "planner_horizon": 4,
+      "planner_candidates": 12,
+      "planner_risk_weight": 1.65,
+      "planner_uncertainty_weight": 0.40,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": null,
+      "quality_planner_mode": "none",
+      "geometry_generalization": true
+    },
+    {
+      "name": "dlc_individual_transition",
+      "label_cn": "DLC-IT",
+      "kind": "paper_dlc_world_model_baseline",
+      "policy": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/individual_transition.pt",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "overtake_aware_planner": false
+    },
+    {
+      "name": "dlc_joint_transition",
+      "label_cn": "DLC-JT",
+      "kind": "paper_dlc_world_model_baseline",
+      "policy": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/joint_transition.pt",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "overtake_aware_planner": false
+    },
+    {
+      "name": "dlc_joint_transition_observer",
+      "label_cn": "DLC-JTO",
+      "kind": "paper_dlc_world_model_baseline",
+      "policy": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/joint_transition_observer.pt",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "overtake_aware_planner": false
+    },
+    {"name": "rule_expert_gate", "label_cn": "Rule Expert", "kind": "rule_baseline", "policy": "telemetry_expert_gate", "neighbor_mode": "fixed"},
+    {"name": "rule_safety_gate", "label_cn": "Safety Rule", "kind": "rule_baseline", "policy": "telemetry_expert_barrier", "neighbor_mode": "fixed"},
+    {"name": "ppo_continuous", "label_cn": "PPO", "kind": "rl_baseline", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines/ppo_continuous/ppo_continuous.sb3.zip", "neighbor_mode": "fixed"},
+    {"name": "sac_continuous", "label_cn": "SAC", "kind": "rl_baseline", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines/sac_continuous/sac_continuous.sb3.zip", "neighbor_mode": "fixed"},
+    {"name": "td3_continuous", "label_cn": "TD3", "kind": "rl_baseline", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines/td3_continuous/td3_continuous.sb3.zip", "neighbor_mode": "fixed"}
+  ],
+  "benchmark_matrix": [
+    {"name": "hairpin", "track": "tracks/hairpin_scaled.npz", "agent_counts": [6, 8], "seeds": [6201, 6202, 6203, 6204, 6205, 6206, 6207, 6208]},
+    {"name": "s_curve", "track": "tracks/s_curve_scaled.npz", "agent_counts": [6, 8], "seeds": [6201, 6202, 6203, 6204, 6205, 6206, 6207, 6208]}
+  ],
+  "reporting": {
+    "output_dir": "outputs/system_level_matched_supplement_20260912",
+    "figures_dir": "outputs/system_level_matched_supplement_20260912/figures",
+    "tables_dir": "outputs/system_level_matched_supplement_20260912/tables",
+    "gifs_dir": "outputs/system_level_matched_supplement_20260912/gifs",
+    "logs_dir": "outputs/system_level_matched_supplement_20260912/logs"
+  }
+}

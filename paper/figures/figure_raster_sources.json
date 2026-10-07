@@ -1,0 +1,13 @@
+{
+  "note": "Rasters that are paper drawings rather than result figures. A drawing has no archived simulator run behind it, so it is pinned by SHA-256: any edit or re-export is caught. Result figures are recorded, with their simulation provenance, in figure_contact_sheet_sources.json.",
+  "drawings": [
+    {
+      "file": "lct_9.16.jpg",
+      "sha256": "d9fbf0148da8dd4bd43229d7d08c2ff71df768f31567052fbe7c46de8fe9d1ba",
+      "size": [4400, 2201],
+      "kind": "methodology schematic",
+      "used_as": "main.tex Fig. 1 (fig:method_overview)",
+      "note": "Detailed DNQ-DLC pipeline drawing supplied for Fig. 1. All labels are English. Four label errors (misspelled 'Surrounding vehicles', two encoder boxes both named 'Self', 'Actions fro other cars', 'soft geomrtry') and the relation-vector notation were repaired in place by scripts/fix_figure1_labels.py, which records the pixel geometry of every edit. The same script reproduces this file byte for byte from any copy of the delivered raster. A vector redraw of the same pipeline is kept at figures/figure_method_pipeline.pdf; it uses the earlier relation-vector naming and is not the submitted Fig. 1."
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "config": {
+    "approach_distance": 20.0,
+    "corridor_limit": 1.0,
+    "heading_cos_min": 0.82,
+    "hold": 50,
+    "in_corridor_min": 0.7,
+    "lateral_step_bound": 0.1,
+    "legacy_lateral_limit": 0.45,
+    "legacy_step_limit": 0.25,
+    "max_off_run": 10,
+    "min_speed": 1.0,
+    "pass_margin": 4.0,
+    "rival_lat_limit": 1.5,
+    "rival_min_speed": 4.0,
+    "window_pre": 25
+  },
+  "definitions": {
+    "C": "no recorder contact involving the target from event start through hold end",
+    "L": "lead stays >= 4.0 m for 50 steps after completion",
+    "P": "along-track lead crosses 4.0 m after an approach inside [-20.0, -4.0] m",
+    "S_v3": "hold window speed >= 1.0 m/s, true heading cos >= 0.82, no backward flag, per-step |delta lat_true| <= 0.1",
+    "T_v3": "in-corridor fraction >= 0.7 over the maneuver window [complete - 25, complete + 50] with |lat_true| <= 1.0"
+  },
+  "denominator_policy": "all planned case-algorithm rows retained; censored and missing rows count as failures",
+  "endpoints": {
+    "E_full": "P and L and C and T_v3 and S_v3",
+    "E_pass": "P and L and C",
+    "E_valid": "P and L and C and T_v3"
+  },
+  "heading_cos_true": "|dot((cos hull_angle, sin hull_angle), local centre-line tangent)|",
+  "lat_true": "|(position - nearest centreline sample) . (cos beta, sin beta)| / TRACK_WIDTH, beta = track[:,1] (the simulator's border-normal angle); |lat_true| <= 1 is inside the road edge because TRACK_WIDTH is the road half-width",
+  "legacy_defects": {
+    "heading_cos": "recorded value is cos(border_normal - hull_angle), i.e. the sine of the true heading error",
+    "lateral_error": "recorded value is the local-tangent projection, structurally bounded by half the centre-line sample spacing",
+    "window": "legacy corridor and stability clauses were evaluated over the whole event window, including an approach phase that can last hundreds of steps"
+  },
+  "off_road_run_policy": "longest continuous off-road run is reported (distribution plus run-limit sweep at [10, 25, 50, 100]) and is not a gate: it is failed by the hand-tuned rule controllers as well, so it discriminates nothing between methods",
+  "threshold_calibration": "in_corridor_min and lateral_step_bound are fixed before evaluation from the rule-controller distribution"
+}

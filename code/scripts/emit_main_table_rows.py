@@ -1,0 +1,182 @@
+#!/usr/bin/env python
+"""LaTeX rows of the main comparison table, read from the released audits.
+
+Every learned family is reported as the mean over the draws of its training
+recipe with the range those draws span; the rule expert is a single
+deterministic run and carries a Wilson interval.
+
+Usage:
+    python3 scripts/emit_main_table_rows.py --ours <dir> --ours-containment <csv> \
+        --dlc-root <root> --reference <dir> --reference-containment <csv>
+"""
+import argparse, csv, json, math, os, statistics as stats
+
+Z = 1.959963984540054
+
+
+def wilson(k, n, z=Z):
+    if n == 0:
+        return (None, None)
+    p = k / n
+    den = 1 + z * z / n
+    cen = (p + z * z / (2 * n)) / den
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / den
+    return (100 * max(0.0, cen - half), 100 * min(1.0, cen + half))
+
+
+def read_csv(path):
+    with open(path, newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
+
+
+def num(value):
+    try:
+        x = float(value)
+    except (TypeError, ValueError):
+        return None
+    return None if x != x else x
+
+
+def counts(rows):
+    ok = [r for r in rows if r.get("status") in (None, "", "ok")]
+    out = {"n": len(ok)}
+    for key in ("P", "E_pass", "E_valid", "E_full", "E_race"):
+        out[key] = sum(1 for r in ok if str(r.get(key)) == "True")
+    for key in ("rank_gain", "mean_speed", "time_to_pass_steps"):
+        values = [num(r.get(key)) for r in ok]
+        values = [v for v in values if v is not None]
+        out[key] = stats.mean(values) if values else None
+    return out
+
+
+def grass(path):
+    out = {}
+    for row in read_csv(path):
+        out.setdefault(row["algorithm"], []).append(row)
+    return {a: stats.mean(num(r["episode_grass"]) for r in rs) for a, rs in out.items()}
+
+
+def lat(path):
+    out = {}
+    for row in read_csv(path):
+        out.setdefault(row["algorithm"], []).append(row)
+    return {a: stats.mean(num(r["episode_lat"]) for r in rs) for a, rs in out.items()}
+
+
+def draws_of(root, arm):
+    """One counts() dict per draw directory that carries this arm."""
+    out = []
+    for name in sorted(os.listdir(root)):
+        path = os.path.join(root, name, "case_level.csv")
+        if not os.path.exists(path):
+            continue
+        rows = [r for r in read_csv(path) if r["algorithm"] == arm]
+        if rows:
+            out.append(counts(rows))
+    return out
+
+
+def draw_containment(root, arm):
+    """(grass, lateral) per draw directory for one arm."""
+    out = []
+    for name in sorted(os.listdir(root)):
+        path = os.path.join(root, name, "containment_episode_level.csv")
+        if not os.path.exists(path):
+            continue
+        rows = [r for r in read_csv(path) if r["algorithm"] == arm]
+        if not rows:
+            continue
+        out.append((stats.mean(num(r["episode_grass"]) for r in rows),
+                    stats.mean(num(r["episode_lat"]) for r in rows)))
+    return out
+
+
+def spread(values):
+    values = [v for v in values if v is not None]
+    if not values:
+        return "--"
+    if len(values) == 1:
+        return f"{values[0]:.2f}"
+    return f"{stats.mean(values):.2f} [{min(values):.0f}, {max(values):.0f}]"
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--ours", required=True)
+    parser.add_argument("--ours-containment", required=True)
+    parser.add_argument("--dlc-root", required=True)
+    parser.add_argument("--reference", required=True)
+    parser.add_argument("--reference-containment", required=True)
+    parser.add_argument("--rl-containment", default="",
+                        help="episode containment of the five continuous-control seeds; "
+                             "its rows are keyed by seed, so it is read for these families")
+    args = parser.parse_args()
+
+    ours_rows = read_csv(os.path.join(args.ours, "case_level.csv"))
+    ref_rows = read_csv(os.path.join(args.reference, "case_level.csv"))
+    ours_g = grass(args.ours_containment)
+    ours_l = lat(args.ours_containment)
+    ref_g = grass(args.reference_containment)
+    ref_l = lat(args.reference_containment)
+    rl_g = grass(args.rl_containment) if args.rl_containment else {}
+    rl_l = lat(args.rl_containment) if args.rl_containment else {}
+
+    def family_containment(prefix, fallback_g, fallback_l, key):
+        if not prefix:
+            # The rule expert is a single deterministic run, so it has no
+            # per-seed rows to average and must use the reference table.
+            return fallback_g.get(key, float("nan")), fallback_l.get(key, float("nan"))
+        values_g = [v for a, v in rl_g.items() if a.startswith(prefix)]
+        values_l = [v for a, v in rl_l.items() if a.startswith(prefix)]
+        if values_g:
+            return stats.mean(values_g), stats.mean(values_l)
+        return fallback_g.get(key, float("nan")), fallback_l.get(key, float("nan"))
+
+    print("% generated by scripts/emit_main_table_rows.py")
+    ours_draws = [counts([r for r in ours_rows if r["algorithm"] == a])
+                  for a in sorted({r["algorithm"] for r in ours_rows})]
+    print(f"DNQ-DLC (ours) & {spread([d['P'] for d in ours_draws])} & "
+          f"{spread([d['E_full'] for d in ours_draws])} & {spread([d['E_race'] for d in ours_draws])} & "
+          f"{stats.mean(v for a, v in ours_g.items() if a.startswith('ours_dnq_dlc_seed')):.3f} & "
+          f"{stats.mean(v for a, v in ours_l.items() if a.startswith('ours_dnq_dlc_seed')):.2f} & "
+          f"{stats.mean([d['mean_speed'] for d in ours_draws]):.1f} & "
+          f"{stats.mean([d['time_to_pass_steps'] for d in ours_draws]):.0f} & "
+          f"{stats.mean([d['rank_gain'] for d in ours_draws]):.2f} \\\\")
+
+    ref_single = {}
+    for algorithm in sorted({r["algorithm"] for r in ref_rows}):
+        ref_single[algorithm] = counts([r for r in ref_rows if r["algorithm"] == algorithm])
+    order = [("rule_expert_gate", "Rule expert"),
+             ("ppo_continuous", "PPO"), ("sac_continuous", "SAC"), ("td3_continuous", "TD3")]
+    for key, label in order:
+        block = ref_single.get(key)
+        if not block:
+            continue
+        lo, hi = wilson(block["E_full"], block["n"])
+        prefix = {"ppo_continuous": "ppo_seed", "sac_continuous": "sac_seed",
+                  "td3_continuous": "td3_seed"}.get(key, "")
+        g_value, l_value = family_containment(prefix, ref_g, ref_l, key)
+        print(f"{label} & {block['P']}/48 = {100*block['P']/48:.0f}\\,\\% "
+              f"[{wilson(block['P'],48)[0]:.0f}, {wilson(block['P'],48)[1]:.0f}] & "
+              f"{block['E_full']}/48 = {100*block['E_full']/48:.0f}\\,\\% [{lo:.0f}, {hi:.0f}] & "
+              f"{block['E_race']}/48 = {100*block['E_race']/48:.0f}\\,\\% & "
+              f"{g_value:.3f} & {l_value:.2f} & "
+              f"{block['mean_speed']:.1f} & {block['time_to_pass_steps']:.0f} & {block['rank_gain']:.2f} \\\\")
+
+    for arm, label in (("dlc_individual_transition", "DLC-IT (matched)"),
+                       ("dlc_joint_transition", "DLC-JT (matched)"),
+                       ("dlc_joint_transition_observer", "DLC-JTO (matched)")):
+        ds = draws_of(args.dlc_root, arm)
+        dc = draw_containment(args.dlc_root, arm)
+        if not ds:
+            continue
+        print(f"{label} & {spread([d['P'] for d in ds])} & {spread([d['E_full'] for d in ds])} & "
+              f"{spread([d['E_race'] for d in ds])} & "
+              f"{stats.mean(g for g, _ in dc):.3f} & {stats.mean(l for _, l in dc):.2f} & "
+              f"{stats.mean([d['mean_speed'] for d in ds]):.1f} & "
+              f"{stats.mean([d['time_to_pass_steps'] for d in ds]):.0f} & "
+              f"{stats.mean([d['rank_gain'] for d in ds]):.2f} \\\\")
+
+
+if __name__ == "__main__":
+    main()

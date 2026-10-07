@@ -1,0 +1,23 @@
+{
+  "status": "development validation; not confirmatory paper evaluation",
+  "decision_rule": "Complete all fixed cases, including failures; no parameter changes during this run",
+  "version": "joint_clearance_pilot_v2",
+  "adaptation_seeds": [910001, 910002],
+  "fresh_validation_seeds": [910101, 910102, 910103, 910104],
+  "vehicle_counts": [4, 6],
+  "methods": ["joint_clearance_pilot", "rule_expert_gate", "rule_safety_gate"],
+  "episodes": 24,
+  "horizon": 2200,
+  "maps": "same procedural track per seed",
+  "background": "TelemetryLanePolicy(target_speed=13.0), each car executes independent state feedback",
+  "telemetry_version": "corrected_v2",
+  "start_order": "consecutive vehicle IDs, ego last",
+  "line_spacing": 5,
+  "lateral_spacing": 2.2,
+  "primary_development_endpoint": "same initially eligible opponent, lead >= 6 for 50 consecutive steps, zero ego contact from start through retention",
+  "secondary_development_endpoints": ["center_ontrack_contact_free_completion", "whole_episode_contacts", "grass_exposure", "stopped_steps", "observed_completion_time", "no_feasible_candidate_steps"],
+  "selection_limit": "No DNQ model selection or retraining uses these validation outcomes during this run",
+  "formal_test_seeds": "not allocated; these seeds are permanently marked development",
+  "teacher_data_gate": "Do not call untested prototype a successful expert; inspect endpoint and episode quality before using any action targets",
+  "comparison_limit": "New deterministic map-based pilot versus existing rule controllers; not DNQ efficacy or module attribution"
+}

@@ -1,15 +1,28 @@
 * text=auto eol=lf
 
-*.csv text eol=lf
-*.json text eol=lf
-*.md text eol=lf
-*.py text eol=lf
-*.toml text eol=lf
-*.yml text eol=lf
+# Every artifact in this repository is identified by the SHA-256 of its bytes,
+# so no tracked file may be line-ending normalised. Byte-exact types are marked
+# binary; the source files below are stored as-is too.
+*.csv -text
+*.tsv -text
+*.json -text
+*.md -text
+*.txt -text
+*.py -text
+*.sh -text
+*.toml -text
+*.yml -text
+*.cff -text
+*.template -text
+.gitattributes -text
+LICENSE -text
 
 *.mp4 binary
 *.pdf binary
 *.png binary
+*.jpg binary
+*.jpeg binary
 *.pt binary
+*.zip binary
 *.tif binary
 *.tiff binary

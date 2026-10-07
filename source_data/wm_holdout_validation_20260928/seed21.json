@@ -1,0 +1,611 @@
+{
+  "model": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/wm_k15_sb_all_v4matt_seed21/graph_risk_dlc_world.graphworld.pt",
+  "model_meta": {
+    "telemetry_version": "corrected_v2",
+    "neighbor_order": "identity",
+    "neighbor_selection": "interaction",
+    "data_split": "train",
+    "train_seed": 21,
+    "expert_source": "joint_clearance_pilot",
+    "background_profile": "lane13",
+    "start_layout": "single_file",
+    "proposal_target_only": false,
+    "speed_balance_alpha": 0.5,
+    "speed_balance_scope": "all",
+    "name": "graph_risk_dlc_world",
+    "obs_dim": 41,
+    "action_dim": 3,
+    "quality_dim": 4,
+    "quality_aux_weight": 0.0,
+    "quality_targets": [
+      "on_track_logit",
+      "grass_logit",
+      "lane_error_scaled",
+      "forward_clearance_scaled"
+    ],
+    "num_agents": 6,
+    "min_agents_train": 4,
+    "max_agents_train": 6,
+    "target_agent": 5,
+    "target_agent_mode": "last",
+    "hidden_dim": 192,
+    "proposal_hidden_dim": 128,
+    "pooling_mode": "attention",
+    "masked_pooling": "attention",
+    "planner_horizon": 4,
+    "planner_candidates": 18,
+    "risk_weight": 1.6,
+    "uncertainty_weight": 0.35,
+    "progress_weight": 1.2,
+    "imitation_weight": 0.06,
+    "overtake_weight": 2.4,
+    "lane_quality_weight": 0.42,
+    "grass_penalty_weight": 2.0,
+    "close_gap_penalty_weight": 0.65,
+    "planner_target_speed": 22.0,
+    "overtake_aware_planner": true,
+    "use_slot_mask": true,
+    "predict_residual": true,
+    "slot_feature_dim": 7,
+    "slot_priority": false,
+    "relation_dim": 8,
+    "opponent_dim": 8,
+    "ego_dim": 17,
+    "observation_type": "telemetry_dynamic",
+    "max_neighbors": 3,
+    "neighbor_keep_prob": 0.9,
+    "planner_profile": "risk_aware",
+    "background_policies": "telemetry_lane13",
+    "episodes": 160,
+    "train_steps": 40000,
+    "device": "cuda:1",
+    "collection_workers": 1,
+    "source": "graph_risk_dlc_world_model",
+    "ego_mean": [
+      0.2396843135356903,
+      0.07411979883909225,
+      -0.09006800502538681,
+      0.04596779868006706,
+      0.2893281877040863,
+      0.3093389868736267,
+      0.16360294818878174,
+      0.018398433923721313,
+      0.3752022981643677,
+      0.3187859356403351,
+      -0.012247996404767036,
+      -0.0071352459490299225,
+      0.08667353540658951,
+      0.011702719144523144,
+      0.9975447654724121,
+      0.0001370320824207738,
+      2.729500920395367e-05
+    ],
+    "ego_std": [
+      0.32979753613471985,
+      0.20348824560642242,
+      0.2099585384130478,
+      0.18103112280368805,
+      0.05615208297967911,
+      0.7054867148399353,
+      0.615463137626648,
+      0.07498359680175781,
+      0.2877825200557709,
+      0.18789488077163696,
+      0.21590590476989746,
+      0.2354491800069809,
+      0.2669060230255127,
+      0.08463393151760101,
+      0.016780950129032135,
+      0.01170453429222107,
+      0.005224327091127634
+    ],
+    "opponent_mean": [
+      0.0020670860540121794,
+      0.02520710416138172,
+      0.0007732848171144724,
+      -0.001665464835241437,
+      0.14140735566616058,
+      0.005412450060248375,
+      0.6247365474700928
+    ],
+    "opponent_std": [
+      0.13389037549495697,
+      0.0636034682393074,
+      0.180733785033226,
+      0.18540287017822266,
+      0.050886012613773346,
+      0.5642721056938171,
+      0.5382713079452515
+    ]
+  },
+  "protocol": {
+    "model": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/wm_k15_sb_all_v4matt_seed21/graph_risk_dlc_world.graphworld.pt",
+    "output_dir": "/tmp/wm_holdout/seed21",
+    "episodes": 8,
+    "max_steps": 600,
+    "seed": 7300,
+    "gap_tiles": 18,
+    "lateral_spacing": 0.0,
+    "max_neighbors": 3,
+    "risk_lateral": 0.45,
+    "collection_workers": 1,
+    "batch_size": 256,
+    "horizons": "1,3,5,10",
+    "rollout_stride": 10,
+    "max_rollout_windows": 200,
+    "device": "cuda:1"
+  },
+  "strata": {
+    "id_procedural_n4_6": {
+      "track": "procedural",
+      "min_agents": 4,
+      "max_agents": 6,
+      "seed_start": 7300,
+      "episode_count": 8,
+      "transition_count": 4800,
+      "one_step": {
+        "agent_transition_count": 21600,
+        "state_rmse_all": 0.009092544205486774,
+        "state_mae_all": 0.002026396105065942,
+        "state_rmse_by_feature": [
+          0.00013330450747162104,
+          0.00013041740749031305,
+          0.0036800147499889135,
+          0.003425294766202569,
+          0.003039135131984949,
+          0.003017099341377616,
+          0.004531616810709238,
+          0.006979762576520443,
+          0.021181859076023102,
+          0.00040131431887857616,
+          0.030208097770810127,
+          0.035087455064058304,
+          0.00229101674631238,
+          0.013296748511493206,
+          0.002815342741087079,
+          0.00017960606783162802,
+          0.0001894222223199904,
+          0.0006214354652911425,
+          0.000857000530231744,
+          0.008226640522480011,
+          0.010028200224041939,
+          0.0002678771852515638,
+          0.006241307593882084,
+          0.007197174709290266,
+          0.0,
+          0.000580021645873785,
+          0.0008010165765881538,
+          0.00794348493218422,
+          0.008050820790231228,
+          0.0002763266093097627,
+          0.0054954770021140575,
+          0.006072378717362881,
+          0.0,
+          0.0003436932456679642,
+          0.00032113329507410526,
+          0.003834288567304611,
+          0.0038942445535212755,
+          0.00018540558812674135,
+          0.0018038155976682901,
+          0.002136141760274768,
+          0.0
+        ],
+        "target_state_rmse": 0.011620874516665936,
+        "reward_mae": 0.08704907447099686,
+        "risk_prevalence": 0.19069445133209229,
+        "risk_auroc": 0.9999984167598799,
+        "risk_auprc": 0.9999932882450522,
+        "risk_brier": 0.00040420942241325974,
+        "risk_ece_10bin": 0.00021434158627416862,
+        "risk_calibration_bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "n": 17464,
+            "confidence": 5.2272697236718845e-05,
+            "risk_frequency": 5.7260650480989464e-05
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.2,
+            "n": 6,
+            "confidence": 0.13572298114498457,
+            "risk_frequency": 0.16666666666666666
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.3,
+            "n": 6,
+            "confidence": 0.2624993200103442,
+            "risk_frequency": 0.3333333333333333
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "n": 4,
+            "confidence": 0.3287404254078865,
+            "risk_frequency": 0.25
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.5,
+            "n": 2,
+            "confidence": 0.4677489399909973,
+            "risk_frequency": 1.0
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.6,
+            "n": 5,
+            "confidence": 0.538258683681488,
+            "risk_frequency": 0.6
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.7,
+            "n": 2,
+            "confidence": 0.6473744213581085,
+            "risk_frequency": 0.5
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.8,
+            "n": 4,
+            "confidence": 0.7627173215150833,
+            "risk_frequency": 0.75
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.9,
+            "n": 10,
+            "confidence": 0.8561926782131195,
+            "risk_frequency": 0.8
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "n": 4097,
+            "confidence": 0.9996738376517339,
+            "risk_frequency": 1.0
+          }
+        ]
+      },
+      "multi_step": {
+        "1": {
+          "windows": 200,
+          "state_rmse_all": 0.010324392127622452,
+          "target_state_rmse": 0.015199302442335512
+        },
+        "3": {
+          "windows": 200,
+          "state_rmse_all": 0.06009772400476419,
+          "target_state_rmse": 0.03820714408730833
+        },
+        "5": {
+          "windows": 200,
+          "state_rmse_all": 0.06500468308828249,
+          "target_state_rmse": 0.050867271635751415
+        },
+        "10": {
+          "windows": 200,
+          "state_rmse_all": 0.09914463844243407,
+          "target_state_rmse": 0.0879527977071584
+        }
+      }
+    },
+    "ood_hairpin_n8": {
+      "track": "tracks/hairpin_scaled.npz",
+      "min_agents": 8,
+      "max_agents": 8,
+      "seed_start": 7400,
+      "episode_count": 8,
+      "transition_count": 4800,
+      "one_step": {
+        "agent_transition_count": 38400,
+        "state_rmse_all": 0.026038985699415207,
+        "state_mae_all": 0.005574254784733057,
+        "state_rmse_by_feature": [
+          0.0005051137995906174,
+          0.0004995068884454668,
+          0.011248120106756687,
+          0.012281392700970173,
+          0.007265601307153702,
+          0.016438022255897522,
+          0.011600509285926819,
+          0.014517919160425663,
+          0.03995222598314285,
+          0.0015239240601658821,
+          0.10065554827451706,
+          0.06776386499404907,
+          0.008272831328213215,
+          0.048601824790239334,
+          0.059142403304576874,
+          0.03574914485216141,
+          0.04487127065658569,
+          0.0011452784528955817,
+          0.0010768986539915204,
+          0.01476280577480793,
+          0.012595395557582378,
+          0.0009052257519215345,
+          0.009865089319646358,
+          0.010039160028100014,
+          0.0,
+          0.001374328276142478,
+          0.0012373712379485369,
+          0.014140868559479713,
+          0.012398749589920044,
+          0.0007027211831882596,
+          0.00794734712690115,
+          0.008373192511498928,
+          0.0,
+          0.0008768276311457157,
+          0.000691126799210906,
+          0.01063284557312727,
+          0.007849196903407574,
+          0.0005301805213093758,
+          0.006602335721254349,
+          0.00461486354470253,
+          0.0
+        ],
+        "target_state_rmse": 0.02842271886765957,
+        "reward_mae": 0.5809209942817688,
+        "risk_prevalence": 0.23937499523162842,
+        "risk_auroc": 0.9946340645730786,
+        "risk_auprc": 0.9903731351760166,
+        "risk_brier": 0.013625873252749443,
+        "risk_ece_10bin": 0.012471375027970844,
+        "risk_calibration_bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "n": 28728,
+            "confidence": 0.00035395934272598457,
+            "risk_frequency": 0.005291005291005291
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.2,
+            "n": 96,
+            "confidence": 0.1428613493529459,
+            "risk_frequency": 0.16666666666666666
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.3,
+            "n": 64,
+            "confidence": 0.26027768151834607,
+            "risk_frequency": 0.125
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "n": 56,
+            "confidence": 0.3463758820933955,
+            "risk_frequency": 0.2857142857142857
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.5,
+            "n": 72,
+            "confidence": 0.43791524155272377,
+            "risk_frequency": 0.2222222222222222
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.6,
+            "n": 64,
+            "confidence": 0.5502400882542133,
+            "risk_frequency": 0.375
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.7,
+            "n": 56,
+            "confidence": 0.6410856757845197,
+            "risk_frequency": 0.42857142857142855
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.8,
+            "n": 64,
+            "confidence": 0.7499330006539822,
+            "risk_frequency": 0.375
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.9,
+            "n": 112,
+            "confidence": 0.8561364465526172,
+            "risk_frequency": 0.5714285714285714
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "n": 9088,
+            "confidence": 0.9987016019647496,
+            "risk_frequency": 0.9735915492957746
+          }
+        ]
+      },
+      "multi_step": {
+        "1": {
+          "windows": 200,
+          "state_rmse_all": 0.029404400605630557,
+          "target_state_rmse": 0.03275229134180583
+        },
+        "3": {
+          "windows": 200,
+          "state_rmse_all": 0.08158349071305604,
+          "target_state_rmse": 0.05461854654468317
+        },
+        "5": {
+          "windows": 200,
+          "state_rmse_all": 0.11821448100858871,
+          "target_state_rmse": 0.09924222671308358
+        },
+        "10": {
+          "windows": 200,
+          "state_rmse_all": 0.1860976541192062,
+          "target_state_rmse": 0.14791505549585363
+        }
+      }
+    },
+    "ood_s_curve_n8": {
+      "track": "tracks/s_curve_scaled.npz",
+      "min_agents": 8,
+      "max_agents": 8,
+      "seed_start": 7500,
+      "episode_count": 8,
+      "transition_count": 4800,
+      "one_step": {
+        "agent_transition_count": 38400,
+        "state_rmse_all": 0.024221839383244514,
+        "state_mae_all": 0.0047087459824979305,
+        "state_rmse_by_feature": [
+          0.00041787803638726473,
+          0.00032646520412527025,
+          0.010036639869213104,
+          0.006110583432018757,
+          0.0056325094774365425,
+          0.008064123801887035,
+          0.008823786862194538,
+          0.01148469839245081,
+          0.02737615816295147,
+          0.0014509017346426845,
+          0.1065269261598587,
+          0.08430551737546921,
+          0.00665908120572567,
+          0.03477359563112259,
+          0.028304249048233032,
+          0.03835810720920563,
+          0.0019197606015950441,
+          0.0006820068811066449,
+          0.001095680403523147,
+          0.012672023847699165,
+          0.009749488905072212,
+          0.0003635726170614362,
+          0.008222362957894802,
+          0.00763290049508214,
+          0.0,
+          0.0009388720500282943,
+          0.0009038353455252945,
+          0.012711234390735626,
+          0.008486319333314896,
+          0.0003703699039760977,
+          0.007645017933100462,
+          0.006508390419185162,
+          0.0,
+          0.0006084374035708606,
+          0.0006193526205606759,
+          0.009682468138635159,
+          0.005424262024462223,
+          0.00038614144432358444,
+          0.004132803063839674,
+          0.0033375397324562073,
+          0.0
+        ],
+        "target_state_rmse": 0.01975165866315365,
+        "reward_mae": 0.5036923885345459,
+        "risk_prevalence": 0.2227083295583725,
+        "risk_auroc": 0.9955518938612324,
+        "risk_auprc": 0.9856722950209157,
+        "risk_brier": 0.028393516317009926,
+        "risk_ece_10bin": 0.02509698710031614,
+        "risk_calibration_bins": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.1,
+            "n": 28928,
+            "confidence": 0.0013219846263182752,
+            "risk_frequency": 0.010785398230088495
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.2,
+            "n": 344,
+            "confidence": 0.14864958229279795,
+            "risk_frequency": 0.37209302325581395
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.3,
+            "n": 136,
+            "confidence": 0.2411861864521223,
+            "risk_frequency": 0.35294117647058826
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.4,
+            "n": 128,
+            "confidence": 0.33708959841169417,
+            "risk_frequency": 0.25
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.5,
+            "n": 64,
+            "confidence": 0.4481465253047645,
+            "risk_frequency": 0.25
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.6,
+            "n": 136,
+            "confidence": 0.5552950742490151,
+            "risk_frequency": 0.4117647058823529
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.7,
+            "n": 144,
+            "confidence": 0.6600003552933534,
+            "risk_frequency": 0.3333333333333333
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.8,
+            "n": 144,
+            "confidence": 0.7587474261720976,
+            "risk_frequency": 0.6111111111111112
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.9,
+            "n": 232,
+            "confidence": 0.8602965381638757,
+            "risk_frequency": 0.4827586206896552
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 1.0,
+            "n": 8144,
+            "confidence": 0.9959069253302276,
+            "risk_frequency": 0.9469548133595285
+          }
+        ]
+      },
+      "multi_step": {
+        "1": {
+          "windows": 200,
+          "state_rmse_all": 0.023108385814446016,
+          "target_state_rmse": 0.013077779997027522
+        },
+        "3": {
+          "windows": 200,
+          "state_rmse_all": 0.06671196766979642,
+          "target_state_rmse": 0.08194038544397826
+        },
+        "5": {
+          "windows": 200,
+          "state_rmse_all": 0.08829441797353774,
+          "target_state_rmse": 0.07474426430270706
+        },
+        "10": {
+          "windows": 200,
+          "state_rmse_all": 0.13911796792187678,
+          "target_state_rmse": 0.135330378910471
+        }
+      }
+    }
+  }
+}

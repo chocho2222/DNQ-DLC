@@ -7,6 +7,7 @@ from typing import Protocol
 import numpy as np
 
 from dlc.state_models import StateModelBundle
+from dlc.observation_layout import rule_observation, require_checkpoint_version
 
 PLAYFIELD = 2000 / 6.0
 TRACK_WIDTH = 40 / 6.0
@@ -75,6 +76,10 @@ class TrackFollowPolicy:
             car_pos = np.array(car.hull.position).reshape((1, 2))
             track_index = int(np.argmin(np.linalg.norm(car_pos - track_xy, axis=1)))
             target_index = min(track_index + self.lookahead, len(base_env.track) - 1)
+            corrected = getattr(base_env, 'telemetry_version', 'legacy_v1') == 'corrected_v2'
+            if corrected:
+                direction = -1 if base_env.episode_direction == 'CW' else 1
+                target_index = (track_index + direction * self.lookahead) % len(base_env.track)
             desired_angle = base_env.track[target_index][1]
             if base_env.episode_direction == "CW":
                 desired_angle += math.pi
@@ -85,8 +90,18 @@ class TrackFollowPolicy:
                 dtype=np.float32,
             )
             normal = np.array([-math.sin(desired_angle), math.cos(desired_angle)])
+            if corrected:
+                # Existing correction is right-positive, unlike corrected telemetry.
+                local_angle = float(base_env.track[track_index][1])
+                if base_env.episode_direction == 'CW':
+                    local_angle += math.pi
+                normal = np.array([math.cos(local_angle), math.sin(local_angle)])
             lateral_error = float(np.dot(center_delta, normal))
             corrected_angle = desired_angle - self.lateral_gain * lateral_error / 40.0
+            if corrected:
+                # Right-positive displacement requires a left (positive-angle)
+                # correction because physical forward is local +Y.
+                corrected_angle = desired_angle + self.lateral_gain * lateral_error / 40.0
 
             angle_error = wrap_to_pi(corrected_angle - car.hull.angle)
             speed = np.linalg.norm(car.hull.linearVelocity)
@@ -195,6 +210,7 @@ class TelemetryLanePolicy:
         return self.target_speed
 
     def act(self, env, obs):
+        obs = rule_observation(env, obs)
         del env
         obs_array = np.asarray(obs, dtype=np.float32)
         action = np.zeros((obs_array.shape[0], 3), dtype=np.float32)
@@ -297,6 +313,7 @@ class TelemetryAdaptiveGatePolicy(TelemetryLanePolicy):
         return None
 
     def act(self, env, obs):
+        obs = rule_observation(env, obs)
         del env
         obs_array = np.asarray(obs, dtype=np.float32)
         self._init_state(obs_array.shape[0])
@@ -481,7 +498,7 @@ class TelemetryExpertGatePolicy:
             elif self.recovery_hold[agent_id] > 0:
                 self.recovery_hold[agent_id] -= 1
 
-            close_traffic = self._has_close_traffic(agent_id, obs_array)
+            close_traffic = self._has_close_traffic(agent_id, rule_observation(env, obs_array))
             if self.recovery_hold[agent_id] > 0:
                 action[agent_id] = lane[agent_id]
                 if on_grass and heading_cos > 0.25:
@@ -640,6 +657,7 @@ class TelemetryBarrierExpertGatePolicy(TelemetryExpertGatePolicy):
         return count, nearest_forward, nearest_lateral
 
     def act(self, env, obs):
+        obs = rule_observation(env, obs)
         del env
         obs_array = np.asarray(obs, dtype=np.float32)
         self._init_state(obs_array.shape[0])
@@ -952,7 +970,14 @@ class TorchActorPolicy:
 
     def _adapt_legacy_two_agent_obs(self, env, obs):
         obs = np.asarray(obs, dtype=np.float32)
-        expected_agents, expected_dim = self.bundle.obs_mean.shape
+        shape = np.asarray(self.bundle.obs_mean).shape
+        if len(shape) == 2:
+            expected_agents, expected_dim = int(shape[0]), int(shape[1])
+        else:
+            # Retrained checkpoints store one pooled row of normalisation
+            # constants; the field size comes from the bundle metadata.
+            expected_agents = int(self.bundle.meta.get("num_agents", 0)) or None
+            expected_dim = int(shape[-1])
         if obs.shape == (expected_agents, expected_dim):
             return obs, None
         if expected_agents != 2 or expected_dim != 24 or obs.ndim != 2 or obs.shape[1] < 17:
@@ -968,6 +993,14 @@ class TorchActorPolicy:
 
     def act(self, env, obs):
         num_agents = env.unwrapped.num_agents
+        if (getattr(env.unwrapped, 'telemetry_version', 'legacy_v1') == 'corrected_v2'
+                and self.bundle.meta.get('telemetry_version', 'legacy_v1') == 'legacy_v1'
+                and getattr(env.unwrapped, 'allow_legacy_checkpoint_migration', False)):
+            # The archived two-agent checkpoints use the legacy right-positive
+            # telemetry convention.  Convert only for this explicitly marked
+            # exploratory migration; the physical simulator remains unchanged.
+            obs = rule_observation(env, obs)
+        require_checkpoint_version(env, self.bundle.meta)
         obs, legacy_target_agent = self._adapt_legacy_two_agent_obs(env, obs)
         normalized_obs = self.bundle.normalize_obs(obs)
         obs_tensor = torch.as_tensor(normalized_obs, dtype=torch.float32, device=self.device)
@@ -982,6 +1015,56 @@ class TorchActorPolicy:
         return np.asarray(action, dtype=np.float32)
 
 
+class PackedActorPolicy:
+    """Actor wrapper that repacks the observation before the network sees it.
+
+    A checkpoint trained on the packed slot layout expects a fixed number of
+    ranked relation slots, while the run may expose every vehicle whenever the
+    neighbour budget is unbounded. Repacking applies the same selection and the
+    same slot order that produced the training rows, so the actor is scored on
+    the observation it was trained for; without it the network reads whichever
+    vehicles happen to sit in the first slots.
+    """
+
+    def __init__(self, inner, max_neighbors=3, selection_mode="interaction",
+                 telemetry_version="corrected_v2"):
+        self.inner = inner
+        self.name = getattr(inner, "name", "packed_actor")
+        self.max_neighbors = int(max_neighbors)
+        self.selection_mode = str(selection_mode)
+        self.telemetry_version = str(telemetry_version)
+        self.controlled_agent = None
+
+    def reset(self):
+        self.inner.reset()
+
+    def set_controlled_agent(self, agent_id):
+        self.controlled_agent = int(agent_id)
+        if hasattr(self.inner, "set_controlled_agent"):
+            self.inner.set_controlled_agent(agent_id)
+
+    def expected_obs_dim(self):
+        mean = getattr(getattr(self.inner, "bundle", None), "obs_mean", None)
+        if mean is None:
+            return None
+        return int(np.asarray(mean).shape[-1])
+
+    def act(self, env, obs):
+        from dlc.graph_policy import pack_dynamic_neighbor_obs
+
+        expected = self.expected_obs_dim()
+        obs = np.asarray(obs, dtype=np.float32)
+        if expected is not None and obs.shape[-1] != expected:
+            obs = pack_dynamic_neighbor_obs(
+                obs,
+                target_obs_dim=expected,
+                max_neighbors=self.max_neighbors,
+                selection_mode=self.selection_mode,
+                telemetry_version=self.telemetry_version,
+            )
+        return self.inner.act(env, obs)
+
+
 class StableBaselinesActorPolicy:
     def __init__(self, model_path, seed=0, device="cpu"):
         del seed
@@ -990,6 +1073,7 @@ class StableBaselinesActorPolicy:
         if not meta_path.exists() and self.model_path.name.endswith(".sb3.zip"):
             meta_path = self.model_path.with_name(self.model_path.name.replace(".sb3.zip", ".meta.json"))
         meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
+        self.meta = meta
         algorithm = str(meta.get("algorithm", self.model_path.name.split("_", 1)[0])).lower()
         try:
             from stable_baselines3 import PPO, SAC, TD3
@@ -1009,18 +1093,58 @@ class StableBaselinesActorPolicy:
     def set_controlled_agent(self, agent_id):
         self.controlled_agent = int(agent_id)
 
-    def _adapt_observation(self, obs):
+    def _adapt_observation(self, env, obs):
         obs = np.asarray(obs, dtype=np.float32)
-        if obs.ndim != 2 or obs.shape[1] == self.expected_obs_dim:
+        migrated = False
+        if (getattr(env.unwrapped, 'telemetry_version', 'legacy_v1') == 'corrected_v2'
+                and self.meta.get('telemetry_version', 'legacy_v1') == 'legacy_v1'
+                and getattr(env.unwrapped, 'allow_legacy_checkpoint_migration', False)):
+            migrated = True
+            obs = rule_observation(env, obs)
+            expected_agents, expected_dim = obs.shape[0], self.expected_obs_dim
+            if expected_dim == 24 and obs.shape[1] >= 24:
+                packed = np.zeros((obs.shape[0], 24), dtype=np.float32)
+                packed[:, :17] = obs[:, :17]
+                for agent_id, row in enumerate(obs):
+                    slots = row[17:].reshape(-1, 7)
+                    if len(slots):
+                        valid = slots[np.isfinite(slots).all(axis=1)]
+                        if len(valid):
+                            packed[agent_id, 17:24] = valid[np.argmin(valid[:, 0])]
+                obs = packed
+        # An agent trained with ``--pack-observation`` saw interaction-ranked
+        # slots even when the field was small enough that every opponent fit the
+        # budget, so the order was not the environment's own. The evaluator
+        # exposes every vehicle and the loader used to pack only when the row
+        # width differed from the checkpoint, which left those agents ranked by
+        # identity at the fleet sizes whose width happens to match. The
+        # checkpoint declares the packing it was trained with, so honour it
+        # whenever it is declared; checkpoints that do not declare it keep the
+        # previous behaviour bit for bit.
+        runtime_packed = str(self.meta.get("observation_packing", "")).startswith(
+            "runtime_interaction_packing"
+        )
+        if obs.ndim != 2:
             return obs
-        if obs.shape[1] > self.expected_obs_dim and self.expected_obs_dim >= 17:
+        if obs.shape[1] == self.expected_obs_dim and not runtime_packed:
+            return obs
+        if self.expected_obs_dim >= 17 and (
+                obs.shape[1] > self.expected_obs_dim
+                or (runtime_packed and obs.shape[1] == self.expected_obs_dim)):
             try:
                 from dlc.graph_policy import pack_dynamic_neighbor_obs
 
                 return pack_dynamic_neighbor_obs(
                     obs,
                     target_obs_dim=self.expected_obs_dim,
+                    max_neighbors=int(self.meta.get("max_neighbors") or 0) or None,
                     selection_mode="interaction",
+                    # A migrated observation is in legacy format and has to be
+                    # ranked with the legacy rule; an observation the agent was
+                    # trained on in the environment's own format is ranked with
+                    # that format, so training and evaluation agree.
+                    telemetry_version=('legacy_v1' if migrated
+                                       else getattr(env.unwrapped, 'telemetry_version', 'legacy_v1')),
                 )
             except Exception:
                 return obs[:, : self.expected_obs_dim].copy()
@@ -1031,7 +1155,8 @@ class StableBaselinesActorPolicy:
         return obs
 
     def act(self, env, obs):
-        obs = self._adapt_observation(obs)
+        require_checkpoint_version(env, self.meta)
+        obs = self._adapt_observation(env, obs)
         num_agents = env.unwrapped.num_agents
         agent_id = self.controlled_agent
         if agent_id < 0:
@@ -1055,6 +1180,7 @@ def make_policy(
     neighbor_mode="fixed",
     max_neighbors=None,
     neighbor_selection_mode="legacy",
+    reverse_slot_order=False,
     planner_horizon=None,
     planner_candidates=None,
     planner_risk_weight=None,
@@ -1094,9 +1220,45 @@ def make_policy(
     geometry_anchor_blend=0.35,
     geometry_barrier_weight=0.65,
     hard_safety_shield=None,
+    shield_mode=None,
+    shield_lateral=None,
+    shield_grass_lateral=None,
+    shield_heading_cos=None,
+    guard_penalty_weight=None,
+    separation_scale=None,
+    planner_liveness_weight=None,
+    planner_liveness_speed=None,
+    maneuver_hold_steps=None,
+    corridor_feasibility=None,
+    planner_progress_mode=None,
+    corridor_selection=None,
+    clearance_feasibility=None,
+    shield_escalation_steps=None,
+    shield_escalation_bypass=None,
+    escalation_fallback=None,
+    corridor_return_weight=None,
+    corridor_return_candidates=None,
+    corridor_return_gain=None,
+    corridor_return_heading_gain=None,
+    corridor_return_gate=None,
+    corridor_recovery_cross_track=None,
+    relevance_memory=None,
+    maneuver_commit_steps=None,
+    maneuver_commit_forward_m=None,
+    maneuver_commit_lateral_m=None,
+    maneuver_commit_release_m=None,
+    clearance_alongside_length=None,
+    clearance_lateral_min=None,
+    dump_rollouts=False,
     use_rule_anchor=True,
     use_handcrafted_candidates=True,
     use_geometry_recovery=True,
+    recovery_enabled=True,
+    head_ablation=None,
+    world_model_mode="full",
+    decision_utility_compare_mode=None,
+    pack_neighbors=None,
+    ensemble_epistemic=True,
 ):
     def make_safe_base(base_name):
         if base_name == "track_follow":
@@ -1158,7 +1320,13 @@ def make_policy(
         return TelemetryYieldPolicy()
     if name == "telemetry_cruise":
         return TelemetryCruisePolicy()
-    if name.endswith(".npz"):
+    if isinstance(name, (list, tuple)):
+        name = list(name)
+        if not name:
+            raise ValueError("An ensemble policy needs at least one member")
+        if not all(member.endswith(".graphworld.pt") for member in name):
+            raise ValueError(f"Only .graphworld.pt checkpoints can be ensembled, got {name}")
+    elif name.endswith(".npz"):
         policy = ModelPlannerPolicy(name, seed=seed)
         return (
             SafeTrackBlendPolicy(
@@ -1170,8 +1338,8 @@ def make_policy(
             if safe
             else policy
         )
-    if name.endswith(".pt"):
-        if name.endswith(".graphworld.pt"):
+    if isinstance(name, (list, tuple)) or name.endswith(".pt"):
+        if isinstance(name, (list, tuple)) or name.endswith(".graphworld.pt"):
             from dlc.graph_world_model import GraphWorldModelPolicy
 
             policy = GraphWorldModelPolicy(
@@ -1180,6 +1348,7 @@ def make_policy(
                 neighbor_mode=neighbor_mode,
                 max_neighbors=max_neighbors,
                 neighbor_selection_mode=neighbor_selection_mode,
+                reverse_slot_order=reverse_slot_order,
                 planner_horizon=planner_horizon,
                 planner_candidates=planner_candidates,
                 planner_risk_weight=planner_risk_weight,
@@ -1219,9 +1388,44 @@ def make_policy(
                 geometry_anchor_blend=geometry_anchor_blend,
                 geometry_barrier_weight=geometry_barrier_weight,
                 hard_safety_shield=hard_safety_shield,
+                shield_mode=shield_mode,
+                shield_lateral=shield_lateral,
+                shield_grass_lateral=shield_grass_lateral,
+                shield_heading_cos=shield_heading_cos,
+                guard_penalty_weight=guard_penalty_weight,
+                separation_scale=separation_scale,
+                planner_liveness_weight=planner_liveness_weight,
+                planner_liveness_speed=planner_liveness_speed,
+                maneuver_hold_steps=maneuver_hold_steps,
+                corridor_feasibility=corridor_feasibility,
+                planner_progress_mode=planner_progress_mode,
+                corridor_selection=corridor_selection,
+                clearance_feasibility=clearance_feasibility,
+                shield_escalation_steps=shield_escalation_steps,
+                shield_escalation_bypass=shield_escalation_bypass,
+                escalation_fallback=escalation_fallback,
+                corridor_return_weight=corridor_return_weight,
+                corridor_return_candidates=corridor_return_candidates,
+                corridor_return_gain=corridor_return_gain,
+                corridor_return_heading_gain=corridor_return_heading_gain,
+                corridor_return_gate=corridor_return_gate,
+                corridor_recovery_cross_track=corridor_recovery_cross_track,
+                relevance_memory=relevance_memory,
+                maneuver_commit_steps=maneuver_commit_steps,
+                maneuver_commit_forward_m=maneuver_commit_forward_m,
+                maneuver_commit_lateral_m=maneuver_commit_lateral_m,
+                maneuver_commit_release_m=maneuver_commit_release_m,
+                clearance_alongside_length=clearance_alongside_length,
+                clearance_lateral_min=clearance_lateral_min,
+                dump_rollouts=dump_rollouts,
                 use_rule_anchor=use_rule_anchor,
                 use_handcrafted_candidates=use_handcrafted_candidates,
                 use_geometry_recovery=use_geometry_recovery,
+                recovery_enabled=recovery_enabled,
+                head_ablation=head_ablation,
+                world_model_mode=world_model_mode,
+                decision_utility_compare_mode=decision_utility_compare_mode,
+                ensemble_epistemic=ensemble_epistemic,
             )
             if safe:
                 return SafeTrackBlendPolicy(
@@ -1251,6 +1455,13 @@ def make_policy(
             return policy
         else:
             policy = TorchActorPolicy(name, seed=seed, device=device)
+        if pack_neighbors:
+            policy = PackedActorPolicy(
+                policy,
+                max_neighbors=int(pack_neighbors),
+                selection_mode=neighbor_selection_mode,
+                telemetry_version="corrected_v2",
+            )
         if safe:
             return SafeTrackBlendPolicy(
                 policy,

@@ -4,22 +4,23 @@ Local integrity record for the DNQ-DLC GitHub and archival release.
 
 ## Status
 
-- Release status: `local_manifest_only`
+- Release status: `private_github_release_candidate`
 - External DOI: not assigned
 - External archive URL: not assigned
-- File count: 211
-- Total size: 58872239 bytes
+- File count: 2019
+- Total size: 166891825 bytes
 
 ## Category summary
 
 | Category | Files | Size (bytes) |
 |---|---:|---:|
-| checkpoints | 18 | 28679361 |
-| code | 33 | 441181 |
-| configs | 2 | 26558 |
-| docs | 98 | 21573798 |
-| governance | 41 | 5604618 |
-| source_data | 19 | 2546723 |
+| checkpoints | 77 | 104128154 |
+| code | 479 | 6929790 |
+| configs | 98 | 523451 |
+| docs | 98 | 21574690 |
+| governance | 50 | 726207 |
+| paper | 28 | 5667860 |
+| source_data | 1189 | 27341673 |
 
 ## Integrity
 
@@ -28,7 +29,7 @@ build/output/cache directories, and the three self-referential manifest
 files. Regenerate after any release-package change:
 
 ```bash
-python code/build_release_manifest.py
+python reproduce/rebuild_archive_manifest.py
 ```
 
 Complete checksums are in `RELEASE_ARCHIVE_MANIFEST.csv` and

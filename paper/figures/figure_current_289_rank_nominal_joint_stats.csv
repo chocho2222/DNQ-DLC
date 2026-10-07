@@ -1,0 +1,7 @@
+proposed,baseline,metric,n_pairs,test,p_raw,p_holm,stars
+DRQ-DLC,DLC-JTO,nominal_rate,30,paired Wilcoxon,1.862645149230957e-09,1.1175870895385742e-08,***
+DRQ-DLC,PPO,nominal_rate,30,paired signed-rank (exact sign permutation),3.0517578125e-05,0.000152587890625,***
+DRQ-DLC,Rule Expert,nominal_rate,30,paired signed-rank (exact sign permutation),0.015625,0.03125,*
+DRQ-DLC,Safety Rule,nominal_rate,30,paired signed-rank (exact sign permutation),0.0078125,0.0234375,*
+DRQ-DLC,SAC,nominal_rate,20,paired Wilcoxon,4.896457741865042e-05,0.00019585830967460167,***
+DRQ-DLC,TD3,nominal_rate,5,paired signed-rank (exact sign permutation),0.0625,0.0625,ns

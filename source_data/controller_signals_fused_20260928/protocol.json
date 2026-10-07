@@ -1,0 +1,13 @@
+{
+  "root": "/tmp/ours_ens",
+  "case_plan": "/tmp/ours_ens/case_plan_ens.csv",
+  "algorithms": [
+    "ours_dnq_dlc"
+  ],
+  "warmup_steps": 300,
+  "hold_steps": 50,
+  "playfield_scale": 333.3333333333333,
+  "wm_error_definition": "imagined_rollout channel [x, y, speed] rescaled by PLAYFIELD and 50 m/s, differenced against the realised trace at the same offset",
+  "image": "learned world model, 4-step horizon, dump_rollouts enabled in the main comparison config",
+  "note": "internal signals measured inside the main runs; no component is removed or retrained here"
+}

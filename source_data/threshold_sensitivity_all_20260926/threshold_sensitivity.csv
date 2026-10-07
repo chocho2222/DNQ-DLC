@@ -1,0 +1,76 @@
+variant,description,algorithm,cases,censored,E_pass,E_full,grass_fraction,in_corridor_man
+baseline,baseline,ours_dnq_dlc,48,0,24,21,0.083,nan
+baseline,baseline,rule_expert_gate,48,0,14,12,0.2333,nan
+baseline,baseline,dlc_individual_transition,48,0,16,16,0.1053,nan
+baseline,baseline,dlc_joint_transition,48,0,15,14,0.0611,nan
+baseline,baseline,dlc_joint_transition_observer,48,0,23,14,0.1849,nan
+pass_margin_3.0,pass_margin 3.0 (looser),ours_dnq_dlc,48,0,27,22,0.0918,nan
+pass_margin_3.0,pass_margin 3.0 (looser),rule_expert_gate,48,0,16,15,0.2172,nan
+pass_margin_3.0,pass_margin 3.0 (looser),dlc_individual_transition,48,0,22,18,0.1431,0.7693
+pass_margin_3.0,pass_margin 3.0 (looser),dlc_joint_transition,48,0,16,14,0.0983,nan
+pass_margin_3.0,pass_margin 3.0 (looser),dlc_joint_transition_observer,48,0,24,16,0.2149,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),ours_dnq_dlc,48,0,24,21,0.083,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),rule_expert_gate,48,0,14,12,0.2333,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),dlc_individual_transition,48,0,16,16,0.1053,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),dlc_joint_transition,48,0,15,14,0.0611,nan
+pass_margin_5.0,pass_margin 5.0 (stricter),dlc_joint_transition_observer,48,0,23,14,0.1849,nan
+hold_40,hold 40 (looser),ours_dnq_dlc,48,0,24,21,0.0811,nan
+hold_40,hold 40 (looser),rule_expert_gate,48,0,14,12,0.2297,nan
+hold_40,hold 40 (looser),dlc_individual_transition,48,0,18,17,0.0942,nan
+hold_40,hold 40 (looser),dlc_joint_transition,48,0,15,14,0.0617,nan
+hold_40,hold 40 (looser),dlc_joint_transition_observer,48,0,23,14,0.1795,nan
+hold_60,hold 60 (stricter),ours_dnq_dlc,48,0,23,20,0.085,nan
+hold_60,hold 60 (stricter),rule_expert_gate,48,0,14,12,0.2389,nan
+hold_60,hold 60 (stricter),dlc_individual_transition,48,0,16,16,0.1139,nan
+hold_60,hold 60 (stricter),dlc_joint_transition,48,0,15,14,0.0616,nan
+hold_60,hold 60 (stricter),dlc_joint_transition_observer,48,0,23,14,0.1887,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),ours_dnq_dlc,48,0,24,21,0.083,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),rule_expert_gate,48,0,14,12,0.2333,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),dlc_individual_transition,48,0,16,16,0.1053,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),dlc_joint_transition,48,0,15,14,0.0611,nan
+in_corridor_min_0.6,in_corridor_min 0.6 (looser),dlc_joint_transition_observer,48,0,23,14,0.1849,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),ours_dnq_dlc,48,0,24,21,0.083,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),rule_expert_gate,48,0,14,12,0.2333,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),dlc_individual_transition,48,0,16,16,0.1053,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),dlc_joint_transition,48,0,15,14,0.0611,nan
+in_corridor_min_0.8,in_corridor_min 0.8 (stricter),dlc_joint_transition_observer,48,0,23,14,0.1849,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),ours_dnq_dlc,48,0,24,20,0.083,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),rule_expert_gate,48,0,14,12,0.2333,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),dlc_individual_transition,48,0,16,16,0.1053,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),dlc_joint_transition,48,0,15,11,0.0611,nan
+corridor_limit_0.9,corridor_limit 0.9 (stricter),dlc_joint_transition_observer,48,0,23,14,0.1849,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),ours_dnq_dlc,48,0,24,21,0.083,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),rule_expert_gate,48,0,14,12,0.2333,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),dlc_individual_transition,48,0,16,16,0.1053,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),dlc_joint_transition,48,0,15,14,0.0611,nan
+corridor_limit_1.1,corridor_limit 1.1 (looser),dlc_joint_transition_observer,48,0,23,17,0.1849,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),ours_dnq_dlc,48,0,24,21,0.083,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),rule_expert_gate,48,0,14,12,0.2333,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),dlc_individual_transition,48,0,16,16,0.1053,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),dlc_joint_transition,48,0,15,14,0.0611,nan
+lateral_step_bound_0.07,lateral_step_bound 0.07 (stricter),dlc_joint_transition_observer,48,0,23,14,0.1849,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),ours_dnq_dlc,48,0,24,21,0.083,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),rule_expert_gate,48,0,14,12,0.2333,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),dlc_individual_transition,48,0,16,16,0.1053,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),dlc_joint_transition,48,0,15,14,0.0611,nan
+lateral_step_bound_0.15,lateral_step_bound 0.15 (looser),dlc_joint_transition_observer,48,0,23,14,0.1849,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),ours_dnq_dlc,48,0,24,22,0.083,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),rule_expert_gate,48,0,14,13,0.2333,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),dlc_individual_transition,48,0,16,16,0.1053,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),dlc_joint_transition,48,0,15,14,0.0611,nan
+heading_cos_min_0.75,heading_cos_min 0.75 (looser),dlc_joint_transition_observer,48,0,23,15,0.1849,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),ours_dnq_dlc,48,0,24,19,0.083,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),rule_expert_gate,48,0,14,12,0.2333,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),dlc_individual_transition,48,0,16,15,0.1053,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),dlc_joint_transition,48,0,15,12,0.0611,nan
+heading_cos_min_0.88,heading_cos_min 0.88 (stricter),dlc_joint_transition_observer,48,0,23,14,0.1849,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),ours_dnq_dlc,48,0,24,21,0.0807,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),rule_expert_gate,48,0,14,12,0.2301,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),dlc_individual_transition,48,0,16,16,0.1073,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),dlc_joint_transition,48,0,15,14,0.0609,nan
+approach_distance_15.0,approach_distance 15.0 (stricter),dlc_joint_transition_observer,48,0,23,14,0.1926,nan
+approach_distance_25.0,approach_distance 25.0 (looser),ours_dnq_dlc,48,0,24,20,0.0818,nan
+approach_distance_25.0,approach_distance 25.0 (looser),rule_expert_gate,48,0,13,12,0.2303,nan
+approach_distance_25.0,approach_distance 25.0 (looser),dlc_individual_transition,48,0,15,15,0.1013,nan
+approach_distance_25.0,approach_distance 25.0 (looser),dlc_joint_transition,48,0,15,14,0.0635,nan
+approach_distance_25.0,approach_distance 25.0 (looser),dlc_joint_transition_observer,48,0,23,14,0.1947,nan

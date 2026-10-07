@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "mode": "run",
+  "stable_baselines3_available": true,
+  "job_count": 15,
+  "trained_count": 15,
+  "paths": {
+    "training_plan": "outputs/tits_dynamic_graph_expanded/rl_baselines_strict_20260926/tables/rl_baseline_training_plan.csv",
+    "training_results": "outputs/tits_dynamic_graph_expanded/rl_baselines_strict_20260926/tables/rl_baseline_training_results.csv"
+  },
+  "dependency_boundary": "If stable_baselines3 is unavailable, no RL result is generated or claimed. Install the RL environment and rerun mode=run before citing PPO/SAC/TD3 baselines."
+}

@@ -1,0 +1,29 @@
+{
+  "scope": "controlled development, not confirmatory ablation or submission method",
+  "seeds": [910201],
+  "vehicle_counts": [4, 6],
+  "methods": ["graph_physical_rules_pilot", "graph_physical_quality_pilot"],
+  "episodes": 4,
+  "horizon_steps": 2200,
+  "world_model_horizon_steps": 4,
+  "max_candidates": 18,
+  "checkpoint": "outputs/joint_clearance_development_20260910/graph_model_pilot_cached/graph_risk_dlc_world.graphworld.pt",
+  "shared_changes": [
+    "Same checkpoint, input packing, map, background policy and initial states",
+    "Footprint-based recovery margin instead of centerline-offset cutoffs",
+    "No braking solely because an aligned 4.4-unit offset exceeds 0.42 normalized lateral",
+    "Same pool: actor, old rule anchor and lane/speed templates; actual deduplicated count recorded",
+    "No use of joint-clearance teacher's candidate veto, planned future or selected action",
+    "Batched deterministic mean rollout; validated against scalar scoring"
+  ],
+  "score_comparison": {
+    "legacy": "Existing reward/progress/overtaking/lane/risk/uncertainty score, unchanged weights",
+    "physical": "Projected progress and explicit local footprint, contact proximity, heading penalties; old reward/risk/uncertainty heads not used for ranking"
+  },
+  "limitations": [
+    "Bundle-level score change, not isolated attribution to a single risk or reward term",
+    "Risk head was trained on old proxy labels; geometric-score variant does not silently claim it was retrained",
+    "Geometric footprints use local rectangular approximations, not physical collision probabilities",
+    "A single shared map seed is exploratory only; stop and diagnose poor performance without selecting favorable cases"
+  ]
+}

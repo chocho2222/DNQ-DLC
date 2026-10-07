@@ -1,0 +1,62 @@
+{
+  "study": "ours_corrected_v2_clr17w25",
+  "note": "Penalty-mode base + lateral-clearance feasibility + liveness reference raised to 17 m/s (speed-tracking feasibility). Candidate final method configuration.",
+  "dynamic_graph": {
+    "observation_type": "telemetry_dynamic",
+    "max_neighbors": null,
+    "neighbor_selection_mode": "dynamic_interaction",
+    "slot_feature_dim": 7,
+    "use_slot_mask": true
+  },
+  "algorithms": [
+    {
+      "name": "rule_expert_gate",
+      "label_cn": "Rule expert",
+      "policy": "telemetry_expert_gate",
+      "kind": "rule_baseline"
+    },
+    {
+      "name": "ours_corrected_v2_clr17w25",
+      "label_cn": "DNQ-DLC (final candidate)",
+      "policy": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/wm_k15_sb_all/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": null,
+      "planner_horizon": 4,
+      "planner_candidates": 12,
+      "planner_risk_weight": 1.65,
+      "planner_uncertainty_weight": 0.4,
+      "overtake_aware_planner": true,
+      "hard_safety_shield": true,
+      "use_rule_anchor": true,
+      "use_handcrafted_candidates": true,
+      "use_geometry_recovery": true,
+      "recovery_enabled": true,
+      "geometry_generalization": true,
+      "geometry_curvature_lookahead": 10,
+      "geometry_curvature_speed_weight": 20.0,
+      "geometry_lateral_speed_weight": 5.0,
+      "geometry_heading_speed_weight": 5.5,
+      "geometry_min_speed": 9.5,
+      "geometry_anchor_blend": 0.38,
+      "geometry_barrier_weight": 0.75,
+      "kind": "runtime_dynamic_neighborhood_graph_dlc_world_safe",
+      "quality_proposal_path": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/quality_actor_k15/graph_bc.graph.pt",
+      "quality_planner_mode": "blend",
+      "quality_rollout_blend": 0.35,
+      "quality_overtake_weight": 0.6,
+      "quality_lane_weight": 0.3,
+      "quality_grass_weight": 0.5,
+      "quality_close_gap_weight": 0.2,
+      "shield_mode": "filter",
+      "guard_penalty_weight": 3.0,
+      "dump_rollouts": true,
+      "planner_liveness_weight": 2.5,
+      "planner_liveness_speed": 17.0,
+      "maneuver_hold_steps": 1,
+      "corridor_feasibility": true,
+      "corridor_selection": "penalty",
+      "clearance_feasibility": true
+    }
+  ]
+}

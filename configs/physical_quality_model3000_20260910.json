@@ -1,0 +1,19 @@
+{
+  "scope": "separate development pilot; not submission checkpoint",
+  "model": "outputs/physical_quality_development_20260910/model_3000_updates/graph_risk_dlc_world.graphworld.pt",
+  "training_source": "outputs/joint_clearance_development_20260910/pilot_training_data",
+  "training_transitions": 17600,
+  "optimizer_updates": 3000,
+  "batch_size": 128,
+  "validation": "No test-set checkpoint selection; evaluated only on predeclared development seed 910201",
+  "evaluation": {
+    "methods": ["graph_physical_rules_pilot", "graph_physical_quality_pilot"],
+    "seed": 910201,
+    "vehicle_counts": [4, 6],
+    "steps": 2200,
+    "same_initial_states": true,
+    "same_map_dynamics_background": true
+  },
+  "preservation": "All cases and failures retained; no outcome filtering or test-based tuning",
+  "evidence_limit": "Training loss and this four-case development run do not establish DNQ-DLC performance or module attribution"
+}

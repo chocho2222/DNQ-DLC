@@ -1,0 +1,903 @@
+{
+  "model_dir": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_3/models",
+  "episodes_per_pairing": 20,
+  "seed": 3,
+  "max_steps": 800,
+  "planner_horizon": 3,
+  "planner_candidates": 16,
+  "device": "cuda:3",
+  "policy_execution": "torch_actor",
+  "pairings": {
+    "individual_transition_vs_joint_transition": {
+      "episodes": 20,
+      "wins": [
+        2,
+        18
+      ],
+      "win_ratio": [
+        0.1,
+        0.9
+      ],
+      "mean_score": [
+        -76.25867358707396,
+        -73.23478291993419
+      ],
+      "episodes_detail": [
+        {
+          "episode": 0,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.25468164794002,
+            -72.50936329588029
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 1,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.55172413793096,
+            -73.10344827586218
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 2,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.7105263157894,
+            -73.42105263157904
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 3,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.63299663299655,
+            -73.26599326599337
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 4,
+          "winner": 0,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -73.03135888501754,
+            -73.03135888501754
+          ],
+          "tile_visited_count": [
+            3,
+            2
+          ]
+        },
+        {
+          "episode": 5,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.59863945578225,
+            -73.19727891156474
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 6,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.49122807017537,
+            -72.982456140351
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 7,
+          "winner": 0,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -72.61992619926214,
+            -72.61992619926214
+          ],
+          "tile_visited_count": [
+            3,
+            2
+          ]
+        },
+        {
+          "episode": 8,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.51567944250864,
+            -73.03135888501754
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 9,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.41577060931893,
+            -72.83154121863812
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 10,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.7105263157894,
+            -73.42105263157904
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 11,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.9969969969969,
+            -73.99399399399407
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 12,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.67774086378729,
+            -73.35548172757485
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 13,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.42857142857136,
+            -72.85714285714299
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 14,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -77.1830985915492,
+            -74.36619718309863
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 15,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.88473520249212,
+            -73.7694704049845
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 16,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.65551839464875,
+            -73.31103678929776
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 17,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.8454258675078,
+            -73.69085173501585
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 18,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.69966996699662,
+            -73.3993399339935
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        },
+        {
+          "episode": 19,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.26865671641785,
+            -72.53731343283597
+          ],
+          "tile_visited_count": [
+            2,
+            2
+          ]
+        }
+      ]
+    },
+    "individual_transition_vs_joint_transition_observer": {
+      "episodes": 20,
+      "wins": [
+        0,
+        20
+      ],
+      "win_ratio": [
+        0.0,
+        1.0
+      ],
+      "mean_score": [
+        -76.58555015778072,
+        -31.479756092495258
+      ],
+      "episodes_detail": [
+        {
+          "episode": 0,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.53979238754319,
+            -24.63667820069207
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 1,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.62162162162154,
+            -46.216216216216715
+          ],
+          "tile_visited_count": [
+            2,
+            10
+          ]
+        },
+        {
+          "episode": 2,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.33699633699628,
+            -32.380952380952664
+          ],
+          "tile_visited_count": [
+            2,
+            13
+          ]
+        },
+        {
+          "episode": 3,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.38989169675084,
+            -22.238267148014426
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 4,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.59863945578225,
+            -25.57823129251706
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 5,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.62162162162154,
+            -25.945945945945997
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 6,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.58703071672348,
+            -25.392491467576896
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 7,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.19771863117866,
+            -19.163498098859222
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 8,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.3636363636363,
+            -36.36363636363665
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        },
+        {
+          "episode": 9,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.89440993788811,
+            -30.310559006211374
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 10,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.04743083003949,
+            -32.569169960474504
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        },
+        {
+          "episode": 11,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.57534246575335,
+            -25.205479452054874
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 12,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.68874172185423,
+            -27.019867549668966
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 13,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.97885196374612,
+            -31.661631419939784
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 14,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.5277777777777,
+            -24.44444444444449
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 15,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.90402476780176,
+            -55.232198142415534
+          ],
+          "tile_visited_count": [
+            2,
+            8
+          ]
+        },
+        {
+          "episode": 16,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.62162162162154,
+            -25.94594594594606
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 17,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.69966996699662,
+            -37.095709570957474
+          ],
+          "tile_visited_count": [
+            2,
+            13
+          ]
+        },
+        {
+          "episode": 18,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.79487179487171,
+            -41.538461538461945
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        },
+        {
+          "episode": 19,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.72131147540975,
+            -40.65573770491843
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        }
+      ]
+    },
+    "joint_transition_vs_joint_transition_observer": {
+      "episodes": 20,
+      "wins": [
+        0,
+        20
+      ],
+      "win_ratio": [
+        0.0,
+        1.0
+      ],
+      "mean_score": [
+        -76.01632240825748,
+        -33.548830340088344
+      ],
+      "episodes_detail": [
+        {
+          "episode": 0,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.46643109540629,
+            -37.597173144876635
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        },
+        {
+          "episode": 1,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.81528662420374,
+            -38.598726114650084
+          ],
+          "tile_visited_count": [
+            2,
+            13
+          ]
+        },
+        {
+          "episode": 2,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.26865671641785,
+            -20.2985074626865
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 3,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -71.96787148594395,
+            -45.86345381526166
+          ],
+          "tile_visited_count": [
+            3,
+            9
+          ]
+        },
+        {
+          "episode": 4,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.16858237547888,
+            -18.697318007662684
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 5,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.67774086378729,
+            -40.13289036544888
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        },
+        {
+          "episode": 6,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -77.0674486803518,
+            -41.87683284457523
+          ],
+          "tile_visited_count": [
+            2,
+            13
+          ]
+        },
+        {
+          "episode": 7,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.62162162162154,
+            -39.459459459459815
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        },
+        {
+          "episode": 8,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.8454258675078,
+            -42.14511041009505
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        },
+        {
+          "episode": 9,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.26865671641785,
+            -20.298507462686473
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 10,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.75324675324667,
+            -28.051948051948195
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 11,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.73202614379076,
+            -27.712418300653734
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 12,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.88473520249212,
+            -30.155763239875583
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 13,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.53979238754319,
+            -24.63667820069207
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 14,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -72.59259259259274,
+            -48.51851851851919
+          ],
+          "tile_visited_count": [
+            3,
+            9
+          ]
+        },
+        {
+          "episode": 15,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.65551839464875,
+            -26.488294314381356
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 16,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.37681159420283,
+            -22.02898550724636
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 17,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.55172413793096,
+            -24.827586206896594
+          ],
+          "tile_visited_count": [
+            2,
+            16
+          ]
+        },
+        {
+          "episode": 18,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -73.19727891156474,
+            -51.088435374150336
+          ],
+          "tile_visited_count": [
+            3,
+            9
+          ]
+        },
+        {
+          "episode": 19,
+          "winner": 1,
+          "steps": 800,
+          "done": false,
+          "total_reward": [
+            -76.87499999999991,
+            -42.50000000000042
+          ],
+          "tile_visited_count": [
+            2,
+            12
+          ]
+        }
+      ]
+    }
+  }
+}

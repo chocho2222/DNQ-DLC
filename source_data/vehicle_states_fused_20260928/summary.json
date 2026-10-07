@@ -1,0 +1,28 @@
+{
+  "case_level": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/vehicle_states_fused_20260928/vehicle_case_level.csv",
+  "event_level": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/vehicle_states_fused_20260928/vehicle_event_level.csv",
+  "reference": "ours_dnq_dlc",
+  "scales": [
+    "M4_sparse",
+    "M6_dense",
+    "M8_scale",
+    "M10_scale"
+  ],
+  "methods": [
+    "dlc_individual_transition",
+    "dlc_joint_transition",
+    "dlc_joint_transition_observer",
+    "ours_dnq_dlc",
+    "ppo_continuous",
+    "rule_expert_gate",
+    "sac_continuous",
+    "td3_continuous"
+  ],
+  "n_cases": 384,
+  "n_events": 930,
+  "tables": {
+    "by_scale": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/vehicle_states_fused_20260928/vehicle_state_by_scale.csv",
+    "paired_vs_reference": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/vehicle_states_fused_20260928/vehicle_state_paired.csv",
+    "events_by_scale": "outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/vehicle_states_fused_20260928/vehicle_event_by_scale.csv"
+  }
+}

@@ -1,57 +1,42 @@
 {
   "status": "private_github_release_candidate",
-  "checked_date": "2026-07-20",
+  "checked_date": "2026-10-07",
   "public_video_url": null,
   "public_code_repository": null,
   "private_code_repository": "https://github.com/chocho2222/DNQ-DLC",
   "repository_visibility": "private",
   "default_branch": "main",
-  "initial_remote_content_commit": "52b50320ebc263fc2dd2143ec29f863a9f4f7639",
-  "continuous_integration": "passed",
+  "continuous_integration": "workflow_prepared",
   "pages_status": "workflow_ready_skipped_while_private",
-  "release_candidate_version": "v0.1.0-rc.1",
-  "github_release_tag": "v0.1.0-rc.1",
-  "github_release_status": "private_draft_prerelease",
-  "github_release_url": "https://github.com/chocho2222/DNQ-DLC/releases/tag/untagged-fcb4509fcfcc44d43ea2",
+  "release_candidate_version": "v0.1.0-rc.2",
+  "content_digest": "sha256:2d3af4413d04ff96bfd1a85bdc8c9d1b57f48f2a40b3cdac46dd8913225ece98",
+  "snapshot_tag": "tits-2026-09-29",
+  "snapshot_file_count": 1755,
+  "snapshot_total_bytes": 101832622,
+  "digest_recipe": "sha256 over the sorted '<root>/<path>:<sha256>' lines of release_manifest.json",
+  "digest_rebuild_script": "reproduce/rebuild_release_manifest.sh",
   "commit_hash": null,
   "archival_doi": null,
-  "local_video_count": 22,
   "primary_endpoint": {
-    "matched_cases": 200,
-    "dnq_success_rate": 0.855,
-    "rule_expert_success_rate": 0.715,
-    "paired_difference": 0.14,
-    "paired_ci95": [
-      0.065,
-      0.215
-    ],
-    "exact_mcnemar_p": 0.0006173782640671298
+    "cases_per_method": 48,
+    "proposed_recipe": "mean over five training draws, submitted draw the first",
+    "proposed_cases_completed": 45.8,
+    "proposed_strict_tier": 20.2,
+    "proposed_strict_tier_draw_range": [14, 26],
+    "proposed_racing_rival_tier": 11.0,
+    "rule_expert_cases_completed": 45,
+    "rule_expert_strict_tier": 12,
+    "dlc_variants_strict_tier": {"individual": 17.5, "joint": 18.5, "observer": 13.5},
+    "proposed_rank_gain": 4.88,
+    "strongest_reference_rank_gain": 4.19,
+    "shield_active_share_of_steps": [0.30, 0.46]
   },
   "notes": [
-    "The private author-owned GitHub repository exists and main is pushed.",
-    "The research-artifact portal contains 22 illustrative videos and browser-linked frozen source data.",
-    "The CI and Pages workflows are prepared; Pages deployment is intentionally skipped while the repository is private.",
+    "The repository now carries the code, configurations, checkpoints and frozen tables of the 2026-09-29 evaluation; the digest of that snapshot is reproduced by reproduce/rebuild_release_manifest.sh.",
+    "docs/ still hosts the earlier evidence portal and its simulation clips; the quantitative claims it reports are superseded by paper/.",
+    "The unit tests run in this layout with PYTHONPATH=code and python -m unittest discover -s code/tests.",
     "Complete custom-track and rendered-media provenance review before public release.",
     "No public deployment or archival DOI has been created."
   ],
-  "dlc_checkpoint_sensitivity": {
-    "evaluation_cases": 8,
-    "training_checkpoints": 4,
-    "successes_per_checkpoint": [
-      0,
-      0,
-      0,
-      0
-    ],
-    "dnq_successes": 7,
-    "rule_expert_successes": 6,
-    "holm_p_across_four": 0.0625
-  },
-  "reserved_public_site_url": "https://chocho2222.github.io/DNQ-DLC/",
-  "site_contents": {
-    "simulation_videos": 22,
-    "source_data_directory": "docs/data",
-    "editable_figures": true,
-    "audit_files": true
-  }
+  "reserved_public_site_url": "https://chocho2222.github.io/DNQ-DLC/"
 }

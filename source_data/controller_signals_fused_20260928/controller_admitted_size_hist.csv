@@ -1,0 +1,16 @@
+experiment_id,algorithm,admitted_size,steps,fraction
+M4_sparse,ours_dnq_dlc,0,8914,0.40153153153153154
+M4_sparse,ours_dnq_dlc,1,963,0.04337837837837838
+M4_sparse,ours_dnq_dlc,2,690,0.031081081081081083
+M4_sparse,ours_dnq_dlc,3,11633,0.524009009009009
+M6_dense,ours_dnq_dlc,0,3726,0.16783783783783784
+M6_dense,ours_dnq_dlc,1,1391,0.06265765765765766
+M6_dense,ours_dnq_dlc,2,1668,0.07513513513513513
+M6_dense,ours_dnq_dlc,3,15415,0.6943693693693693
+M8_scale,ours_dnq_dlc,0,313,0.014099099099099099
+M8_scale,ours_dnq_dlc,1,1069,0.048153153153153154
+M8_scale,ours_dnq_dlc,2,1340,0.06036036036036036
+M8_scale,ours_dnq_dlc,3,19478,0.8773873873873874
+M10_scale,ours_dnq_dlc,1,854,0.03846846846846847
+M10_scale,ours_dnq_dlc,2,1529,0.06887387387387388
+M10_scale,ours_dnq_dlc,3,19817,0.8926576576576577

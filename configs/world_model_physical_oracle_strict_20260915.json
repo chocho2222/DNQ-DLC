@@ -1,0 +1,55 @@
+{
+  "study": "world_model_physical_counterfactual_oracle",
+  "frozen_date": "2026-09-15",
+  "source_experiment": "handcrafted_candidates_strict_20260915",
+  "source_algorithm": "dnq_full_candidates",
+  "selection_rule": "For each frozen case, audit twelve candidate-scoring decisions selected at equally spaced ranks among all eligible trace decisions.",
+  "horizon_steps": 4,
+  "decisions_per_case": 12,
+  "replay_tolerance": 1e-5,
+  "primary_metrics": [
+    "model_progress_spearman",
+    "progress_top1_hit",
+    "progress_regret_m",
+    "model_reward_spearman",
+    "reward_top1_hit",
+    "reward_regret"
+  ],
+  "secondary_metrics": [
+    "model_utility_spearman",
+    "physical_top1_hit",
+    "physical_regret",
+    "grass_fraction",
+    "backward_fraction",
+    "mean_abs_lateral_error",
+    "contact_any",
+    "minimum_pair_distance"
+  ],
+  "physical_utility_weights": {
+    "progress": 1.0,
+    "grass": 5.0,
+    "backward": 5.0,
+    "lateral": 2.0,
+    "contact": 10.0
+  },
+  "cases": [
+    {"shard": "s1", "track": "hairpin_scaled", "num_agents": 6, "seed": 6301},
+    {"shard": "s2", "track": "hairpin_scaled", "num_agents": 6, "seed": 6305},
+    {"shard": "s3", "track": "hairpin_scaled", "num_agents": 6, "seed": 6309},
+    {"shard": "s4", "track": "hairpin_scaled", "num_agents": 6, "seed": 6313},
+    {"shard": "s1", "track": "hairpin_scaled", "num_agents": 8, "seed": 6301},
+    {"shard": "s2", "track": "hairpin_scaled", "num_agents": 8, "seed": 6305},
+    {"shard": "s3", "track": "hairpin_scaled", "num_agents": 8, "seed": 6309},
+    {"shard": "s4", "track": "hairpin_scaled", "num_agents": 8, "seed": 6313},
+    {"shard": "s1", "track": "s_curve_scaled", "num_agents": 6, "seed": 6301},
+    {"shard": "s2", "track": "s_curve_scaled", "num_agents": 6, "seed": 6305},
+    {"shard": "s3", "track": "s_curve_scaled", "num_agents": 6, "seed": 6309},
+    {"shard": "s4", "track": "s_curve_scaled", "num_agents": 6, "seed": 6313},
+    {"shard": "s1", "track": "s_curve_scaled", "num_agents": 8, "seed": 6301},
+    {"shard": "s2", "track": "s_curve_scaled", "num_agents": 8, "seed": 6305},
+    {"shard": "s3", "track": "s_curve_scaled", "num_agents": 8, "seed": 6309},
+    {"shard": "s4", "track": "s_curve_scaled", "num_agents": 8, "seed": 6313}
+  ],
+  "denominator_policy": "Every frozen case remains in the report. Missing source artifacts, replay failures, and cases with fewer eligible decisions are retained and explicitly reported.",
+  "interpretation_boundary": "This is a same-state, one-action intervention with a frozen open-loop continuation over the planner horizon; it does not estimate a full-episode policy intervention."
+}

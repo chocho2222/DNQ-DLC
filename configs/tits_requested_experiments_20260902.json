@@ -1,0 +1,29 @@
+{
+  "study": "requested_experiments_20260902",
+  "experiments": {
+    "complete_ablation": {
+      "variants": ["dnq_full_requested", "dnq_no_dynamic_selection", "dnq_no_quality_term", "dnq_no_risk_uncertainty", "dnq_no_recovery"],
+      "design": "paired seeds, one component changed per variant"
+    },
+    "speed_matched": {
+      "config": "configs/tits_speed_matched_20260902.json",
+      "speed_cap_mps": 10.0,
+      "matching_tolerance_mps": 1.0,
+      "primary_metrics": ["overtake_success_rate", "target_grass_rate"]
+    },
+    "density_generalization": {
+      "tracks": ["tracks/oval_density_n10_scaled.npz", "tracks/oval_density_n12_scaled.npz"],
+      "vehicle_counts": [10, 12],
+      "controls": ["dnq_full_requested", "dnq_no_dynamic_selection"]
+    },
+    "head_ablation": {
+      "heads": ["state", "reward", "risk", "uncertainty"],
+      "variants": ["dnq_no_state_head", "dnq_no_reward_head", "dnq_no_risk_head", "dnq_no_uncertainty_head"]
+    },
+    "failure_analysis": {
+      "existing_atlas": "outputs/tits_dynamic_graph/tits_casewise_diagnostic_pack/tables/casewise_failure_mode_summary.csv",
+      "trace_fields": ["target_policy_debug", "dynamic_neighbor_ids", "target_grass_rate", "overtake_window_grass_rate_mean", "hard_recovery_rate"]
+    }
+  },
+  "formal_run_note": "Smoke outputs are verification only. Use matched randomized seeds and retain all failures for manuscript claims."
+}

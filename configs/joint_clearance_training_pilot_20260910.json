@@ -1,0 +1,23 @@
+{
+  "status": "pilot data collection, no formal DNQ result",
+  "seed_start": 9301001,
+  "episodes": 8,
+  "vehicle_counts": [4, 5, 6],
+  "episode_horizon": 2200,
+  "start_layout": "paired",
+  "line_spacing": 5,
+  "lateral_spacing": 2.2,
+  "expert_source": "joint_clearance_pilot_v2",
+  "background_profile": "lane13",
+  "selection": "interaction",
+  "K": 3,
+  "validation_seeds_disjoint": [910101, 910102, 910103, 910104],
+  "preservation": "Retain every transition and case, including contact, grass, incomplete passing, early endings and errors",
+  "training_gate": "Review collection outcomes before fitting; no automatic claim that teacher actions are successful or safe",
+  "limitations": [
+    "Teacher uses all current agents and map geometry; student with K=3 receives a different information budget",
+    "Only procedural maps and lane-following background traffic covered",
+    "Boundary risk labels in current world-model training remain telemetry proxies, not collision forecasts",
+    "No formal test split or performance checkpoint selection is made by this collection"
+  ]
+}

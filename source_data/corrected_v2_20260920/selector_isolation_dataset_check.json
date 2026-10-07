@@ -1,0 +1,35 @@
+{
+  "source": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/dataset_k15",
+  "arms": {
+    "fixed": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/dataset_k15_fixed3",
+    "nearest": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph_expanded/corrected_v2_20260920/dataset_k15_nearest3"
+  },
+  "pairs": {
+    "source_vs_fixed": {
+      "episodes": 160,
+      "episode_plan_identical": true,
+      "behaviour_identical_episodes": 160,
+      "max_behaviour_delta": 0.0,
+      "observation_identical_episodes": 0,
+      "max_observation_delta": 1.9999998807907104
+    },
+    "source_vs_nearest": {
+      "episodes": 160,
+      "episode_plan_identical": true,
+      "behaviour_identical_episodes": 160,
+      "max_behaviour_delta": 0.0,
+      "observation_identical_episodes": 0,
+      "max_observation_delta": 1.9999706745147705
+    },
+    "fixed_vs_nearest": {
+      "episodes": 160,
+      "episode_plan_identical": true,
+      "behaviour_identical_episodes": 160,
+      "max_behaviour_delta": 0.0,
+      "observation_identical_episodes": 0,
+      "max_observation_delta": 2.0
+    }
+  },
+  "status": "PASS",
+  "failures": []
+}

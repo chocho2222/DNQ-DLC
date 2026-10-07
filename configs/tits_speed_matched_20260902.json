@@ -1,0 +1,156 @@
+{
+  "study": "speed_matched_control_20260902",
+  "python": "/home/itrc/.conda/envs/vlm_planner/bin/python",
+  "track": {
+    "default": "procedural",
+    "monza_npz": "tracks/monza_scaled.npz"
+  },
+  "hardware": {
+    "preferred_device": "cuda:0",
+    "available_gpu_count_expected": 4
+  },
+  "dynamic_graph": {
+    "observation_type": "telemetry_dynamic",
+    "max_neighbors": 3,
+    "neighbor_selection_mode": "legacy",
+    "slot_feature_dim": 7,
+    "use_slot_mask": true,
+    "train_agent_range": [
+      4,
+      6
+    ],
+    "test_agent_counts": [
+      4,
+      5,
+      6,
+      8
+    ],
+    "neighbor_modes": [
+      "dynamic",
+      "fixed"
+    ],
+    "neighbor_keep_prob": 0.85
+  },
+  "algorithms": [
+    {
+      "name": "dlc_joint_transition_observer_speedcap10",
+      "label_cn": "DLC-JTO (10 m/s cap)",
+      "policy": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines/joint_transition_observer.pt",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "paper_dlc_world_model_baseline",
+      "paper_dlc_model_type": "joint_transition_observer",
+      "overtake_aware_planner": false,
+      "speed_cap": 10
+    },
+    {
+      "name": "ppo_continuous_speedcap10",
+      "label_cn": "PPO (10 m/s cap)",
+      "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines/ppo_continuous/ppo_continuous.sb3.zip",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "rl_baseline",
+      "speed_cap": 10
+    },
+    {
+      "name": "rule_expert_gate_speedcap10",
+      "label_cn": "Rule expert (10 m/s cap)",
+      "policy": "telemetry_expert_gate",
+      "neighbor_mode": "fixed",
+      "max_neighbors": null,
+      "kind": "rule_baseline",
+      "speed_cap": 10
+    },
+    {
+      "name": "v6_runtime_dynamic_neighborhood_safe_speedcap10",
+      "kind": "runtime_dynamic_neighborhood_graph_dlc_world_safe",
+      "label_cn": "v6动态邻域DLC-safe (10 m/s cap)",
+      "model_path": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": 3,
+      "planner_horizon": 4,
+      "planner_candidates": 12,
+      "planner_risk_weight": 1.65,
+      "planner_uncertainty_weight": 0.4,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.25,
+      "quality_overtake_weight": 0.18,
+      "quality_lane_weight": 0.35,
+      "quality_grass_weight": 0.9,
+      "quality_close_gap_weight": 0.25,
+      "description": "Safety-oriented v6 variant with a moderate planning budget and stronger risk, lane and grass penalties.",
+      "policy": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "speed_cap": 10
+    }
+  ],
+  "metrics": [
+    "lap_completion_rate",
+    "overtake_success_rate",
+    "overtake_start_to_complete_time",
+    "rank_gain",
+    "grass_rate",
+    "collision_or_contact_proxy",
+    "lateral_error_mean",
+    "heading_error_mean",
+    "time_to_first_overtake",
+    "finish_step",
+    "compute_latency_ms"
+  ],
+  "benchmark_matrix": [
+    {
+      "name": "in_distribution_procedural",
+      "track": "procedural",
+      "agent_counts": [
+        4,
+        5,
+        6
+      ],
+      "seeds": [
+        3,
+        7,
+        11,
+        17,
+        23
+      ]
+    },
+    {
+      "name": "vehicle_count_extrapolation",
+      "track": "procedural",
+      "agent_counts": [
+        8
+      ],
+      "seeds": [
+        31,
+        37,
+        41,
+        43,
+        47
+      ]
+    },
+    {
+      "name": "monza_external_track",
+      "track": "tracks/monza_scaled.npz",
+      "agent_counts": [
+        4,
+        6
+      ],
+      "seeds": [
+        53,
+        59,
+        61,
+        67,
+        71
+      ]
+    }
+  ],
+  "reporting": {
+    "output_dir": "outputs/tits_dynamic_graph_expanded/expanded_benchmark_matrix_e1_200runs",
+    "figures_dir": "outputs/tits_dynamic_graph/figures",
+    "tables_dir": "outputs/tits_dynamic_graph/tables",
+    "gifs_dir": "outputs/tits_dynamic_graph/gifs",
+    "logs_dir": "outputs/tits_dynamic_graph/logs"
+  }
+}

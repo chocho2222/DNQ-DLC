@@ -1,0 +1,4 @@
+budget,cases,P,E_full,E_race,grass_cases,grass_mean,rank_gain_sum,admitted_mean
+k3_released,8,7,3,3,7,0.06586541068373902,56,2.704375
+k2,8,8,3,2,8,0.12092581753980326,54,1.9898863636363635
+k1,8,8,2,2,8,0.15852727839304298,45,1.0

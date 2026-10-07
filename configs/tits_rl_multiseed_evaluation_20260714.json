@@ -1,0 +1,42 @@
+{
+  "protocol": "Frozen evaluation of 3-seed, 200k-step PPO/SAC/TD3 checkpoints against unchanged DNQ-DLC and rule baselines.",
+  "dynamic_graph": {
+    "max_neighbors": 3,
+    "neighbor_selection_mode": "interaction"
+  },
+  "algorithms": [
+    {
+      "name": "dnq_dlc_full",
+      "label_cn": "DNQ-DLC",
+      "kind": "unchanged_full_controller",
+      "policy": "outputs/tits_dynamic_graph/models/ours_dynamic_graph_dlc_world/graph_risk_dlc_world.graphworld.pt",
+      "neighbor_mode": "dynamic",
+      "neighbor_selection_mode": "interaction",
+      "max_neighbors": 3,
+      "planner_horizon": 4,
+      "planner_candidates": 12,
+      "planner_risk_weight": 1.65,
+      "planner_uncertainty_weight": 0.40,
+      "overtake_aware_planner": true,
+      "quality_proposal_path": "outputs/tits_dynamic_graph/models/quality_graph_bc_v1/graph_bc.graph.pt",
+      "quality_planner_mode": "quality_guided_rollout",
+      "quality_rollout_blend": 0.25,
+      "quality_overtake_weight": 0.18,
+      "quality_lane_weight": 0.35,
+      "quality_grass_weight": 0.90,
+      "quality_close_gap_weight": 0.25,
+      "geometry_generalization": true
+    },
+    {"name": "rule_expert_gate", "label_cn": "Rule expert", "kind": "rule_baseline", "policy": "telemetry_expert_gate"},
+    {"name": "rule_safety_gate", "label_cn": "Safety rule", "kind": "rule_baseline", "policy": "telemetry_expert_barrier"},
+    {"name": "ppo_seed9101", "label_cn": "PPO s1", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/ppo_continuous/seed9101/ppo_continuous.sb3.zip"},
+    {"name": "ppo_seed9102", "label_cn": "PPO s2", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/ppo_continuous/seed9102/ppo_continuous.sb3.zip"},
+    {"name": "ppo_seed9103", "label_cn": "PPO s3", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/ppo_continuous/seed9103/ppo_continuous.sb3.zip"},
+    {"name": "sac_seed9101", "label_cn": "SAC s1", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/sac_continuous/seed9101/sac_continuous.sb3.zip"},
+    {"name": "sac_seed9102", "label_cn": "SAC s2", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/sac_continuous/seed9102/sac_continuous.sb3.zip"},
+    {"name": "sac_seed9103", "label_cn": "SAC s3", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/sac_continuous/seed9103/sac_continuous.sb3.zip"},
+    {"name": "td3_seed9101", "label_cn": "TD3 s1", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/td3_continuous/seed9101/td3_continuous.sb3.zip"},
+    {"name": "td3_seed9102", "label_cn": "TD3 s2", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/td3_continuous/seed9102/td3_continuous.sb3.zip"},
+    {"name": "td3_seed9103", "label_cn": "TD3 s3", "kind": "rl_200k", "policy": "outputs/tits_dynamic_graph_expanded/rl_baselines_matched_20260710/td3_continuous/seed9103/td3_continuous.sb3.zip"}
+  ]
+}

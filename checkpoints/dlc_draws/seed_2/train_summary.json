@@ -1,0 +1,119 @@
+{
+  "seed": 2,
+  "episodes": 400,
+  "max_steps": 800,
+  "behavior_policy": "track_follow",
+  "transitions": 320000,
+  "model_paths": {
+    "individual_transition": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_2/models/individual_transition.pt",
+    "joint_transition": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_2/models/joint_transition.pt",
+    "joint_transition_observer": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_2/models/joint_transition_observer.pt"
+  },
+  "metrics": {
+    "individual_transition": {
+      "world_loss_final": 0.4245719015598297,
+      "world_loss_mean": 0.49252774491906165,
+      "actor_loss_final": -8874.6376953125,
+      "value_loss_final": 6975384.0,
+      "actor_updates": 200,
+      "stages": {
+        "50": {
+          "world_loss_final": 0.2643854022026062,
+          "actor_loss_final": -9.285382270812988,
+          "value_loss_final": 11.541093826293945,
+          "actor_updates": 50
+        },
+        "100": {
+          "world_loss_final": 0.524402379989624,
+          "actor_loss_final": -325.5520324707031,
+          "value_loss_final": 6563.65869140625,
+          "actor_updates": 100
+        },
+        "150": {
+          "world_loss_final": 0.45431041717529297,
+          "actor_loss_final": -2972.416748046875,
+          "value_loss_final": 1135835.625,
+          "actor_updates": 150
+        },
+        "200": {
+          "world_loss_final": 0.4245719015598297,
+          "actor_loss_final": -8874.6376953125,
+          "value_loss_final": 6975384.0,
+          "actor_updates": 200
+        }
+      }
+    },
+    "joint_transition": {
+      "world_loss_final": 0.4617229402065277,
+      "world_loss_mean": 0.571239454895258,
+      "actor_loss_final": 0.9738242030143738,
+      "value_loss_final": 274.10235595703125,
+      "actor_updates": 200,
+      "stages": {
+        "50": {
+          "world_loss_final": 0.2846631407737732,
+          "actor_loss_final": -5.190089225769043,
+          "value_loss_final": 6.488632678985596,
+          "actor_updates": 50
+        },
+        "100": {
+          "world_loss_final": 0.6736458539962769,
+          "actor_loss_final": -92.40817260742188,
+          "value_loss_final": 1951.7286376953125,
+          "actor_updates": 100
+        },
+        "150": {
+          "world_loss_final": 0.5284714698791504,
+          "actor_loss_final": -49.738136291503906,
+          "value_loss_final": 2420.223876953125,
+          "actor_updates": 150
+        },
+        "200": {
+          "world_loss_final": 0.4617229402065277,
+          "actor_loss_final": 0.9738242030143738,
+          "value_loss_final": 274.10235595703125,
+          "actor_updates": 200
+        }
+      }
+    },
+    "joint_transition_observer": {
+      "world_loss_final": 0.5462689399719238,
+      "world_loss_mean": 0.7956959891319275,
+      "actor_loss_final": -3550.557373046875,
+      "value_loss_final": 5107015.0,
+      "actor_updates": 200,
+      "stages": {
+        "50": {
+          "world_loss_final": 0.4036325216293335,
+          "actor_loss_final": -5.892777442932129,
+          "value_loss_final": 12.682645797729492,
+          "actor_updates": 50
+        },
+        "100": {
+          "world_loss_final": 0.91340172290802,
+          "actor_loss_final": -177.23757934570312,
+          "value_loss_final": 9653.5439453125,
+          "actor_updates": 100
+        },
+        "150": {
+          "world_loss_final": 0.6316434144973755,
+          "actor_loss_final": -1044.1153564453125,
+          "value_loss_final": 242370.421875,
+          "actor_updates": 150
+        },
+        "200": {
+          "world_loss_final": 0.5462689399719238,
+          "actor_loss_final": -3550.557373046875,
+          "value_loss_final": 5107015.0,
+          "actor_updates": 200
+        }
+      }
+    }
+  },
+  "stage_model_dirs": {
+    "50": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_2/models/step_50",
+    "100": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_2/models/step_100",
+    "150": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_2/models/step_150",
+    "200": "outputs/tits_dynamic_graph_expanded/paper_dlc_baselines_training_budget_matched/seed_2/models/step_200"
+  }
+}

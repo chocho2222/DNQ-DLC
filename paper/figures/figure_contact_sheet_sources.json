@@ -1,0 +1,145 @@
+{
+  "banner_language": "en",
+  "re_simulated": false,
+  "sheets": [
+    {
+      "case_id": "case1_dlc_fail_v6safe_success",
+      "file": "figure_s4_success_comparison_contact_sheet.png",
+      "sha256": "11303a000526bd51c8664d76a45b284091d6a000a154058512841f003554f90d",
+      "size": [
+        1800,
+        908
+      ],
+      "panels": [
+        {
+          "algorithm": "dlc_world_original",
+          "method_label": "DLC (original)",
+          "stage": "start",
+          "step": 0,
+          "rank": 6,
+          "grass": false,
+          "lateral_error": "-0.060",
+          "heading_cos": "0.999",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/summaries/dlc_world_original_n6_seed53.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/traces/dlc_world_original_n6_seed53.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/gifs/dlc_world_original_n6_seed53.first_person.gif"
+        },
+        {
+          "algorithm": "dlc_world_original",
+          "method_label": "DLC (original)",
+          "stage": "mid",
+          "step": 450,
+          "rank": 6,
+          "grass": false,
+          "lateral_error": "0.139",
+          "heading_cos": "0.988",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/summaries/dlc_world_original_n6_seed53.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/traces/dlc_world_original_n6_seed53.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/gifs/dlc_world_original_n6_seed53.first_person.gif"
+        },
+        {
+          "algorithm": "dlc_world_original",
+          "method_label": "DLC (original)",
+          "stage": "end",
+          "step": 899,
+          "rank": 6,
+          "grass": true,
+          "lateral_error": "0.108",
+          "heading_cos": "0.999",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/summaries/dlc_world_original_n6_seed53.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/traces/dlc_world_original_n6_seed53.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/gifs/dlc_world_original_n6_seed53.first_person.gif"
+        },
+        {
+          "algorithm": "v6_runtime_dynamic_neighborhood_safe",
+          "method_label": "DNQ-DLC",
+          "stage": "start",
+          "step": 13,
+          "rank": 6,
+          "grass": false,
+          "lateral_error": "0.026",
+          "heading_cos": "1.000",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/summaries/v6_runtime_dynamic_neighborhood_safe_n6_seed53.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/traces/v6_runtime_dynamic_neighborhood_safe_n6_seed53.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/gifs/v6_runtime_dynamic_neighborhood_safe_n6_seed53.first_person.gif"
+        },
+        {
+          "algorithm": "v6_runtime_dynamic_neighborhood_safe",
+          "method_label": "DNQ-DLC",
+          "stage": "mid",
+          "step": 35,
+          "rank": 6,
+          "grass": false,
+          "lateral_error": "-0.208",
+          "heading_cos": "0.996",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/summaries/v6_runtime_dynamic_neighborhood_safe_n6_seed53.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/traces/v6_runtime_dynamic_neighborhood_safe_n6_seed53.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/gifs/v6_runtime_dynamic_neighborhood_safe_n6_seed53.first_person.gif"
+        },
+        {
+          "algorithm": "v6_runtime_dynamic_neighborhood_safe",
+          "method_label": "DNQ-DLC",
+          "stage": "complete",
+          "step": 57,
+          "rank": 1,
+          "grass": false,
+          "lateral_error": "-0.227",
+          "heading_cos": "1.000",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/summaries/v6_runtime_dynamic_neighborhood_safe_n6_seed53.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/traces/v6_runtime_dynamic_neighborhood_safe_n6_seed53.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/publication_gifs/monza_n6_seed53_v6safe_vs_dlc/gifs/v6_runtime_dynamic_neighborhood_safe_n6_seed53.first_person.gif"
+        }
+      ]
+    },
+    {
+      "case_id": "case3_v6safe_failure_residual",
+      "file": "figure_s5_failure_case_contact_sheet.png",
+      "sha256": "f1ba8ba5a3b5be60568e576481dcbaddf13daab81fcbca814b9d60568bd43d5b",
+      "size": [
+        1800,
+        454
+      ],
+      "panels": [
+        {
+          "algorithm": "v6_runtime_dynamic_neighborhood_safe",
+          "method_label": "DNQ-DLC",
+          "stage": "start",
+          "step": 0,
+          "rank": 4,
+          "grass": false,
+          "lateral_error": "-0.067",
+          "heading_cos": "1.000",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/summaries/v6_runtime_dynamic_neighborhood_safe_n4_seed17.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/traces/v6_runtime_dynamic_neighborhood_safe_n4_seed17.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/gifs/v6_runtime_dynamic_neighborhood_safe_n4_seed17.first_person.gif"
+        },
+        {
+          "algorithm": "v6_runtime_dynamic_neighborhood_safe",
+          "method_label": "DNQ-DLC",
+          "stage": "mid",
+          "step": 1100,
+          "rank": 4,
+          "grass": true,
+          "lateral_error": "0.146",
+          "heading_cos": "0.993",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/summaries/v6_runtime_dynamic_neighborhood_safe_n4_seed17.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/traces/v6_runtime_dynamic_neighborhood_safe_n4_seed17.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/gifs/v6_runtime_dynamic_neighborhood_safe_n4_seed17.first_person.gif"
+        },
+        {
+          "algorithm": "v6_runtime_dynamic_neighborhood_safe",
+          "method_label": "DNQ-DLC",
+          "stage": "end",
+          "step": 2199,
+          "rank": 4,
+          "grass": true,
+          "lateral_error": "0.115",
+          "heading_cos": "-0.140",
+          "source_summary": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/summaries/v6_runtime_dynamic_neighborhood_safe_n4_seed17.summary.json",
+          "source_trace": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/traces/v6_runtime_dynamic_neighborhood_safe_n4_seed17.trace.json",
+          "source_gif": "/home/itrc/VLM/racing/overtake/multi_car_racing/outputs/tits_dynamic_graph/tits_typical_first_person_case_pack/rerun/procedural_n4_seed17/gifs/v6_runtime_dynamic_neighborhood_safe_n4_seed17.first_person.gif"
+        }
+      ]
+    }
+  ]
+}
